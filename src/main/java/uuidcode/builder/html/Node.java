@@ -66,31 +66,33 @@ public class Node<T> {
         Stream<List<String>> listStream = this.childNodeList.stream()
             .map(Node::contentList);
 
-        Stream<String> childNodeContentStream = listStream
+        return listStream
             .map(this::shrink)
-            .map(list -> {
-                if (this.childNodeList.size() <= 1) {
-                    if (list.size() >= 3) {
-                        return processIndent(list);
-                    }
-                } else {
-                    return processIndent(list);
-                }
-
-                return list;
-            })
-            .flatMap(List::stream);
-
-        List<String> list = childNodeContentStream.collect(Collectors.toList());
-        return list;
+            .map(this::processIndent)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     private List<String> processIndent(List<String> list) {
-        return list.stream().map(this::prependIndent).collect(Collectors.toList());
+        if (this.childNodeList.size() <= 1) {
+            if (list.size() >= 3) {
+                return prependIndent(list);
+            }
+        } else {
+            return prependIndent(list);
+        }
+
+        return list;
+    }
+
+    private List<String> prependIndent(List<String> list) {
+        return list.stream()
+            .map(this::prependIndent)
+            .collect(Collectors.toList());
     }
 
     private String prependIndent(String content) {
-        return generate(INDENT, 1) + content;
+        return INDENT + content;
     }
 
     private String joining(List<String> list) {
@@ -107,11 +109,5 @@ public class Node<T> {
         }
 
         return list;
-   }
-
-    public String generate(String text, int size) {
-        return IntStream.range(0, size)
-            .mapToObj(i -> text)
-            .collect(Collectors.joining());
     }
 }
