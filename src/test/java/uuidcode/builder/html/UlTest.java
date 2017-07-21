@@ -2,9 +2,9 @@ package uuidcode.builder.html;
 
 import org.junit.Test;
 
-public class DivTest extends CoreTest {
+public class UlTest extends CoreTest {
     @Test
     public void test() {
-        assertHtml(Div.of().html(), "div");
+        assertHtml(Ul.of().html(), "ul");
     }
 }
