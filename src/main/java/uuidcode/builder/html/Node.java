@@ -109,19 +109,6 @@ public class Node<T> {
         return list;
    }
 
-    public int depth() {
-        int depth = 0;
-
-        Node currentNode = this.getParentNode();
-
-        while (currentNode != null) {
-            currentNode = currentNode.getParentNode();
-            depth++;
-        }
-
-        return depth;
-    }
-
     public String generate(String text, int size) {
         return IntStream.range(0, size)
             .mapToObj(i -> text)
