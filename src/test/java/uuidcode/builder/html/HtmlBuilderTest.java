@@ -1,9 +1,15 @@
 package uuidcode.builder.html;
 
 import static uuidcode.builder.html.HtmlBuilder.div;
+import static uuidcode.builder.html.HtmlBuilder.input;
 import static uuidcode.builder.html.HtmlBuilder.li;
+import static uuidcode.builder.html.HtmlBuilder.span;
 import static uuidcode.builder.html.HtmlBuilder.ul;
 import static uuidcode.builder.html.HtmlBuilder.a;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 
@@ -63,5 +69,28 @@ public class HtmlBuilderTest extends CoreTest {
         ).html();
 
         assertHtml(html, "complex");
+    }
+
+    @Test
+    public void selectBox() {
+        List<String> nameList = IntStream.range(0, 3)
+            .mapToObj(String::valueOf)
+            .collect(Collectors.toList());
+
+        String html = div(
+            input(),
+            a(
+                span()
+            ),
+            div(
+                ul(
+                    nameList.stream()
+                        .map(i -> li().setId(i))
+                        .collect(Collectors.toList())
+                )
+            )
+        ).html();
+
+        this.assertHtml(html, "selectBox");
     }
 }

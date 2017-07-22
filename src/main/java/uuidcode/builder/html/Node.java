@@ -6,11 +6,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Node<T> {
+public class Node<T extends Node> {
     public static final String INDENT = "    ";
-    private String tagName;
+
     private List<Node> childNodeList = new ArrayList<>();
+    private List<Attribute> attributeList = new ArrayList<>();
+    private String tagName;
     private Node parentNode;
+    private boolean requiresEndTag = true;
+
+    public boolean getRequiresEndTag() {
+        return this.requiresEndTag;
+    }
+
+    public T setRequiresEndTag(boolean requiresEndTag) {
+        this.requiresEndTag = requiresEndTag;
+        return (T) this;
+    }
+
+    public List<Attribute> getAttributeList() {
+        return this.attributeList;
+    }
+
+    public Node setAttributeList(List<Attribute> attributeList) {
+        this.attributeList = attributeList;
+        return this;
+    }
 
     public List<Node> getChildNodeList() {
         return childNodeList;
@@ -36,9 +57,11 @@ public class Node<T> {
     }
 
     public T add(Node... node) {
-        for (Node child : node) {
-            this.add(child);
-        }
+        return add(Arrays.asList(node));
+    }
+
+    public T add(List<Node> nodeList) {
+        nodeList.stream().forEach(this::add);
         return (T) this;
     }
 
@@ -55,10 +78,24 @@ public class Node<T> {
 
     public List<String> contentList() {
         List<String> contentList = new ArrayList<>();
-        contentList.add("<" + this.tagName + ">");
+        contentList.add("<" + this.tagName + this.attribute() + ">");
         contentList.addAll(this.getChildContentList());
-        contentList.add("</" + this.tagName + ">");
+
+        if (this.requiresEndTag) {
+            contentList.add("</" + this.tagName + ">");
+        }
+
         return this.shrink(contentList);
+    }
+
+    private String attribute() {
+        if (this.attributeList.size() == 0) {
+            return "";
+        }
+
+        return " " + this.attributeList.stream()
+            .map(Attribute::toString)
+            .collect(Collectors.joining(" "));
     }
 
     private List<String> getChildContentList() {
@@ -108,5 +145,10 @@ public class Node<T> {
         }
 
         return list;
+    }
+
+    public Node setId(String id) {
+        this.attributeList.add(Attribute.of("id", id));
+        return (T) this;
     }
 }
