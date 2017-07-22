@@ -24,15 +24,6 @@ public class Node<T extends Node> {
         return (T) this;
     }
 
-    public List<Attribute> getAttributeList() {
-        return this.attributeList;
-    }
-
-    public Node setAttributeList(List<Attribute> attributeList) {
-        this.attributeList = attributeList;
-        return this;
-    }
-
     public List<Node> getChildNodeList() {
         return childNodeList;
     }
