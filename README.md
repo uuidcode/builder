@@ -43,7 +43,7 @@ private List<Node> createLiList(List<String> nameList) {
 
 ```
 
-## result
+## html result
 
 ```html
 <div id="projectTypeContainer" class="opt_comm4">
@@ -63,5 +63,6 @@ private List<Node> createLiList(List<String> nameList) {
     </script>
 </div>
 ```
+## coverage
 
 ![coverage](image/coverage.png)
