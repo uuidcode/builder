@@ -43,7 +43,7 @@ private List<Node> createLiList(List<String> nameList) {
 
 ```
 
-##result
+## result
 
 ```html
 <div id="projectTypeContainer" class="opt_comm4">
