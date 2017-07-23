@@ -3,7 +3,9 @@ package uuidcode.builder.html;
 import static uuidcode.builder.html.HtmlBuilder.div;
 import static uuidcode.builder.html.HtmlBuilder.input;
 import static uuidcode.builder.html.HtmlBuilder.li;
+import static uuidcode.builder.html.HtmlBuilder.script;
 import static uuidcode.builder.html.HtmlBuilder.span;
+import static uuidcode.builder.html.HtmlBuilder.text;
 import static uuidcode.builder.html.HtmlBuilder.ul;
 import static uuidcode.builder.html.HtmlBuilder.a;
 
@@ -77,19 +79,31 @@ public class HtmlBuilderTest extends CoreTest {
             .mapToObj(String::valueOf)
             .collect(Collectors.toList());
 
-        String html = div(
+        Div div = div(
             input(),
             a(
-                span()
+                text("하트"),
+                span().addClass("ico_comm")
             ),
-            div(
-                ul(
-                    nameList.stream()
-                        .map(i -> li().setId(i))
-                        .collect(Collectors.toList())
-                )
-            )
-        ).html();
+            ul(
+                nameList.stream()
+                    .map(i -> li(a()).setId(i))
+                    .collect(Collectors.toList())
+            ),
+            script(text("Hello, World"))
+        );
+
+        div.setId("projectTypeContainer").addClass("opt_comm4");
+        div.getChildNodeList().get(0)
+            .setType("hidden")
+            .setName("projectType")
+            .setId("projectType")
+            .setValue("HEART");
+        div.getChildNodeList().get(1).setId("projectTypeLabel")
+            .addClass("link_selected");
+        div.getChildNodeList().get(2).addClass("list_opt");
+
+        String html = div.html();
 
         this.assertHtml(html, "selectBox");
     }

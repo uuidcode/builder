@@ -3,6 +3,7 @@ package uuidcode.builder.html;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -142,4 +143,36 @@ public class Node<T extends Node> {
         this.attributeList.add(Attribute.of("id", id));
         return (T) this;
     }
+
+    public T addClass(String className) {
+        for (Attribute attribute : attributeList) {
+            if (attribute.getName().equals("class")) {
+                boolean notMatched = attribute.getValueList()
+                    .stream()
+                    .noneMatch(a -> a.equals(className));
+
+                if (notMatched) {
+                    attribute.getValueList().add(className);
+                }
+            }
+        }
+
+        return (T) this;
+    }
+
+    public Node setType(String type) {
+        this.attributeList.add(Attribute.of("type", type));
+        return (T) this;
+    }
+
+    public Node setName(String name) {
+        this.attributeList.add(Attribute.of("name", name));
+        return (T) this;
+    }
+
+    public Node setValue(String value) {
+        this.attributeList.add(Attribute.of("value", value));
+        return (T) this;
+    }
+
 }

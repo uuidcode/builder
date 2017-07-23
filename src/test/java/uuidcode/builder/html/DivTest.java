@@ -5,6 +5,6 @@ import org.junit.Test;
 public class DivTest extends CoreTest {
     @Test
     public void test() {
-        assertHtml(Div.of().html(), "div");
+        assertHtml(Div.of().add(Text.of("abc")).html(), "div");
     }
 }

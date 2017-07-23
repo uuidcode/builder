@@ -27,7 +27,15 @@ public class HtmlBuilder {
         return Input.of();
     }
 
-    public static Span span() {
-        return Span.of();
+    public static Span span(Node... nodes) {
+        return Span.of().add(nodes);
+    }
+
+    public static Text text(String text) {
+        return Text.of(text);
+    }
+
+    public static Script script(Text... texts) {
+        return Script.of().add(texts);
     }
 }

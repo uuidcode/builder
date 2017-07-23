@@ -1,11 +1,14 @@
-<div>
-    <input>
-    <a><span></span></a>
-    <div>
-        <ul>
-            <li id="0"></li>
-            <li id="1"></li>
-            <li id="2"></li>
-        </ul>
-    </div>
+<div id="projectTypeContainer" class="opt_comm4">
+    <input type="hidden" name="projectType" id="projectType" value="HEART">
+    <a id="projectTypeLabel" class="link_selected">
+        하트
+        <span class="ico_comm"></span>
+    </a>
+    <ul class="list_opt">
+        <li><a id="projectType_null" class="link_option" href="javascript: COD.Utils.pickItemAtSelectBox('projectType', '전체', '')">전체</a></li>
+        <li><a id="projectType_PROJECT" class="link_option" href="javascript: COD.Utils.pickItemAtSelectBox('projectType', '일반', 'PROJECT')">일반</a></li>
+        <li><a id="projectType_HEART" class="link_option" href="javascript: COD.Utils.pickItemAtSelectBox('projectType', '하트', 'HEART')">하트</a></li>
+        <li><a id="projectType_SUBSCRIPTION" class="link_option" href="javascript: COD.Utils.pickItemAtSelectBox('projectType', '피플', 'SUBSCRIPTION')">피플</a></li>
+    </ul>
+    <script>COD.Utils.initSelectBox('#projectTypeContainer')</script>
 </div>
