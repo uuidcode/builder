@@ -145,16 +145,27 @@ public class Node<T extends Node> {
     }
 
     public T addClass(String className) {
-        for (Attribute attribute : attributeList) {
-            if (attribute.getName().equals("class")) {
-                boolean notMatched = attribute.getValueList()
-                    .stream()
-                    .noneMatch(a -> a.equals(className));
+        return this.addAttribute(Attribute.of("class", className));
+    }
 
-                if (notMatched) {
-                    attribute.getValueList().add(className);
-                }
+    public T addStyle(String style) {
+        return this.addAttribute(Attribute.of("style", style));
+    }
+
+    public T addAttribute(Attribute newAttribute) {
+        Optional<Attribute> matchedAttribute = this.attributeList.stream()
+            .filter(attribute -> attribute.getName().equals(newAttribute.getName()))
+            .findFirst();
+
+        if (matchedAttribute.isPresent()) {
+            List<String> valueList = matchedAttribute.get().getValueList();
+            String newValue = newAttribute.getValueList().get(0);
+
+            if (valueList.stream().noneMatch(v -> v.equals(newValue))) {
+                valueList.add(newValue);
             }
+        } else {
+            this.attributeList.add(newAttribute);
         }
 
         return (T) this;
@@ -172,6 +183,11 @@ public class Node<T extends Node> {
 
     public Node setValue(String value) {
         this.attributeList.add(Attribute.of("value", value));
+        return (T) this;
+    }
+
+    public Node setHref(String href) {
+        this.attributeList.add(Attribute.of("href", href));
         return (T) this;
     }
 

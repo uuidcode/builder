@@ -19,7 +19,7 @@ public class HtmlBuilderTest extends CoreTest {
     @Test
     public void test() {
         new HtmlBuilder();
-        assertHtml(div().html(), "div");
+        assertHtml(div(text("abc")).html(), "div");
     }
 
     @Test
@@ -85,12 +85,9 @@ public class HtmlBuilderTest extends CoreTest {
                 text("하트"),
                 span().addClass("ico_comm")
             ),
-            ul(
-                nameList.stream()
-                    .map(i -> li(a()).setId(i))
-                    .collect(Collectors.toList())
-            ),
-            script(text("Hello, World"))
+            ul(this.createLiList(nameList)),
+            script(text("var i = 'Hello, World!';"),
+                text("console.log(i);"))
         );
 
         div.setId("projectTypeContainer").addClass("opt_comm4");
@@ -99,12 +96,19 @@ public class HtmlBuilderTest extends CoreTest {
             .setName("projectType")
             .setId("projectType")
             .setValue("HEART");
+
         div.getChildNodeList().get(1).setId("projectTypeLabel")
             .addClass("link_selected");
         div.getChildNodeList().get(2).addClass("list_opt");
 
-        String html = div.html();
+        this.assertHtml(div.html(), "selectBox");
+    }
 
-        this.assertHtml(html, "selectBox");
+    private List<Node> createLiList(List<String> nameList) {
+        return nameList.stream()
+            .map(i -> a(text(i)).setId("type_" + i)
+                    .setHref("http://www.google.com?q=" + i))
+            .map(a -> li(a))
+            .collect(Collectors.toList());
     }
 }

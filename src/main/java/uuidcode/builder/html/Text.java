@@ -1,15 +1,10 @@
 package uuidcode.builder.html;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Text extends Node<Text> {
     private String text;
-
-    public String getText() {
-        return this.text;
-    }
 
     public Text setText(String text) {
         this.text = text;
