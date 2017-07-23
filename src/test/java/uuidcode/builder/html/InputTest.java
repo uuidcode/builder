@@ -1,13 +1,21 @@
 package uuidcode.builder.html;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uuidcode.builder.html.Input.of;
 
 import org.junit.Test;
 
-public class InputTest {
+public class InputTest extends CoreTest {
     @Test
     public void test() {
-        assertThat(of().getRequiresEndTag()).isFalse();
+        assertThat(Input.of().getRequiresEndTag()).isFalse();
+
+        String html = Input.of()
+            .setType("text")
+            .setName("phone")
+            .setValue("000-1111-2222")
+            .setDisabled(true)
+            .html();
+
+        this.assertHtml(html, "input");
     }
 }

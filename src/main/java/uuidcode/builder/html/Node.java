@@ -157,23 +157,31 @@ public class Node<T extends Node> {
         return this.addAttribute(Attribute.of("style", style));
     }
 
-    public Node setType(String type) {
+    public T setType(String type) {
         this.attributeList.add(Attribute.of("type", type));
         return (T) this;
     }
 
-    public Node setName(String name) {
+    public T setName(String name) {
         this.attributeList.add(Attribute.of("name", name));
         return (T) this;
     }
 
-    public Node setValue(String value) {
+    public T setValue(String value) {
         this.attributeList.add(Attribute.of("value", value));
         return (T) this;
     }
 
-    public Node setHref(String href) {
+    public T setHref(String href) {
         this.attributeList.add(Attribute.of("href", href));
+        return (T) this;
+    }
+
+    public Node setDisabled(boolean disabled) {
+        if (disabled) {
+            this.attributeList.add(Attribute.of("disabled"));
+        }
+
         return (T) this;
     }
 }
