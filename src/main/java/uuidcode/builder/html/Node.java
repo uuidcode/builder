@@ -64,17 +64,16 @@ public class Node<T extends Node> {
     }
 
     public String html() {
-        return this.contentList().stream()
-            .collect(Collectors.joining(System.lineSeparator()));
+        return Utils.joiningWithLineSeparator(this.contentList());
     }
 
     public List<String> contentList() {
         List<String> contentList = new ArrayList<>();
-        contentList.add("<" + this.tagName + this.attribute() + ">");
+        contentList.add(Utils.startTag(this.tagName + this.attribute()));
         contentList.addAll(this.getChildContentList());
 
         if (this.requiresEndTag) {
-            contentList.add("</" + this.tagName + ">");
+            contentList.add(Utils.endTag(this.tagName));
         }
 
         return this.shrink(contentList);
@@ -102,15 +101,11 @@ public class Node<T extends Node> {
     }
 
     private List<String> processIndent(List<String> list) {
-        if (this.childNodeList.size() <= 1) {
-            if (list.size() >= 3) {
-                return prependIndent(list);
-            }
-        } else {
-            return prependIndent(list);
+        if (this.childNodeList.size() <= 1 && list.size() < 3) {
+            return list;
         }
 
-        return list;
+        return prependIndent(list);
     }
 
     private List<String> prependIndent(List<String> list) {
@@ -139,6 +134,16 @@ public class Node<T extends Node> {
         return list;
     }
 
+    public T addAttribute(Attribute newAttribute) {
+        this.attributeList.stream()
+            .filter(attribute -> attribute.getName().equals(newAttribute.getName()))
+            .findFirst()
+            .map(attribute -> attribute.getValueSet().addAll(newAttribute.getValueSet()))
+            .orElseGet(() ->this.attributeList.add(newAttribute));
+
+        return (T) this;
+    }
+
     public Node setId(String id) {
         this.attributeList.add(Attribute.of("id", id));
         return (T) this;
@@ -150,25 +155,6 @@ public class Node<T extends Node> {
 
     public T addStyle(String style) {
         return this.addAttribute(Attribute.of("style", style));
-    }
-
-    public T addAttribute(Attribute newAttribute) {
-        Optional<Attribute> matchedAttribute = this.attributeList.stream()
-            .filter(attribute -> attribute.getName().equals(newAttribute.getName()))
-            .findFirst();
-
-        if (matchedAttribute.isPresent()) {
-            List<String> valueList = matchedAttribute.get().getValueList();
-            String newValue = newAttribute.getValueList().get(0);
-
-            if (valueList.stream().noneMatch(v -> v.equals(newValue))) {
-                valueList.add(newValue);
-            }
-        } else {
-            this.attributeList.add(newAttribute);
-        }
-
-        return (T) this;
     }
 
     public Node setType(String type) {
@@ -190,5 +176,4 @@ public class Node<T extends Node> {
         this.attributeList.add(Attribute.of("href", href));
         return (T) this;
     }
-
 }

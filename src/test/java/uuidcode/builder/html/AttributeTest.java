@@ -18,8 +18,8 @@ public class AttributeTest {
 
         assertThat(attribute.getName()).isEqualTo("id");
 
-        AssertList.of(attribute.getValueList())
-            .hasSize(1)
-            .satisfies(0, i -> i.equals("ABC"));
+        String[] values = attribute.getValueSet().toArray(new String[0]);
+        assertThat(values).hasSize(1);
+        assertThat(values[0]).isEqualTo("ABC");
     }
 }

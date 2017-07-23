@@ -1,12 +1,12 @@
 package uuidcode.builder.html;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Attribute {
     private String name;
-    private List<String> valueList = new ArrayList<>();
+    private Set<String> valueSet = new LinkedHashSet<>();
 
     public static Attribute of(String name) {
         return new Attribute().setName(name);
@@ -17,12 +17,12 @@ public class Attribute {
     }
 
     public Attribute addValue(String value) {
-        this.valueList.add(value);
+        this.valueSet.add(value);
         return this;
     }
 
-    public List<String> getValueList() {
-        return this.valueList;
+    public Set<String> getValueSet() {
+        return this.valueSet;
     }
 
     public String getName() {
@@ -35,13 +35,11 @@ public class Attribute {
     }
     
     public String toString() {
-        String value = this.valueList.stream()
-            .collect(Collectors.joining(" "));
-
-        if (this.valueList.size() == 0) {
+        if (this.valueSet.size() == 0) {
             return this.name;
         }
 
-        return this.name + "=\"" + value + "\"";
+        String value = Utils.joiningWithSpace(this.valueSet);
+        return this.name + "=" + Utils.wrapWithDoubleQuotation(value);
     }
 }
