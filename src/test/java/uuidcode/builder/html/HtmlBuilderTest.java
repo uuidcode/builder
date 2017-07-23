@@ -82,7 +82,7 @@ public class HtmlBuilderTest extends CoreTest {
         Div div = div(
             input(),
             a(
-                text("하트"),
+                text("heart"),
                 span().addClass("ico_comm")
             ),
             ul(this.createLiList(nameList)),
