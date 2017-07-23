@@ -1,7 +1,8 @@
-# builder
+# html builder
 
+## source
 ```java
- @Test
+@Test
 public void selectBox() {
     List<String> nameList = IntStream.range(0, 3)
         .mapToObj(String::valueOf)
@@ -32,7 +33,17 @@ public void selectBox() {
     this.assertHtml(div.html(), "selectBox");
 }
 
+private List<Node> createLiList(List<String> nameList) {
+    return nameList.stream()
+        .map(i -> a(text(i)).setId("type_" + i)
+                .setHref("http://www.google.com?q=" + i))
+        .map(a -> li(a))
+        .collect(Collectors.toList());
+}
+
 ```
+
+##result
 
 ```html
 <div id="projectTypeContainer" class="opt_comm4">
