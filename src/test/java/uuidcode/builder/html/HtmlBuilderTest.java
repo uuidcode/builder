@@ -1,6 +1,7 @@
 package uuidcode.builder.html;
 
 import static uuidcode.builder.html.HtmlBuilder.div;
+import static uuidcode.builder.html.HtmlBuilder.img;
 import static uuidcode.builder.html.HtmlBuilder.input;
 import static uuidcode.builder.html.HtmlBuilder.li;
 import static uuidcode.builder.html.HtmlBuilder.script;
@@ -125,5 +126,10 @@ public class HtmlBuilderTest extends CoreTest {
                     .setHref("http://www.google.com?q=" + i))
             .map(a -> li(a))
             .collect(Collectors.toList());
+    }
+
+    @Test
+    public void imageTag() {
+        this.assertHtml(img().setSrc("https://assets-cdn.github.com/images/modules/site/universe-logo.png").html(), "img");
     }
 }

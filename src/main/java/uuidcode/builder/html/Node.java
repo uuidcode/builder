@@ -3,7 +3,6 @@ package uuidcode.builder.html;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -182,6 +181,11 @@ public class Node<T extends Node> {
             this.attributeList.add(Attribute.of("disabled"));
         }
 
+        return (T) this;
+    }
+
+    public T setSrc(String src) {
+        this.attributeList.add(Attribute.of("src", src));
         return (T) this;
     }
 }

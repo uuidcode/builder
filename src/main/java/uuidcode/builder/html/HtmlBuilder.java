@@ -38,4 +38,8 @@ public class HtmlBuilder {
     public static Script script(Text... texts) {
         return Script.of().add(texts);
     }
+
+    public static Img img() {
+        return Img.of();
+    }
 }

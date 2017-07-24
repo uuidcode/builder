@@ -6,7 +6,9 @@
 
     <groupId>uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3</version>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -24,6 +26,34 @@
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
+        <bintray.repo>uuidcode/builder</bintray.repo>
+        <bintray.package>builder</bintray.package>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-uuidcode-builder</id>
+            <name>uuidcode-builder</name>
+            <url>https://api.bintray.com/maven/uuidcode/builder/builder/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
