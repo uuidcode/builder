@@ -1,12 +1,16 @@
 package com.github.uuidcode.builder.html;
 
 import static com.github.uuidcode.builder.html.HtmlBuilder.body;
+import static com.github.uuidcode.builder.html.HtmlBuilder.button;
 import static com.github.uuidcode.builder.html.HtmlBuilder.div;
+import static com.github.uuidcode.builder.html.HtmlBuilder.form;
 import static com.github.uuidcode.builder.html.HtmlBuilder.head;
 import static com.github.uuidcode.builder.html.HtmlBuilder.html;
 import static com.github.uuidcode.builder.html.HtmlBuilder.img;
 import static com.github.uuidcode.builder.html.HtmlBuilder.input;
+import static com.github.uuidcode.builder.html.HtmlBuilder.label;
 import static com.github.uuidcode.builder.html.HtmlBuilder.li;
+import static com.github.uuidcode.builder.html.HtmlBuilder.link;
 import static com.github.uuidcode.builder.html.HtmlBuilder.script;
 import static com.github.uuidcode.builder.html.HtmlBuilder.span;
 import static com.github.uuidcode.builder.html.HtmlBuilder.text;
@@ -146,5 +150,47 @@ public class HtmlBuilderTest extends CoreTest {
         ).html();
 
         this.assertHtml(html, "html");
+    }
+
+    @Test
+    public void bootstrap() {
+        String html = html(
+            head(
+                link().stylesheet().setHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"),
+                link().stylesheet().setHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"),
+                script().setSrc("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+            ),
+            body(
+                div(
+                    form(
+                        div(
+                            label(
+                                text("Email")
+                            ).addClass("col-sm-2", "control-label").setFor("inputEmail"),
+                            div(
+                                input().text().addClass("form-control").setId("inputEmail").setPlaceholder("Email")
+                            ).addClass("col-sm-10")
+                        ).addClass("form-group"),
+                        div(
+                            label(
+                                text("Password")
+                            ).addClass("col-sm-2", "control-label").setFor("inputPassword"),
+                            div(
+                                input().password().addClass("form-control").setId("inputPassword").setPlaceholder("Password")
+                            ).addClass("col-sm-10")
+                        ).addClass("form-group"),
+                        div(
+                            div(
+                                button(
+                                    text("Sing in")
+                                ).submit().addClass("btn", "btn-primary")
+                            ).addClass("col-sm-offset-2", "col-sm-10")
+                        ).addClass("form-group")
+                    ).addClass("form-horizontal")
+                ).addClass("panel-body")
+            )
+        ).html();
+
+        this.assertHtml(html, "bootstrap");
     }
 }

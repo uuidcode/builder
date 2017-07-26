@@ -54,4 +54,20 @@ public class HtmlBuilder {
     public static Body body(Node... nodes) {
         return Body.of().add(nodes);
     }
+
+    public static Link link(Node... nodes) {
+        return Link.of().add(nodes);
+    }
+
+    public static Form form(Node... nodes) {
+        return Form.of().add(nodes);
+    }
+
+    public static Label label(Node... nodes) {
+        return Label.of().add(nodes);
+    }
+
+    public static Button button(Node... nodes) {
+        return Button.of().add(nodes);
+    }
 }

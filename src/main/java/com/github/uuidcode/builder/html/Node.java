@@ -152,12 +152,25 @@ public class Node<T extends Node> {
         return this.addAttribute(Attribute.of("class", className));
     }
 
+    public T addClass(String... className) {
+        for (String name : className) {
+            this.addClass(name);
+        }
+
+        return (T) this;
+    }
+
     public T addStyle(String style) {
         return this.addAttribute(Attribute.of("style", style));
     }
 
     public T setType(String type) {
         this.attributeList.add(Attribute.of("type", type));
+        return (T) this;
+    }
+
+    public T setPlaceholder(String placeholder) {
+        this.attributeList.add(Attribute.of("placeholder", placeholder));
         return (T) this;
     }
 
@@ -174,6 +187,32 @@ public class Node<T extends Node> {
     public T setHref(String href) {
         this.attributeList.add(Attribute.of("href", href));
         return (T) this;
+    }
+
+    public T setRel(String rel) {
+        this.attributeList.add(Attribute.of("rel", rel));
+        return (T) this;
+    }
+
+    public T setFor(String value) {
+        this.attributeList.add(Attribute.of("for", value));
+        return (T) this;
+    }
+
+    public T stylesheet() {
+        return this.setRel("stylesheet");
+    }
+
+    public T password() {
+        return this.setType("password");
+    }
+
+    public T text() {
+        return this.setType("text");
+    }
+
+    public T submit() {
+        return this.setType("submit");
     }
 
     public Node setDisabled(boolean disabled) {
