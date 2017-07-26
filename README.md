@@ -1,4 +1,26 @@
 # html builder
+## source
+```java
+@Test
+public void htmlTag() {
+    String html = html(
+        head(),
+        body(
+            div(text("Hello, World!"))
+        )
+    ).html();
+
+    this.assertHtml(html, "html");
+}
+```
+
+### html result
+```html
+<html>
+    <head></head>
+    <body><div>Hello, World!</div></body>
+</html>
+```
 
 ## source
 ```java
