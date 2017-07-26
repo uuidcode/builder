@@ -85,6 +85,79 @@ private List<Node> createLiList(List<String> nameList) {
     </script>
 </div>
 ```
+
+## source
+
+```java
+@Test
+public void bootstrap() {
+    String html = html(
+        head(
+            link().stylesheet().setHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"),
+            link().stylesheet().setHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"),
+            script().setSrc("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+        ),
+        body(
+            div(
+                form(
+                    div(
+                        label(
+                            text("Email")
+                        ).addClass("col-sm-2", "control-label").setFor("inputEmail"),
+                        div(
+                            input().text().addClass("form-control").setId("inputEmail").setPlaceholder("Email")
+                        ).addClass("col-sm-10")
+                    ).addClass("form-group"),
+                    div(
+                        label(
+                            text("Password")
+                        ).addClass("col-sm-2", "control-label").setFor("inputPassword"),
+                        div(
+                            input().password().addClass("form-control").setId("inputPassword").setPlaceholder("Password")
+                        ).addClass("col-sm-10")
+                    ).addClass("form-group"),
+                    div(
+                        div(
+                            button(
+                                text("Sing in")
+                            ).submit().addClass("btn", "btn-primary")
+                        ).addClass("col-sm-offset-2", "col-sm-10")
+                    ).addClass("form-group")
+                ).addClass("form-horizontal")
+            ).addClass("panel-body")
+        )
+    ).html();
+
+    this.assertHtml(html, "bootstrap");
+}
+```
+
+## html result
+```html
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"></link>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="inputEmail">Email</label>
+                    <div class="col-sm-10"><input type="text" class="form-control" id="inputEmail" placeholder="Email"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="inputPassword">Password</label>
+                    <div class="col-sm-10"><input type="password" class="form-control" id="inputPassword" placeholder="Password"></div>
+                </div>
+                <div class="form-group"><div class="col-sm-offset-2 col-sm-10"><button type="submit" class="btn btn-primary">Sing in</button></div></div>
+            </form>
+        </div>
+    </body>
+</html>
+```
+
 ## coverage
 
 ![coverage](image/coverage.png)
