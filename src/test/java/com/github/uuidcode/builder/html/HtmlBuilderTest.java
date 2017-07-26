@@ -1,6 +1,9 @@
 package com.github.uuidcode.builder.html;
 
+import static com.github.uuidcode.builder.html.HtmlBuilder.body;
 import static com.github.uuidcode.builder.html.HtmlBuilder.div;
+import static com.github.uuidcode.builder.html.HtmlBuilder.head;
+import static com.github.uuidcode.builder.html.HtmlBuilder.html;
 import static com.github.uuidcode.builder.html.HtmlBuilder.img;
 import static com.github.uuidcode.builder.html.HtmlBuilder.input;
 import static com.github.uuidcode.builder.html.HtmlBuilder.li;
@@ -131,5 +134,17 @@ public class HtmlBuilderTest extends CoreTest {
     @Test
     public void imageTag() {
         this.assertHtml(img().setSrc("https://assets-cdn.github.com/images/modules/site/universe-logo.png").html(), "img");
+    }
+
+    @Test
+    public void htmlTag() {
+        String html = html(
+            head(),
+            body(
+                div(text("Hello, World!"))
+            )
+        ).html();
+
+        this.assertHtml(html, "html");
     }
 }

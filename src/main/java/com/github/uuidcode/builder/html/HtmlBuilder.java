@@ -42,4 +42,16 @@ public class HtmlBuilder {
     public static Img img() {
         return Img.of();
     }
+
+    public static Html html(Node... nodes) {
+        return Html.of().add(nodes);
+    }
+
+    public static Head head(Node... nodes) {
+        return Head.of().add(nodes);
+    }
+
+    public static Body body(Node... nodes) {
+        return Body.of().add(nodes);
+    }
 }
