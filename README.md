@@ -98,33 +98,33 @@ public void bootstrap() {
             script().setSrc("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
         ),
         body(
-            div(
-                form(
-                    div(
-                        label(
+            div().addClass("panel-body").add(
+                form().addClass("form-horizontal").add(
+                    div().addClass("form-group").add(
+                        label().addClass("col-sm-2", "control-label").setFor("inputEmail").add(
                             text("Email")
-                        ).addClass("col-sm-2", "control-label").setFor("inputEmail"),
+                        ),
                         div(
                             input().text().addClass("form-control").setId("inputEmail").setPlaceholder("Email")
                         ).addClass("col-sm-10")
-                    ).addClass("form-group"),
-                    div(
-                        label(
+                    ),
+                    div().addClass("form-group").add(
+                        label().addClass("col-sm-2", "control-label").setFor("inputPassword").add(
                             text("Password")
-                        ).addClass("col-sm-2", "control-label").setFor("inputPassword"),
-                        div(
+                        ),
+                        div().addClass("col-sm-10").add(
                             input().password().addClass("form-control").setId("inputPassword").setPlaceholder("Password")
-                        ).addClass("col-sm-10")
-                    ).addClass("form-group"),
-                    div(
-                        div(
-                            button(
+                        )
+                    ),
+                    div().addClass("form-group").add(
+                        div().addClass("col-sm-offset-2", "col-sm-10").add(
+                            button().submit().addClass("btn", "btn-primary").add(
                                 text("Sing in")
-                            ).submit().addClass("btn", "btn-primary")
-                        ).addClass("col-sm-offset-2", "col-sm-10")
-                    ).addClass("form-group")
-                ).addClass("form-horizontal")
-            ).addClass("panel-body")
+                            )
+                        )
+                    )
+                )
+            )
         )
     ).html();
 
