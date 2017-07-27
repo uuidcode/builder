@@ -179,4 +179,25 @@ public void url() {
 
     assertThat(url).isEqualTo("/project/stage/1024?mode=test&size=3");
 }
+
+@Test
+public void wrap() {
+    String result = StringBuilder.of()
+        .add("1")
+        .add(2)
+        .wrapDoubleQuote()
+        .joiningCommaAndSpace();
+
+    assertThat(result)
+        .isEqualTo("\"1\", \"2\"");
+
+    result = StringBuilder.of()
+        .add(1)
+        .add(2)
+        .wrapSingleQuote()
+        .joiningComma();
+
+    assertThat(result)
+        .isEqualTo("'1','2'");
+}
 ```

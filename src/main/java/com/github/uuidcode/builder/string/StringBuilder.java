@@ -20,6 +20,8 @@ public class StringBuilder {
     public static final String AMPERSAND = "&";
     public static final String NEW_LINE = System.lineSeparator();
     public static final String EQUAL = "=";
+    public static final String DOUBLE_QUOTE = "\"";
+    public static final String SINGLE_QUOTE = "'";
 
     private Stream.Builder<String> builder = Stream.builder();
     private List<IntermediateOperation> intermediateOperationList = new ArrayList<>();
@@ -95,55 +97,55 @@ public class StringBuilder {
         return this.joining("");
     }
 
-    public String joiningWithComma() {
+    public String joiningComma() {
         return this.joining(COMMA);
     }
 
-    public String joiningWithCommaAndSpace() {
+    public String joiningCommaAndSpace() {
         return this.joining(COMMA + SPACE);
     }
 
-    public String joiningWithCommaAndNewLine() {
+    public String joiningCommaAndNewLine() {
         return this.joining(COMMA + NEW_LINE);
     }
 
-    public String joiningWithSpace() {
+    public String joiningSpace() {
         return this.joining(SPACE);
     }
 
-    public String joiningWithUnderscore() {
+    public String joiningUnderscore() {
         return this.joining(UNDERSCORE);
     }
 
-    public String joiningWithHyphen() {
+    public String joiningHyphen() {
         return this.joining(HYPHEN);
     }
 
-    public String joiningWithVerticalBar() {
+    public String joiningVerticalBar() {
         return this.joining(VERTICAL_BAR);
     }
 
-    public String joiningWithSlash() {
+    public String joiningSlash() {
         return this.joining(SLASH);
     }
 
-    public String joiningWithQuestionMark() {
+    public String joiningQuestionMark() {
         return this.joining(QUESTION_MARK);
     }
 
-    public String joiningWithDot() {
+    public String joiningDot() {
         return this.joining(DOT);
     }
 
-    public String joiningWithAmpersand() {
+    public String joiningAmpersand() {
         return this.joining(AMPERSAND);
     }
 
-    public String joiningWithNewLine() {
+    public String joiningNewLine() {
         return this.joining(NEW_LINE);
     }
 
-    public String joiningWithEqual() {
+    public String joiningEqual() {
         return this.joining(EQUAL);
     }
 
@@ -246,5 +248,14 @@ public class StringBuilder {
     public StringBuilder addEqual() {
         return this.add(EQUAL);
     }
+
+    public StringBuilder wrapDoubleQuote() {
+        return this.map(i -> DOUBLE_QUOTE + i + DOUBLE_QUOTE);
+    }
+
+    public StringBuilder wrapSingleQuote() {
+        return this.map(i -> SINGLE_QUOTE + i + SINGLE_QUOTE);
+    }
+
 }
 

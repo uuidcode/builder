@@ -95,43 +95,43 @@ public class StringBuilderTest {
             .isEqualTo("12");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithComma()).isEqualTo("1,2");
+            .joiningComma()).isEqualTo("1,2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithCommaAndSpace()).isEqualTo("1, 2");
+            .joiningCommaAndSpace()).isEqualTo("1, 2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithCommaAndNewLine()).isEqualTo("1," + NEW_LINE + "2");
+            .joiningCommaAndNewLine()).isEqualTo("1," + NEW_LINE + "2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithSpace()).isEqualTo("1 2");
+            .joiningSpace()).isEqualTo("1 2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithUnderscore()).isEqualTo("1_2");
+            .joiningUnderscore()).isEqualTo("1_2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithHyphen()).isEqualTo("1-2");
+            .joiningHyphen()).isEqualTo("1-2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithVerticalBar()).isEqualTo("1|2");
+            .joiningVerticalBar()).isEqualTo("1|2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithSlash()).isEqualTo("1/2");
+            .joiningSlash()).isEqualTo("1/2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithQuestionMark()).isEqualTo("1?2");
+            .joiningQuestionMark()).isEqualTo("1?2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithEqual()).isEqualTo("1=2");
+            .joiningEqual()).isEqualTo("1=2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithDot()).isEqualTo("1.2");
+            .joiningDot()).isEqualTo("1.2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithAmpersand()).isEqualTo("1&2");
+            .joiningAmpersand()).isEqualTo("1&2");
 
         assertThat(StringBuilder.of().add("1").add("2")
-            .joiningWithNewLine()).isEqualTo("1" + NEW_LINE + "2");
+            .joiningNewLine()).isEqualTo("1" + NEW_LINE + "2");
 
         assertThat(StringBuilder.of().add("1").add("2")
             .joiningAndThen().add("3").joining()).isEqualTo("123");
@@ -191,5 +191,26 @@ public class StringBuilderTest {
             .joining();
         
         assertThat(url).isEqualTo("/project/stage/1024?mode=test&size=3");
+    }
+
+    @Test
+    public void wrap() {
+        String result = StringBuilder.of()
+            .add("1")
+            .add(2)
+            .wrapDoubleQuote()
+            .joiningCommaAndSpace();
+
+        assertThat(result)
+            .isEqualTo("\"1\", \"2\"");
+
+        result = StringBuilder.of()
+            .add(1)
+            .add(2)
+            .wrapSingleQuote()
+            .joiningComma();
+
+        assertThat(result)
+            .isEqualTo("'1','2'");
     }
 }
