@@ -158,6 +158,25 @@ public void bootstrap() {
 </html>
 ```
 
-## coverage
+## StringBuilder
+```java
+@Test
+public void url() {
+    String url = StringBuilder.of("")
+        .add("project")
+        .add("stage")
+        .add("1024")
+        .joiningSlashAndThen()
+        .addQuestionMark()
+        .add("mode")
+        .addEqual()
+        .add("test")
+        .addAmpersand()
+        .add("size")
+        .addEqual()
+        .add(3)
+        .joining();
 
-![coverage](image/coverage.png)
+    assertThat(url).isEqualTo("/project/stage/1024?mode=test&size=3");
+}
+```
