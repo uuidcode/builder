@@ -93,26 +93,15 @@ public class HtmlBuilderTest extends CoreTest {
     }
 
     private void internalSelectBox(List<String> nameList, String filename) {
-        Div div = div(
-            input(),
-            a(
+        Div div = div().setId("projectTypeContainer").addClass("opt_comm4").add(
+            input().hidden().setName("projectType").setId("projectType").setValue("HEART"),
+            a().setId("projectTypeLabel").addClass("link_selected").add(
                 text("heart"),
                 span().addClass("ico_comm")
             ),
             this.createContentTag(nameList),
-            script(text("var i = 'Hello, World!';"),
-                text("console.log(i);"))
+            script(text("var i = 'Hello, World!';"), text("console.log(i);"))
         );
-
-        div.setId("projectTypeContainer").addClass("opt_comm4");
-        div.getChildNodeList().get(0)
-            .setType("hidden")
-            .setName("projectType")
-            .setId("projectType")
-            .setValue("HEART");
-
-        div.getChildNodeList().get(1).setId("projectTypeLabel")
-            .addClass("link_selected");
 
         this.assertHtml(div.html(), filename);
     }

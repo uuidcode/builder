@@ -24,43 +24,28 @@ public void htmlTag() {
 
 ## complex source
 ```java
-@Test
-public void selectBox() {
-    List<String> nameList = IntStream.range(0, 3)
-        .mapToObj(String::valueOf)
-        .collect(Collectors.toList());
-
-    Div div = div(
-        input(),
-        a(
+private void internalSelectBox(List<String> nameList, String filename) {
+    Div div = div().setId("projectTypeContainer").addClass("opt_comm4").add(
+        input().hidden().setName("projectType").setId("projectType").setValue("HEART"),
+        a().setId("projectTypeLabel").addClass("link_selected").add(
             text("heart"),
             span().addClass("ico_comm")
         ),
-        ul(this.createLiList(nameList)),
-        script(text("var i = 'Hello, World!';"),
-            text("console.log(i);"))
+        this.createContentTag(nameList),
+        script(text("var i = 'Hello, World!';"), text("console.log(i);"))
     );
 
-    div.setId("projectTypeContainer").addClass("opt_comm4");
-    div.getChildNodeList().get(0)
-        .setType("hidden")
-        .setName("projectType")
-        .setId("projectType")
-        .setValue("HEART");
-
-    div.getChildNodeList().get(1).setId("projectTypeLabel")
-        .addClass("link_selected");
-    div.getChildNodeList().get(2).addClass("list_opt");
-
-    this.assertHtml(div.html(), "selectBox");
+    this.assertHtml(div.html(), filename);
 }
 
-private List<Node> createLiList(List<String> nameList) {
-    return nameList.stream()
-        .map(i -> a(text(i)).setId("type_" + i)
-                .setHref("http://www.google.com?q=" + i))
-        .map(a -> li(a))
-        .collect(Collectors.toList());
+private Node createContentTag(List<String> nameList) {
+    Ul ul = ul(this.createLiTagList(nameList)).addClass("list_opt");
+
+    if (nameList.size() > 3) {
+        return div(ul).addClass("box_opt");
+    } else {
+        return ul;
+    }
 }
 
 ```

@@ -143,7 +143,7 @@ public class Node<T extends Node> {
         return (T) this;
     }
 
-    public Node setId(String id) {
+    public T setId(String id) {
         this.attributeList.add(Attribute.of("id", id));
         return (T) this;
     }
@@ -213,6 +213,10 @@ public class Node<T extends Node> {
 
     public T submit() {
         return this.setType("submit");
+    }
+
+    public T hidden() {
+        return this.setType("hidden");
     }
 
     public Node setDisabled(boolean disabled) {
