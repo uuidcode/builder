@@ -256,6 +256,5 @@ public class StringBuilder {
     public StringBuilder wrapSingleQuote() {
         return this.map(i -> SINGLE_QUOTE + i + SINGLE_QUOTE);
     }
-
 }
 
