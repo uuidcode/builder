@@ -6,8 +6,35 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
     <packaging>jar</packaging>
+
+    <name>builder</name>
+    <description>some useful builder</description>
+    <url>https://github.com/uuidcode/builder</url>
+
+    <scm>
+        <connection>https://github.com/uuidcode/builder.git</connection>
+        <developerConnection>https://github.com/uuidcode/builder.git</developerConnection>
+        <url>https://github.com/uuidcode/builder</url>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>uuidcode</name>
+            <email>uuidcode@gmail.com</email>
+            <organization>uuidcode</organization>
+            <organizationUrl>https://github.com/uuidcode</organizationUrl>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
