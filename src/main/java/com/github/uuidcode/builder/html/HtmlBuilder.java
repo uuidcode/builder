@@ -70,4 +70,28 @@ public class HtmlBuilder {
     public static Button button(Node... nodes) {
         return Button.of().add(nodes);
     }
+
+    public static Table table(Node... nodes) {
+        return Table.of().add(nodes);
+    }
+
+    public static Thead thead(Node... nodes) {
+        return Thead.of().add(nodes);
+    }
+
+    public static Tbody tbody(Node... nodes) {
+        return Tbody.of().add(nodes);
+    }
+
+    public static Th th(Node... nodes) {
+        return Th.of().add(nodes);
+    }
+
+    public static Tr tr(Node... nodes) {
+        return Tr.of().add(nodes);
+    }
+
+    public static Td td(Node... nodes) {
+        return Td.of().add(nodes);
+    }
 }

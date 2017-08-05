@@ -13,7 +13,13 @@ import static com.github.uuidcode.builder.html.HtmlBuilder.li;
 import static com.github.uuidcode.builder.html.HtmlBuilder.link;
 import static com.github.uuidcode.builder.html.HtmlBuilder.script;
 import static com.github.uuidcode.builder.html.HtmlBuilder.span;
+import static com.github.uuidcode.builder.html.HtmlBuilder.table;
+import static com.github.uuidcode.builder.html.HtmlBuilder.tbody;
+import static com.github.uuidcode.builder.html.HtmlBuilder.td;
 import static com.github.uuidcode.builder.html.HtmlBuilder.text;
+import static com.github.uuidcode.builder.html.HtmlBuilder.th;
+import static com.github.uuidcode.builder.html.HtmlBuilder.thead;
+import static com.github.uuidcode.builder.html.HtmlBuilder.tr;
 import static com.github.uuidcode.builder.html.HtmlBuilder.ul;
 import static com.github.uuidcode.builder.html.HtmlBuilder.a;
 
@@ -181,5 +187,33 @@ public class HtmlBuilderTest extends CoreTest {
         ).html();
 
         this.assertHtml(html, "bootstrap");
+    }
+
+    @Test
+    public void tableTag() {
+        String html = table(
+            thead(
+                tr(
+                    th(
+                        text("first")
+                    ),
+                    th(
+                        text("second")
+                    )
+                )
+            ),
+            tbody(
+                tr(
+                    td(
+                        text("1")
+                    ),
+                    td(
+                        text("2")
+                    )
+                )
+            )
+        ).html();
+
+        this.assertHtml(html, "table");
     }
 }
