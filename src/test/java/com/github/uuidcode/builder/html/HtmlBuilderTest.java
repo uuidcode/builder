@@ -6,6 +6,8 @@ import static com.github.uuidcode.builder.html.HtmlBuilder.br;
 import static com.github.uuidcode.builder.html.HtmlBuilder.button;
 import static com.github.uuidcode.builder.html.HtmlBuilder.del;
 import static com.github.uuidcode.builder.html.HtmlBuilder.div;
+import static com.github.uuidcode.builder.html.HtmlBuilder.dl;
+import static com.github.uuidcode.builder.html.HtmlBuilder.dt;
 import static com.github.uuidcode.builder.html.HtmlBuilder.em;
 import static com.github.uuidcode.builder.html.HtmlBuilder.form;
 import static com.github.uuidcode.builder.html.HtmlBuilder.h1;
@@ -18,11 +20,13 @@ import static com.github.uuidcode.builder.html.HtmlBuilder.head;
 import static com.github.uuidcode.builder.html.HtmlBuilder.hr;
 import static com.github.uuidcode.builder.html.HtmlBuilder.html;
 import static com.github.uuidcode.builder.html.HtmlBuilder.i;
+import static com.github.uuidcode.builder.html.HtmlBuilder.iframe;
 import static com.github.uuidcode.builder.html.HtmlBuilder.img;
 import static com.github.uuidcode.builder.html.HtmlBuilder.input;
 import static com.github.uuidcode.builder.html.HtmlBuilder.label;
 import static com.github.uuidcode.builder.html.HtmlBuilder.li;
 import static com.github.uuidcode.builder.html.HtmlBuilder.link;
+import static com.github.uuidcode.builder.html.HtmlBuilder.ol;
 import static com.github.uuidcode.builder.html.HtmlBuilder.option;
 import static com.github.uuidcode.builder.html.HtmlBuilder.p;
 import static com.github.uuidcode.builder.html.HtmlBuilder.script;
@@ -264,9 +268,26 @@ public class HtmlBuilderTest extends CoreTest {
             select(
                 option(text("test1")),
                 option(text("test2"))
-            )
+            ),
+            iframe()
         ).html();
 
         this.assertHtml(html, "form");
+    }
+
+    @Test
+    public void listTag() {
+        String html = body(
+            ol(
+                li(text("1")),
+                li(text("2"))
+            ),
+            dl(
+                dt(text("1")),
+                dt(text("2"))
+            )
+        ).html();
+
+        this.assertHtml(html, "list");
     }
 }

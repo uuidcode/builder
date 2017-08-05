@@ -162,4 +162,21 @@ public class HtmlBuilder {
     public static Option option(Node... nodes) {
         return Option.of().add(nodes);
     }
+
+    public static Ol ol(Node... nodes) {
+        return Ol.of().add(nodes);
+    }
+
+    public static Dt dt(Node... nodes) {
+        return Dt.of().add(nodes);
+    }
+
+    public static Dl dl(Node... nodes) {
+        return Dl.of().add(nodes);
+    }
+
+    public static Iframe iframe(Node... nodes) {
+        return Iframe.of().add(nodes);
+    }
 }
+
