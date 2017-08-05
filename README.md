@@ -152,6 +152,52 @@ public void bootstrap() {
 </html>
 ```
 
+## table source
+```java
+@Test
+public void tableTag() {
+    String html = table(
+        thead(
+            tr(
+                th(
+                    text("first")
+                ),
+                th(
+                    text("second")
+                )
+            )
+        ),
+        tbody(
+            tr(
+                td(
+                    text("1")
+                ),
+                td(
+                    text("2")
+                )
+            )
+        )
+    ).html();
+```
+
+## table html result
+```html
+<table>
+    <thead>
+        <tr>
+            <th>first</th>
+            <th>second</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+        </tr>
+    </tbody>
+</table>
+```
+
 ## StringBuilder
 ```java
 @Test
