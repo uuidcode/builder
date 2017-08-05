@@ -1,3 +1,12 @@
+# maven
+```xml
+<dependency>
+    <groupId>com.github.uuidcode</groupId>
+    <artifactId>builder</artifactId>
+    <version>0.0.13</version>
+</dependency>
+```
+
 # html builder
 ## simple source
 ```java
