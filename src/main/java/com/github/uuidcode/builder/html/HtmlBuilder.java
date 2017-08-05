@@ -154,4 +154,12 @@ public class HtmlBuilder {
     public static Del del(Node... nodes) {
         return Del.of().add(nodes);
     }
+
+    public static Select select(Node... nodes) {
+        return Select.of().add(nodes);
+    }
+
+    public static Option option(Node... nodes) {
+        return Option.of().add(nodes);
+    }
 }

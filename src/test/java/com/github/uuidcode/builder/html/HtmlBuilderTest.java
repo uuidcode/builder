@@ -23,8 +23,10 @@ import static com.github.uuidcode.builder.html.HtmlBuilder.input;
 import static com.github.uuidcode.builder.html.HtmlBuilder.label;
 import static com.github.uuidcode.builder.html.HtmlBuilder.li;
 import static com.github.uuidcode.builder.html.HtmlBuilder.link;
+import static com.github.uuidcode.builder.html.HtmlBuilder.option;
 import static com.github.uuidcode.builder.html.HtmlBuilder.p;
 import static com.github.uuidcode.builder.html.HtmlBuilder.script;
+import static com.github.uuidcode.builder.html.HtmlBuilder.select;
 import static com.github.uuidcode.builder.html.HtmlBuilder.span;
 import static com.github.uuidcode.builder.html.HtmlBuilder.strong;
 import static com.github.uuidcode.builder.html.HtmlBuilder.table;
@@ -253,5 +255,18 @@ public class HtmlBuilderTest extends CoreTest {
         ).html();
 
         this.assertHtml(html, "head");
+    }
+
+    @Test
+    public void formTag() {
+        String html = form(
+            button(text("test")),
+            select(
+                option(text("test1")),
+                option(text("test2"))
+            )
+        ).html();
+
+        this.assertHtml(html, "form");
     }
 }
