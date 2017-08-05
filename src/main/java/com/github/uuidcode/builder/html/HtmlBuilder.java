@@ -94,4 +94,64 @@ public class HtmlBuilder {
     public static Td td(Node... nodes) {
         return Td.of().add(nodes);
     }
+
+    public static H1 h1(Node... nodes) {
+        return H1.of().add(nodes);
+    }
+
+    public static H2 h2(Node... nodes) {
+        return H2.of().add(nodes);
+    }
+
+    public static H3 h3(Node... nodes) {
+        return H3.of().add(nodes);
+    }
+
+    public static H4 h4(Node... nodes) {
+        return H4.of().add(nodes);
+    }
+
+    public static H5 h5(Node... nodes) {
+        return H5.of().add(nodes);
+    }
+
+    public static H6 h6(Node... nodes) {
+        return H6.of().add(nodes);
+    }
+
+    public static Br br(Node... nodes) {
+        return Br.of().add(nodes);
+    }
+
+    public static P p(Node... nodes) {
+        return P.of().add(nodes);
+    }
+
+    public static Hr hr(Node... nodes) {
+        return Hr.of().add(nodes);
+    }
+
+    public static Textarea textarea(Node... nodes) {
+        return Textarea.of().add(nodes);
+    }
+
+    public static Blockquote blockquote(Node... nodes) {
+        return Blockquote.of().add(nodes);
+    }
+
+    public static Strong strong(Node... nodes) {
+        return Strong.of().add(nodes);
+    }
+
+    public static Em em(Node... nodes) {
+        return Em.of().add(nodes);
+    }
+
+    public static I i(Node... nodes) {
+        return I.of().add(nodes);
+    }
+
+    public static Del del(Node... nodes) {
+        return Del.of().add(nodes);
+    }
 }

@@ -1,22 +1,37 @@
 package com.github.uuidcode.builder.html;
 
+import static com.github.uuidcode.builder.html.HtmlBuilder.blockquote;
 import static com.github.uuidcode.builder.html.HtmlBuilder.body;
+import static com.github.uuidcode.builder.html.HtmlBuilder.br;
 import static com.github.uuidcode.builder.html.HtmlBuilder.button;
+import static com.github.uuidcode.builder.html.HtmlBuilder.del;
 import static com.github.uuidcode.builder.html.HtmlBuilder.div;
+import static com.github.uuidcode.builder.html.HtmlBuilder.em;
 import static com.github.uuidcode.builder.html.HtmlBuilder.form;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h1;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h2;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h3;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h4;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h5;
+import static com.github.uuidcode.builder.html.HtmlBuilder.h6;
 import static com.github.uuidcode.builder.html.HtmlBuilder.head;
+import static com.github.uuidcode.builder.html.HtmlBuilder.hr;
 import static com.github.uuidcode.builder.html.HtmlBuilder.html;
+import static com.github.uuidcode.builder.html.HtmlBuilder.i;
 import static com.github.uuidcode.builder.html.HtmlBuilder.img;
 import static com.github.uuidcode.builder.html.HtmlBuilder.input;
 import static com.github.uuidcode.builder.html.HtmlBuilder.label;
 import static com.github.uuidcode.builder.html.HtmlBuilder.li;
 import static com.github.uuidcode.builder.html.HtmlBuilder.link;
+import static com.github.uuidcode.builder.html.HtmlBuilder.p;
 import static com.github.uuidcode.builder.html.HtmlBuilder.script;
 import static com.github.uuidcode.builder.html.HtmlBuilder.span;
+import static com.github.uuidcode.builder.html.HtmlBuilder.strong;
 import static com.github.uuidcode.builder.html.HtmlBuilder.table;
 import static com.github.uuidcode.builder.html.HtmlBuilder.tbody;
 import static com.github.uuidcode.builder.html.HtmlBuilder.td;
 import static com.github.uuidcode.builder.html.HtmlBuilder.text;
+import static com.github.uuidcode.builder.html.HtmlBuilder.textarea;
 import static com.github.uuidcode.builder.html.HtmlBuilder.th;
 import static com.github.uuidcode.builder.html.HtmlBuilder.thead;
 import static com.github.uuidcode.builder.html.HtmlBuilder.tr;
@@ -215,5 +230,28 @@ public class HtmlBuilderTest extends CoreTest {
         ).html();
 
         this.assertHtml(html, "table");
+    }
+
+    @Test
+    public void headTag() {
+        String html = body(
+            h1(text("h1")),
+            h2(text("h2")),
+            h3(text("h3")),
+            h4(text("h4")),
+            h5(text("h5")),
+            h6(text("h6")),
+            hr(),
+            blockquote(text("test")),
+            p(text("test")),
+            br(),
+            textarea(text("test")),
+            del(text("test")),
+            i(text("test")),
+            strong(text("test")),
+            em(text("test"))
+        ).html();
+
+        this.assertHtml(html, "head");
     }
 }
