@@ -6,7 +6,7 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.15-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>builder</name>
@@ -50,16 +50,14 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <bintray.repo>uuidcode/builder</bintray.repo>
-        <bintray.package>builder</bintray.package>
-    </properties>
-
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
-            <id>bintray-uuidcode-builder</id>
-            <name>uuidcode-builder</name>
-            <url>https://api.bintray.com/maven/uuidcode/builder/builder/;publish=1</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -117,6 +115,17 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
             </plugin>
         </plugins>
     </build>
