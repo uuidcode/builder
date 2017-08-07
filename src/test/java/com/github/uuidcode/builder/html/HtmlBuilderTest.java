@@ -4,6 +4,7 @@ import static com.github.uuidcode.builder.html.HtmlBuilder.blockquote;
 import static com.github.uuidcode.builder.html.HtmlBuilder.body;
 import static com.github.uuidcode.builder.html.HtmlBuilder.br;
 import static com.github.uuidcode.builder.html.HtmlBuilder.button;
+import static com.github.uuidcode.builder.html.HtmlBuilder.code;
 import static com.github.uuidcode.builder.html.HtmlBuilder.dd;
 import static com.github.uuidcode.builder.html.HtmlBuilder.del;
 import static com.github.uuidcode.builder.html.HtmlBuilder.div;
@@ -287,7 +288,8 @@ public class HtmlBuilderTest extends CoreTest {
                 dt(text("1")),
                 dt(text("2")),
                 dd(text("3"))
-            )
+            ),
+            code(text("Hello, World!"))
         ).html();
 
         this.assertHtml(html, "list");

@@ -10,9 +10,16 @@ import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 
 public class CoreTest {
-    public void assertHtml(String html, String name) {
-        File file = new File(CoreTest.class.getClassLoader().getResource(name + ".html").getFile());
+    public void assertHtml(String content, String name) {
+        assertFile("html", content, name, ".html");
+    }
 
+    public void assertJs(String content, String name) {
+        assertFile("js", content, name, ".js");
+    }
+
+    private void assertFile(String prefix, String html, String name, String ext) {
+        File file = new File(CoreTest.class.getClassLoader().getResource(prefix + "/" + name + ext).getFile());
         List<String> lines = null;
 
         try {

@@ -179,6 +179,10 @@ public class HtmlBuilder {
         return Dd.of().add(nodes);
     }
 
+    public static Code code(Node... nodes) {
+        return Code.of().add(nodes);
+    }
+
     public static Iframe iframe(Node... nodes) {
         return Iframe.of().add(nodes);
     }
