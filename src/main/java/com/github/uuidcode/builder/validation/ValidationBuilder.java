@@ -3,6 +3,14 @@ package com.github.uuidcode.builder.validation;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * 1
+ * 2
+ * 3
+ * 4
+ * 5
+ * 6
+ */
 public class ValidationBuilder<T> {
     private T t;
     private boolean enabled = true;
