@@ -4,7 +4,7 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.17</version>
+    <version>0.0.19</version>
     <packaging>jar</packaging>
 
     <name>builder</name>
@@ -15,7 +15,7 @@
         <connection>scm:git:git://github.com/uuidcode/builder.git</connection>
         <developerConnection>scm:git:ssh://github.com:uuidcode/builder.git</developerConnection>
         <url>https://github.com/uuidcode/builder/tree/master</url>
-      <tag>builder-0.0.15</tag>
+      <tag>builder-0.0.19</tag>
   </scm>
 
     <licenses>
@@ -46,6 +46,62 @@
             <artifactId>assertj-core</artifactId>
             <version>3.8.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.2</version>
         </dependency>
     </dependencies>
 
