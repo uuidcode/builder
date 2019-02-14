@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -296,8 +297,8 @@ public class RequestBuilder {
         }
     }
 
-    public ResultSet executeAndGetResultSet() {
-        return this.executeAndGetObject(ResultSet.class);
+    public Map executeAndGetMap() {
+        return this.executeAndGetObject(Map.class);
     }
 
     public <T> T executeAndGetObject(Class<T> tClass) {
