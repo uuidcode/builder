@@ -115,6 +115,10 @@ public class CoreUtil {
     }
 
     public static String format(Date date) {
+        if (date == null) {
+            return null;
+        }
+
         FastDateFormat format = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
