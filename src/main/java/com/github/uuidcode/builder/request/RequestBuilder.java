@@ -329,4 +329,8 @@ public class RequestBuilder {
     public <T> List<T> executeAndGetList(Class<T> tClass) {
         return executeAndGetObject(new GenericOf<>(List.class, tClass));
     }
+
+    public List<Map> executeAndGetMapList() {
+        return executeAndGetObject(new GenericOf<>(List.class, Map.class));
+    }
 }
