@@ -11,6 +11,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StringStream {
+    public static final String LINE_FEED = "\n";
+    public static final String EMPTY = "";
     private Stream.Builder<String> builder = Stream.builder();
     private List<IntermediateOperation> intermediateOperationList = new ArrayList<>();
     private Function<String, String> finisher;
@@ -89,6 +91,10 @@ public class StringStream {
 
     public StringStream addSpace() {
         return this.add(CoreUtil.space());
+    }
+
+    public StringStream addEmpty() {
+        return this.add(EMPTY);
     }
 
     public StringStream addWithWrappedBrace(String name) {
@@ -307,6 +313,10 @@ public class StringStream {
 
     public String joiningWithNewLine() {
         return this.joining(CoreUtil.lineSeparator());
+    }
+
+    public String joiningWithLineFeed() {
+        return this.joining(LINE_FEED);
     }
 
     public StringStream joiningAndThen() {

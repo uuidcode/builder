@@ -7,6 +7,7 @@ import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
 
 import static com.github.uuidcode.util.CoreUtil.templateInline;
+import static com.github.uuidcode.util.StringStream.LINE_FEED;
 
 public class Pojo {
     private List<Property> propertyList;
@@ -24,11 +25,18 @@ public class Pojo {
         return this;
     }
 
-    public String generate() {
-        String template = "private {{type}} {{name}}";
+    public String generate(String className) {
+        String fieldContent = this.propertyList.stream()
+            .map(Property::createField)
+            .collect(Collectors.joining(LINE_FEED));
 
-        return this.propertyList.stream()
-            .map(property -> templateInline(template, property))
-            .collect(Collectors.joining("\n"));
+        String methodContent = this.propertyList.stream()
+            .map(property -> property.createSetGetMethod(className))
+            .collect(Collectors.joining(LINE_FEED));
+
+        return StringStream.of()
+            .add(fieldContent)
+            .add(methodContent)
+            .joiningWithLineFeed();
     }
 }

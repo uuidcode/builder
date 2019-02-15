@@ -31,7 +31,7 @@ public class PojoTest {
 
         String content = Pojo.of()
             .setPropertyList(propertyList)
-            .generate();
+            .generate("Test");
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> test content: \n{}", content);

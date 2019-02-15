@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class CoreUtil {
+    public static final String SPACE4 = "    ";
     protected static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 
     private static DateTimeParser[] dateTimeParsers = {
@@ -550,5 +551,9 @@ public class CoreUtil {
         } catch (Throwable t) {
             throw toRuntimeException(t);
         }
+    }
+
+    public static String appendSpaces4(String content) {
+        return SPACE4 + content;
     }
 }
