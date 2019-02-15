@@ -227,7 +227,7 @@ public class RequestBuilder {
             return this;
         }
 
-        return this.authenticationBasic("Basic " + token);
+        return this.authentication("Basic " + token);
     }
 
     public RequestBuilder referer(String referer) {
