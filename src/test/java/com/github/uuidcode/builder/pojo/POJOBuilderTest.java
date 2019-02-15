@@ -17,7 +17,7 @@ public class POJOBuilderTest {
     @Test
     public void test() {
         Set<Map.Entry<String, Object>> entrySet =
-            POJOBuilder.of("{abc: \"123\", def: 123}")
+            PojoBuilder.of("{abc: \"123\", def: 123}")
             .getEntrySet();
 
         List<Property> propertyList = entrySet.stream()

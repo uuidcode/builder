@@ -7,6 +7,10 @@ public class Property {
     private Object value;
     private String type;
 
+    public static Property of() {
+        return new Property();
+    }
+
     public static Property of(Map.Entry<String, Object> entry) {
         Property property = new Property()
             .setName(entry.getKey())

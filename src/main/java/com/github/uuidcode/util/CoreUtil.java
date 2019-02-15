@@ -257,7 +257,7 @@ public class CoreUtil {
         return gson.fromJson(json, clazz);
     }
 
-    public static Map fromJsonToMap(String json) {
+    public static Map<String, Object> fromJsonToMap(String json) {
         return gson.fromJson(json, Map.class);
     }
 
