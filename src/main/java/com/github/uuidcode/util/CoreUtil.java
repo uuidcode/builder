@@ -31,6 +31,9 @@ import org.joda.time.format.DateTimeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import com.github.uuidcode.adapter.DateTypeAdapter;
 import com.github.uuidcode.adapter.LongTypeAdapter;
 import com.github.uuidcode.adapter.StringTypeAdapter;
@@ -516,5 +519,32 @@ public class CoreUtil {
         }
 
         return "";
+    }
+
+    public static Handlebars getHandlebars() {
+        TemplateLoader templateLoader = new ClassPathTemplateLoader();
+        templateLoader.setPrefix("/templates");
+        templateLoader.setSuffix(".hbs");
+        return new Handlebars(templateLoader);
+    }
+
+    public static RuntimeException toRuntimeException(Throwable throwable) {
+        return new RuntimeException(throwable);
+    }
+
+    public static String templateInline(String text, Object data) {
+        try {
+            return getHandlebars().compileInline(text).apply(data);
+        } catch (Throwable t) {
+            throw toRuntimeException(t);
+        }
+    }
+
+    public static String template(String view, Object data) {
+        try {
+            return getHandlebars().compile(view).apply(data);
+        } catch (Throwable t) {
+            throw toRuntimeException(t);
+        }
     }
 }

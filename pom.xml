@@ -4,7 +4,7 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.25</version>
+    <version>0.0.29</version>
     <packaging>jar</packaging>
 
     <name>builder</name>
@@ -15,7 +15,7 @@
         <connection>scm:git:git://github.com/uuidcode/builder.git</connection>
         <developerConnection>scm:git:ssh://github.com:uuidcode/builder.git</developerConnection>
         <url>https://github.com/uuidcode/builder/tree/master</url>
-      <tag>builder-0.0.25</tag>
+      <tag>builder-0.0.29</tag>
   </scm>
 
     <licenses>
@@ -102,6 +102,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
             <version>4.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>4.1.2</version>
         </dependency>
     </dependencies>
 
