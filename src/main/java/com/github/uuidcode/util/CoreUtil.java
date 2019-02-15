@@ -257,6 +257,10 @@ public class CoreUtil {
         return gson.fromJson(json, clazz);
     }
 
+    public static Map fromJsonToMap(String json) {
+        return gson.fromJson(json, Map.class);
+    }
+
     public static List<Map> fromJsonToList(String json) {
         return gson.fromJson(json, new GenericOf<>(List.class, Map.class));
     }
