@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -213,6 +212,22 @@ public class RequestBuilder {
         }
 
         return this;
+    }
+
+    public RequestBuilder authentication(String authentication) {
+        if (authentication != null) {
+            this.addHeader("Authorization", authentication);
+        }
+
+        return this;
+    }
+
+    public RequestBuilder authenticationBasic(String token) {
+        if (token == null) {
+            return this;
+        }
+
+        return this.authenticationBasic("Basic " + token);
     }
 
     public RequestBuilder referer(String referer) {
