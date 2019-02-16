@@ -28,4 +28,16 @@ public class POJOBuilderTest {
             logger.debug(">>> test propertyList: {}", toJson(propertyList));
         }
     }
+
+    @Test
+    public void build() {
+        String content = PojoBuilder.of("{abc: \"123\", def: 123, created: \"2019-01-01\"}")
+            .getPojo()
+            .setClassName("Test")
+            .generate();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> build conten: {}", content);
+        }
+    }
 }

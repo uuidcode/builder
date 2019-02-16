@@ -141,8 +141,9 @@ public class CoreUtil {
             long time = new Date().parse(text);
             return new Date(time);
         } catch (Throwable t) {
-            throw new RuntimeException(t);
         }
+
+        return null;
     }
 
     public static boolean isEmpty(String value) {

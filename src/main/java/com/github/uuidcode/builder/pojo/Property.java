@@ -1,5 +1,7 @@
 package com.github.uuidcode.builder.pojo;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
@@ -7,15 +9,11 @@ import com.github.uuidcode.util.CoreUtil;
 public class Property {
     private String name;
     private Object value;
-    private PropertyType propertyType;
+    private String propertyType;
     private String className;
 
     public boolean isDate() {
-        return this.propertyType == PropertyType.DATE;
-    }
-
-    public String getJavaType() {
-        return this.propertyType.getJavaType();
+        return this.propertyType.equals("Date");
     }
 
     public String getClassName() {
@@ -32,37 +30,66 @@ public class Property {
     }
 
     public static Property of(Map.Entry<String, Object> entry) {
-        return Property.of()
+        Property property = Property.of()
             .setName(entry.getKey())
-            .setValue(entry.getValue())
-            .setPropertyType(getType(entry.getValue()));
+            .setValue(entry.getValue());
+
+        String type = getType(property);
+
+        return property.setPropertyType(type);
     }
 
-    public static PropertyType getType(Object object) {
+    public static String getType(Property property) {
+        Object object = property.getValue();
+        String name = property.getName();
+
         if (object == null) {
-            return PropertyType.STRING;
+            return String.class.getSimpleName();
         }
 
-        String type = object.getClass().getSimpleName();
+        if (object instanceof String) {
+            Date date = CoreUtil.parseDateTime(object.toString());
 
-        PropertyType propertyType = CoreUtil.lookupEnum(PropertyType.class, type);
-
-        if (propertyType == null) {
-            if (Double.class.getSimpleName().equals(type)) {
-                return PropertyType.LONG;
+            if (date != null) {
+                return Date.class.getSimpleName();
             }
 
-            return PropertyType.STRING;
+            return String.class.getSimpleName();
+        } else if (object instanceof Boolean) {
+            return Boolean.class.getSimpleName();
+        } else if (object instanceof Double) {
+            return Long.class.getSimpleName();
+        } else if (object instanceof Map) {
+            return PojoBuilder.getJavaType(name);
+        } else if (object instanceof List) {
+            return getListType((List) object, name);
         }
 
-        return propertyType;
+        throw new RuntimeException("not support type: " + object.getClass().getName());
     }
 
-    public PropertyType getPropertyType() {
+    public static String getListType(List object, String name) {
+        Object itemObject = null;
+
+        if (object.size() > 0) {
+            itemObject = object.get(0);
+        }
+
+        Property itemProperty = Property.of()
+            .setName(name)
+            .setValue(itemObject);
+
+        String itemType = getType(itemProperty);
+        itemType = PojoBuilder.getJavaType(itemType);
+
+        return "List<" + itemType + ">";
+    }
+
+    public String getPropertyType() {
         return this.propertyType;
     }
 
-    public Property setPropertyType(PropertyType propertyType) {
+    public Property setPropertyType(String propertyType) {
         this.propertyType = propertyType;
         return this;
     }

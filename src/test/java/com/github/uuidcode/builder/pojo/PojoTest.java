@@ -16,17 +16,17 @@ public class PojoTest {
     public void test() {
         List<Property> propertyList = new ArrayList<Property>() {{
             this.add(Property.of()
-                .setPropertyType(PropertyType.LONG)
+                .setPropertyType(Long.class.getSimpleName())
                 .setName("name")
                 .setValue("Hello"));
 
             this.add(Property.of()
-                .setPropertyType(PropertyType.STRING)
+                .setPropertyType(String.class.getSimpleName())
                 .setName("title")
                 .setValue("world"));
 
             this.add(Property.of()
-                .setPropertyType(PropertyType.DATE)
+                .setPropertyType(Date.class.getSimpleName())
                 .setName("createDate")
                 .setValue(new Date()));
         }};

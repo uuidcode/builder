@@ -1,5 +1,6 @@
 package com.github.uuidcode.builder.pojo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,19 @@ import com.github.uuidcode.util.CoreUtil;
 
 public class PojoBuilder {
     private String json;
+
+    public static Map<String, String> typeConverter = new HashMap<String, String>() {{
+        this.put("issues", "issue");
+    }};
+
+    public static String getJavaType(String name) {
+        if (name.endsWith("List")) {
+            CoreUtil.toFirstCharUpperCase(name.substring(0, name.length() - 4));
+        }
+
+        String type = typeConverter.getOrDefault(name, name);
+        return CoreUtil.toFirstCharUpperCase(type);
+    }
 
     public String getJson() {
         return this.json;
