@@ -60,7 +60,16 @@ public class Property {
         } else if (object instanceof Double) {
             return Long.class.getSimpleName();
         } else if (object instanceof Map) {
-            return PojoBuilder.getJavaType(name);
+            String javaType = PojoBuilder.getJavaType(name);
+
+            String content = PojoBuilder.of()
+                .getPojo((Map<String, Object>) object)
+                .setClassName(javaType)
+                .generate();
+
+            System.out.println(content);
+
+            return javaType;
         } else if (object instanceof List) {
             return getListType((List) object, name);
         }

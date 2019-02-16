@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import com.github.uuidcode.util.StringStream;
+
 import static com.github.uuidcode.util.CoreUtil.toJson;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,13 +33,24 @@ public class POJOBuilderTest {
 
     @Test
     public void build() {
-        String content = PojoBuilder.of("{abc: \"123\", def: 123, created: \"2019-01-01\"}")
+        String json = StringStream.of()
+            .add("{")
+            .add("abc: '123',")
+            .add("def: 123, ")
+            .add("created: '2019-01-01',")
+            .add("person: {name: 'hello', items: [{id: 37}]},")
+            .add("issues: [{id: 33, created: '2019-01-01', book: {name: 'hello', empty: false, pageList: [{id: 37}]}}]")
+            .add("}")
+            .joiningWithLineFeed()
+            .replaceAll("'", "\"");
+
+        String content = PojoBuilder.of(json)
             .getPojo()
             .setClassName("Test")
             .generate();
 
         if (logger.isDebugEnabled()) {
-            logger.debug(">>> build conten: {}", content);
+            logger.debug(">>> build content: {}", content);
         }
     }
 }

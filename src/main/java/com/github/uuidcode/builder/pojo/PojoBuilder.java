@@ -18,7 +18,7 @@ public class PojoBuilder {
 
     public static String getJavaType(String name) {
         if (name.endsWith("List")) {
-            CoreUtil.toFirstCharUpperCase(name.substring(0, name.length() - 4));
+            name = CoreUtil.toFirstCharUpperCase(name.substring(0, name.length() - 4));
         }
 
         String type = typeConverter.getOrDefault(name, name);
@@ -35,17 +35,18 @@ public class PojoBuilder {
     }
 
     public static PojoBuilder of(String json) {
-        return new PojoBuilder().setJson(json);
+        return of().setJson(json);
+    }
+
+    public static PojoBuilder of() {
+        return new PojoBuilder();
     }
 
     public Set<Entry<String, Object>> getEntrySet() {
         Map<String, Object> map = CoreUtil.fromJsonToMap(this.json);
-        return this.getEntrySet(map);
-    }
-
-    public Set<Entry<String, Object>> getEntrySet(Map<String, Object> map) {
         return map.entrySet();
     }
+
 
     public List<Property> getPropertyList() {
         Set<Entry<String, Object>> entrySet = this.getEntrySet();
@@ -60,6 +61,16 @@ public class PojoBuilder {
 
     public Pojo getPojo() {
         List<Property> propertyList = this.getPropertyList();
+        return Pojo.of().setPropertyList(propertyList);
+    }
+
+    public Pojo getPojo(Set<Entry<String, Object>> entrySet) {
+        List<Property> propertyList = this.getPropertyList(entrySet);
+        return Pojo.of().setPropertyList(propertyList);
+    }
+
+    public Pojo getPojo(Map<String, Object> map) {
+        List<Property> propertyList = this.getPropertyList(map.entrySet());
         return Pojo.of().setPropertyList(propertyList);
     }
 
