@@ -1,3 +1,7 @@
+{{~#if hasDateType}}
+import java.util.Date;
+{{~/if}}
+
 public class {{{className}}} {
     {{~#each propertyList}}
     private {{{javaType}}} {{{name}}}

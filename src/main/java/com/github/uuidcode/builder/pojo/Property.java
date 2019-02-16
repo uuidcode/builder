@@ -10,6 +10,10 @@ public class Property {
     private PropertyType propertyType;
     private String className;
 
+    public boolean isDate() {
+        return this.propertyType == PropertyType.DATE;
+    }
+
     public String getJavaType() {
         return this.propertyType.getJavaType();
     }

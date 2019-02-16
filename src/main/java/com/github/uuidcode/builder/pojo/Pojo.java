@@ -8,6 +8,11 @@ public class Pojo {
     private List<Property> propertyList;
     private String className;
 
+    public boolean getHasDateType() {
+        return this.propertyList.stream()
+            .anyMatch(Property::isDate);
+    }
+
     public String getClassName() {
         return this.className;
     }

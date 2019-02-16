@@ -1,6 +1,7 @@
 package com.github.uuidcode.builder.pojo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,6 +24,11 @@ public class PojoTest {
                 .setPropertyType(PropertyType.STRING)
                 .setName("title")
                 .setValue("world"));
+
+            this.add(Property.of()
+                .setPropertyType(PropertyType.DATE)
+                .setName("createDate")
+                .setValue(new Date()));
         }};
 
         String content = Pojo.of()
