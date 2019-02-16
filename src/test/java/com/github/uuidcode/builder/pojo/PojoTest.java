@@ -6,10 +6,6 @@ import java.util.List;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import com.github.uuidcode.util.CoreUtil;
-
-import static com.github.uuidcode.util.CoreUtil.asList;
-import static org.junit.Assert.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PojoTest {
@@ -19,23 +15,23 @@ public class PojoTest {
     public void test() {
         List<Property> propertyList = new ArrayList<Property>() {{
             this.add(Property.of()
-                .setType("Long")
+                .setPropertyType(PropertyType.LONG)
                 .setName("name")
                 .setValue("Hello"));
 
             this.add(Property.of()
-                .setType("String")
+                .setPropertyType(PropertyType.STRING)
                 .setName("title")
                 .setValue("world"));
         }};
 
         String content = Pojo.of()
             .setPropertyList(propertyList)
-            .generate("Test");
+            .setClassName("Test")
+            .generate();
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> test content: \n{}", content);
         }
     }
-
 }

@@ -1,16 +1,21 @@
 package com.github.uuidcode.builder.pojo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.github.uuidcode.util.CoreUtil;
-import com.github.uuidcode.util.StringStream;
-
-import static com.github.uuidcode.util.CoreUtil.templateInline;
-import static com.github.uuidcode.util.StringStream.LINE_FEED;
 
 public class Pojo {
     private List<Property> propertyList;
+    private String className;
+
+    public String getClassName() {
+        return this.className;
+    }
+
+    public Pojo setClassName(String className) {
+        this.className = className;
+        return this;
+    }
 
     public static Pojo of() {
         return new Pojo();
@@ -25,18 +30,7 @@ public class Pojo {
         return this;
     }
 
-    public String generate(String className) {
-        String fieldContent = this.propertyList.stream()
-            .map(Property::createField)
-            .collect(Collectors.joining(LINE_FEED));
-
-        String methodContent = this.propertyList.stream()
-            .map(property -> property.createSetGetMethod(className))
-            .collect(Collectors.joining(LINE_FEED));
-
-        return StringStream.of()
-            .add(fieldContent)
-            .add(methodContent)
-            .joiningWithLineFeed();
+    public String generate() {
+        return CoreUtil.template("pojo", this);
     }
 }

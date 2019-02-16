@@ -1,0 +1,21 @@
+public class {{{className}}} {
+    {{~#each propertyList}}
+    private {{{javaType}}} {{{name}}}
+    {{~/each}}
+
+    public static {{{className}}} of() {
+        return new {{{className}}}();
+    }
+
+    {{~#each propertyList}}
+
+    public {{{../className}}} {{{setMethodName}}}({{{javaType}}} {{{name}}}) {
+        this.{{{name}}} = {{{name}}};
+        return this;
+    }
+
+    public {{{../className}}} {{{getMethodName}}}() {
+        return this.{{{name}}};
+    }
+    {{~/each}}
+}

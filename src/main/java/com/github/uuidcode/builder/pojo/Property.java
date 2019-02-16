@@ -1,20 +1,18 @@
 package com.github.uuidcode.builder.pojo;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.github.uuidcode.util.CoreUtil;
-import com.github.uuidcode.util.StringStream;
-
-import static com.github.uuidcode.util.CoreUtil.SPACE4;
-import static com.github.uuidcode.util.CoreUtil.templateInline;
-import static com.github.uuidcode.util.StringStream.LINE_FEED;
 
 public class Property {
     private String name;
     private Object value;
-    private String type;
+    private PropertyType propertyType;
     private String className;
+
+    public String getJavaType() {
+        return this.propertyType.getJavaType();
+    }
 
     public String getClassName() {
         return this.className;
@@ -30,33 +28,38 @@ public class Property {
     }
 
     public static Property of(Map.Entry<String, Object> entry) {
-        Property property = new Property()
+        return Property.of()
             .setName(entry.getKey())
             .setValue(entry.getValue())
-            .setType(getType(entry.getValue()));
-
-        if (Double.class.getSimpleName().equals(property.getType())) {
-            property.setType(Long.class.getSimpleName());
-            property.setValue(((Double) property.getValue()).longValue());
-        }
-
-        return property;
+            .setPropertyType(getType(entry.getValue()));
     }
 
-    public static String getType(Object object) {
+    public static PropertyType getType(Object object) {
         if (object == null) {
-            return String.class.getSimpleName();
+            return PropertyType.STRING;
         }
 
-        return object.getClass().getSimpleName();
+        String type = object.getClass().getSimpleName();
+
+        PropertyType propertyType = CoreUtil.lookupEnum(PropertyType.class, type);
+
+        if (propertyType == null) {
+            if (Double.class.getSimpleName().equals(type)) {
+                return PropertyType.LONG;
+            }
+
+            return PropertyType.STRING;
+        }
+
+        return propertyType;
     }
 
-    public String getType() {
-        return this.type;
+    public PropertyType getPropertyType() {
+        return this.propertyType;
     }
 
-    public Property setType(String type) {
-        this.type = type;
+    public Property setPropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
         return this;
     }
     public Object getValue() {
@@ -82,44 +85,5 @@ public class Property {
 
     public String getSetMethodName() {
         return "set" + CoreUtil.toFirstCharUpperCase(this.name);
-    }
-
-    public String createSetMethod(String className) {
-        this.setClassName(className);
-
-        String template = StringStream.of()
-            .add("public {{className}} {{setMethodName}}({{field}}) {")
-            .add("    this.{{name}} = {{name}};")
-            .add("    return this;")
-            .add("}")
-            .map(CoreUtil::appendSpaces4)
-            .joiningWithLineFeed();
-
-        return CoreUtil.templateInline(template, this);
-    }
-
-    public String createGetMethod() {
-        String template = StringStream.of()
-            .add("public {{type}} {{getMethodName}}() {")
-            .add("    return this.{{name}};")
-            .add("}")
-            .map(CoreUtil::appendSpaces4)
-            .joiningWithLineFeed();
-
-        return CoreUtil.templateInline(template, this);
-    }
-
-    public String createSetGetMethod(String className) {
-        return StringStream.of()
-            .addEmpty()
-            .add(this.createSetMethod(className))
-            .addEmpty()
-            .add(this.createGetMethod())
-            .joiningWithLineFeed();
-    }
-
-    public String createField() {
-        String template = SPACE4 + "private {{type}} {{name}}";
-        return CoreUtil.templateInline(template, this);
     }
 }

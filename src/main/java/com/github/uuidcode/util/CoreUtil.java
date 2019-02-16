@@ -556,4 +556,16 @@ public class CoreUtil {
     public static String appendSpaces4(String content) {
         return SPACE4 + content;
     }
+
+    /**
+     * http://stackoverflow.com/questions/2418729/best-practice-to-look-up-java-enum
+     */
+    public static <E extends Enum<E>> E lookupEnum(Class<E> enumClass, String id) {
+        try {
+            return Enum.valueOf(enumClass, id.toUpperCase());
+        } catch (Exception e) {
+        }
+
+        return null;
+    }
 }
