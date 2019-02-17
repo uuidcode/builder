@@ -572,6 +572,23 @@ public class CoreUtil {
         return null;
     }
 
+    public static List<String> splitList(String text, String delimiter) {
+        if (text == null) {
+            return new ArrayList<>();
+        }
+
+        return asList(text.split(delimiter));
+    }
+
+
+    public static List<String> splitListWithNewLine(String text) {
+        return splitList(text, "(\r\n|\r|\n|\n\r)");
+    }
+
+    public static List<String> splitListWithSpace(String text) {
+        return splitList(text, "\\s");
+    }
+
     public static String getClipboard() {
         try {
             return Toolkit.getDefaultToolkit()
@@ -583,6 +600,5 @@ public class CoreUtil {
         }
 
         return null;
-
     }
 }

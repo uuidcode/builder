@@ -24,4 +24,13 @@ public class PojoBuilderTest {
             .setTargetDirectory("test")
             .build();
     }
+
+    @Test
+    public void db() {
+        PojoBuilder.of()
+            .setClassName("Payload")
+            .setSchema(CoreUtil.getClipboard())
+            .setTargetDirectory("test")
+            .build();
+    }
 }

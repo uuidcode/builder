@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.util.CoreUtil.underscoreToLowerCamel;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Pojo {
@@ -80,23 +81,42 @@ public class Pojo {
     }
 
     private List<Pojo> build(List<Pojo> pojoList) {
-        this.propertyList = this.map.entrySet()
-            .stream()
-            .filter(PojoBuilder::isAvailableField)
-            .map(Property::of)
-            .collect(Collectors.toList());
+        boolean propertyType = this.propertyList != null;
+
+        if (propertyType) {
+            this.propertyList = this.propertyList
+                .stream()
+                .filter(property -> PojoBuilder.isAvailableField(property.getName()))
+                .map(property -> {
+                    String name = property.getName();
+                    name = name.toLowerCase();
+                    return property.setName(underscoreToLowerCamel(name));
+                })
+                .collect(Collectors.toList());
+        } else {
+            this.propertyList = this.map.entrySet()
+                .stream()
+                .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
+                .map(Property::of)
+                .collect(Collectors.toList());
+        }
 
         pojoList.add(Pojo.of()
             .setPropertyList(this.propertyList)
             .setClassName(this.className));
 
+        if (propertyType) {
+            return pojoList;
+        }
+
         this.propertyList.stream()
             .filter(Property::getNewType)
             .forEach(property -> {
-                String propertyType = property.getType();
+                String type = property.getType();
+
                 Pojo.of()
                     .setPojoList(pojoList)
-                    .setClassName(propertyType)
+                    .setClassName(type)
                     .setMap((Map<String, Object>) property.getValue())
                     .build(pojoList);
             });
@@ -106,7 +126,7 @@ public class Pojo {
 
     public List<Pojo> build() {
         List<Pojo> pojoList = new ArrayList<>();
-        build(pojoList);
+        this.build(pojoList);
         return pojoList;
     }
 

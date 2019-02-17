@@ -7,10 +7,10 @@ import java.util.Map;
 import com.github.uuidcode.util.CoreUtil;
 
 public class Property {
-    private final static String TYPE_BOOLEAN = "Boolean";
-    private final static String TYPE_STRING = "String";
-    private final static String TYPE_LONG = "Long";
-    private final static String TYPE_DATE = "Date";
+    public final static String TYPE_BOOLEAN = "Boolean";
+    public final static String TYPE_STRING = "String";
+    public final static String TYPE_LONG = "Long";
+    public final static String TYPE_DATE = "Date";
 
     private String name;
     private Object value;
@@ -19,7 +19,11 @@ public class Property {
     private boolean newType;
 
     public String getJavaType() {
-        return CoreUtil.templateInline("List<{{{type}}}>", this);
+        if (this.isList) {
+            return CoreUtil.templateInline("List<{{{type}}}>", this);
+        }
+
+        return this.type;
     }
 
     public boolean getNewType() {

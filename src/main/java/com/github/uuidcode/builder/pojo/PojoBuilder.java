@@ -2,9 +2,10 @@ package com.github.uuidcode.builder.pojo;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
@@ -19,10 +20,11 @@ public class PojoBuilder {
     public static Set<String> includedFieldSet = new HashSet<>();
     public static Set<String> excludedFieldSet = new HashSet<>();
 
-    private String json;
     private String className;
     private String targetDirectory;
     private String packageName;
+    private Map<String, Object> map;
+    private List<Property> propertyList;
 
     public String getPackageName() {
         return this.packageName;
@@ -37,12 +39,10 @@ public class PojoBuilder {
         return this.targetDirectory;
     }
 
-    public static boolean isAvailableField(Entry<String, Object> entry) {
+    public static boolean isAvailableField(String name) {
         if (includedFieldSet.isEmpty() && excludedFieldSet.isEmpty()) {
             return true;
         }
-
-        String name = entry.getKey();
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> isAvailableField includedFieldSet: {}", CoreUtil.toJson(includedFieldSet));
@@ -75,12 +75,48 @@ public class PojoBuilder {
         return this;
     }
 
-    public String getJson() {
-        return this.json;
+    public PojoBuilder setJson(String json) {
+        this.map = CoreUtil.fromJsonToMap(json);
+        return this;
     }
 
-    public PojoBuilder setJson(String json) {
-        this.json = json;
+    public PojoBuilder setSchema(String schema) {
+        this.propertyList = CoreUtil.splitListWithNewLine(schema)
+            .stream()
+            .map(line -> {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(">>> setSchema line: {}", CoreUtil.toJson(line));
+                }
+
+                line = line.trim();
+                List<String> itemList = CoreUtil.splitListWithSpace(line);
+                String type = itemList.get(1);
+
+                if (type.startsWith("int")) {
+                    type = Property.TYPE_LONG;
+                } else if (type.startsWith("bigint")) {
+                    type = Property.TYPE_LONG;
+                } else if (type.startsWith("varbinary")) {
+                    type = Property.TYPE_STRING;
+                } else if (type.startsWith("enum")) {
+                    type = Property.TYPE_STRING;
+                } else if (type.startsWith("varchar")) {
+                    type = Property.TYPE_STRING;
+                } else if (type.startsWith("char")) {
+                    type = Property.TYPE_STRING;
+                } else if (type.startsWith("timestamp")) {
+                    type = Property.TYPE_DATE;
+                } else {
+                    type = Property.TYPE_LONG;
+                }
+
+                return Property.of()
+                    .setName(itemList.get(0).replaceAll("`", ""))
+                    .setType(type)
+                    .setIsList(false);
+            })
+            .collect(Collectors.toList());
+
         return this;
     }
 
@@ -113,9 +149,14 @@ public class PojoBuilder {
     }
 
     public void build() {
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> build propertyList: {}", CoreUtil.toJson(propertyList));
+        }
+
         Pojo.of()
             .setClassName(this.className)
-            .setMap(CoreUtil.fromJsonToMap(this.json))
+            .setMap(this.map)
+            .setPropertyList(this.propertyList)
             .build()
             .forEach(pojo -> pojo.generateAndSave(this.targetDirectory));
     }
