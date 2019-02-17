@@ -112,7 +112,7 @@ public class PojoBuilder {
         return new PojoBuilder();
     }
 
-    public void buildPojo() {
+    public void build() {
         Pojo.of()
             .setClassName(this.className)
             .setMap(CoreUtil.fromJsonToMap(this.json))

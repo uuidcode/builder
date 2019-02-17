@@ -1,5 +1,7 @@
 package com.github.uuidcode.util;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -568,5 +570,19 @@ public class CoreUtil {
         }
 
         return null;
+    }
+
+    public static String getClipboard() {
+        try {
+            return Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .getData(DataFlavor.stringFlavor)
+                .toString();
+        } catch (Throwable t) {
+
+        }
+
+        return null;
+
     }
 }

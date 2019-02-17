@@ -2,6 +2,8 @@ package com.github.uuidcode.builder.pojo;
 
 import org.junit.Test;
 
+import com.github.uuidcode.util.CoreUtil;
+
 public class PojoBuilderTest {
     @Test
     public void test() {
@@ -11,6 +13,15 @@ public class PojoBuilderTest {
             .setTargetDirectory("test")
             .addNameConvert("issues", "issue")
             .addExcludeField("itemList")
-            .buildPojo();
+            .build();
+    }
+
+    @Test
+    public void clipboard() {
+        PojoBuilder.of()
+            .setClassName("Payload")
+            .setJson(CoreUtil.getClipboard())
+            .setTargetDirectory("test")
+            .build();
     }
 }
