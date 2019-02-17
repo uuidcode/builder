@@ -5,12 +5,46 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
+import com.github.uuidcode.util.StringStream;
 
 public class Property {
+    private final static String TYPE_BOOLEAN = "Boolean";
+    private final static String TYPE_STRING = "String";
+    private final static String TYPE_LONG = "Long";
+    private final static String TYPE_DATE = "Date";
+
     private String name;
     private Object value;
     private String propertyType;
     private String className;
+    private boolean isList;
+    private boolean newType;
+
+    public String getJavaType() {
+        return StringStream.of()
+            .add(this.isList, "List<")
+            .add(this.propertyType)
+            .add(this.isList, ">")
+            .joining();
+    }
+
+    public boolean getNewType() {
+        return this.newType;
+    }
+
+    public Property setNewType(boolean newType) {
+        this.newType = newType;
+        return this;
+    }
+
+    public boolean getIsList() {
+        return this.isList;
+    }
+
+    public Property setIsList(boolean isList) {
+        this.isList = isList;
+        return this;
+    }
 
     public boolean isDate() {
         return this.propertyType.equals("Date");
@@ -34,50 +68,43 @@ public class Property {
             .setName(entry.getKey())
             .setValue(entry.getValue());
 
-        String type = getType(property);
-
-        return property.setPropertyType(type);
+        return processType(property);
     }
 
-    public static String getType(Property property) {
+    public static Property processType(Property property) {
         Object object = property.getValue();
         String name = property.getName();
 
         if (object == null) {
-            return String.class.getSimpleName();
+            return property.setPropertyType(TYPE_STRING);
         }
 
         if (object instanceof String) {
             Date date = CoreUtil.parseDateTime(object.toString());
 
             if (date != null) {
-                return Date.class.getSimpleName();
+                return property.setPropertyType(TYPE_DATE);
             }
 
-            return String.class.getSimpleName();
+            return property.setPropertyType(TYPE_STRING);
         } else if (object instanceof Boolean) {
-            return Boolean.class.getSimpleName();
+            return property.setPropertyType(TYPE_BOOLEAN);
         } else if (object instanceof Double) {
-            return Long.class.getSimpleName();
+            return property.setPropertyType(TYPE_LONG);
         } else if (object instanceof Map) {
-            String javaType = PojoBuilder.getJavaType(name);
-
-            String content = PojoBuilder.of()
-                .getPojo((Map<String, Object>) object)
-                .setClassName(javaType)
-                .generate();
-
-            System.out.println(content);
-
-            return javaType;
+            return property.setPropertyType(PojoBuilder.getJavaType(name))
+                .setNewType(true);
         } else if (object instanceof List) {
-            return getListType((List) object, name);
+            return processListType(property);
         }
 
         throw new RuntimeException("not support type: " + object.getClass().getName());
     }
 
-    public static String getListType(List object, String name) {
+    public static Property processListType(Property property) {
+        List object = (List) property.getValue();
+        String name = property.getName();
+
         Object itemObject = null;
 
         if (object.size() > 0) {
@@ -88,10 +115,7 @@ public class Property {
             .setName(name)
             .setValue(itemObject);
 
-        String itemType = getType(itemProperty);
-        itemType = PojoBuilder.getJavaType(itemType);
-
-        return "List<" + itemType + ">";
+        return processType(itemProperty).setIsList(true);
     }
 
     public String getPropertyType() {
@@ -127,3 +151,4 @@ public class Property {
         return "set" + CoreUtil.toFirstCharUpperCase(this.name);
     }
 }
+

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class StringStream {
     public static final String LINE_FEED = "\n";
     public static final String EMPTY = "";
+    public static final String COMMA = ",";
     private Stream.Builder<String> builder = Stream.builder();
     private List<IntermediateOperation> intermediateOperationList = new ArrayList<>();
     private Function<String, String> finisher;
@@ -95,6 +96,10 @@ public class StringStream {
 
     public StringStream addEmpty() {
         return this.add(EMPTY);
+    }
+
+    public StringStream addComma() {
+        return this.add(COMMA);
     }
 
     public StringStream addWithWrappedBrace(String name) {

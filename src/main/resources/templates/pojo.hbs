@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class {{{className}}} {
     {{~#each propertyList}}
-    private {{{propertyType}}} {{{name}}};
+    private {{{javaType}}} {{{name}}};
     {{~/each}}
 
     public static {{{className}}} of() {
@@ -13,12 +13,12 @@ public class {{{className}}} {
 
     {{~#each propertyList}}
 
-    public {{{../className}}} {{{setMethodName}}}({{{propertyType}}} {{{name}}}) {
+    public {{{../className}}} {{{setMethodName}}}({{{javaType}}} {{{name}}}) {
         this.{{{name}}} = {{{name}}};
         return this;
     }
 
-    public {{{../className}}} {{{getMethodName}}}() {
+    public {{{javaType}}} {{{getMethodName}}}() {
         return this.{{{name}}};
     }
     {{~/each}}
