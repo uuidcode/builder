@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
-import com.github.uuidcode.util.StringStream;
 
 public class Property {
     private final static String TYPE_BOOLEAN = "Boolean";
@@ -15,17 +14,12 @@ public class Property {
 
     private String name;
     private Object value;
-    private String propertyType;
-    private String className;
+    private String type;
     private boolean isList;
     private boolean newType;
 
     public String getJavaType() {
-        return StringStream.of()
-            .add(this.isList, "List<")
-            .add(this.propertyType)
-            .add(this.isList, ">")
-            .joining();
+        return CoreUtil.templateInline("List<{{{type}}}>", this);
     }
 
     public boolean getNewType() {
@@ -47,16 +41,7 @@ public class Property {
     }
 
     public boolean isDate() {
-        return this.propertyType.equals("Date");
-    }
-
-    public String getClassName() {
-        return this.className;
-    }
-
-    public Property setClassName(String className) {
-        this.className = className;
-        return this;
+        return this.type.equals("Date");
     }
 
     public static Property of() {
@@ -76,23 +61,23 @@ public class Property {
         String name = property.getName();
 
         if (object == null) {
-            return property.setPropertyType(TYPE_STRING);
+            return property.setType(TYPE_STRING);
         }
 
         if (object instanceof String) {
             Date date = CoreUtil.parseDateTime(object.toString());
 
             if (date != null) {
-                return property.setPropertyType(TYPE_DATE);
+                return property.setType(TYPE_DATE);
             }
 
-            return property.setPropertyType(TYPE_STRING);
+            return property.setType(TYPE_STRING);
         } else if (object instanceof Boolean) {
-            return property.setPropertyType(TYPE_BOOLEAN);
+            return property.setType(TYPE_BOOLEAN);
         } else if (object instanceof Double) {
-            return property.setPropertyType(TYPE_LONG);
+            return property.setType(TYPE_LONG);
         } else if (object instanceof Map) {
-            return property.setPropertyType(PojoBuilder.getJavaType(name))
+            return property.setType(PojoBuilder.getJavaType(name))
                 .setNewType(true);
         } else if (object instanceof List) {
             return processListType(property);
@@ -118,12 +103,12 @@ public class Property {
         return processType(itemProperty).setIsList(true);
     }
 
-    public String getPropertyType() {
-        return this.propertyType;
+    public String getType() {
+        return this.type;
     }
 
-    public Property setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public Property setType(String type) {
+        this.type = type;
         return this;
     }
     public Object getValue() {

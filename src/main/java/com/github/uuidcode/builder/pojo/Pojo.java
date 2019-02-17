@@ -1,5 +1,6 @@
 package com.github.uuidcode.builder.pojo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,31 @@ public class Pojo {
     protected static Logger logger = getLogger(Pojo.class);
 
     private String className;
+    private Map<String, Object> map;
     private List<Property> propertyList;
+    private List<Pojo> pojoList;
+
+    public List<Pojo> getPojoList() {
+        return this.pojoList;
+    }
+
+    public Pojo setPojoList(List<Pojo> pojoList) {
+        this.pojoList = pojoList;
+        return this;
+    }
+
+    public Map<String, Object> getMap() {
+        return this.map;
+    }
+
+    public Pojo setMap(Map<String, Object> map) {
+        this.map = map;
+        return this;
+    }
+
+    public Pojo setJson(String json) {
+        return this.setMap(CoreUtil.fromJsonToMap(json));
+    }
 
     public boolean getHasDateType() {
         return this.propertyList.stream()
@@ -44,45 +69,48 @@ public class Pojo {
         return CoreUtil.template("pojo", this);
     }
 
-    private static List<Pojo> of(List<Pojo> pojoList,
-                                 String className,
-                                 Map<String, Object> map) {
+    public void generateAndSave(String targetDirectory) {
+        String content = this.generate();
+
         if (logger.isDebugEnabled()) {
-            logger.debug(">>> of className: {}", CoreUtil.toJson(className));
+            logger.debug(">>> generateAndSave content: \n{}", content);
         }
 
-        List<Property> propertyList = map.entrySet()
+        CoreUtil.setContent(new File(targetDirectory, this.className + ".java"), content);
+    }
+
+    private List<Pojo> build(List<Pojo> pojoList) {
+        this.propertyList = this.map.entrySet()
             .stream()
+            .filter(PojoBuilder::isAvailableField)
             .map(Property::of)
             .collect(Collectors.toList());
 
-        pojoList.add(Pojo.of(propertyList).setClassName(className));
+        pojoList.add(Pojo.of()
+            .setPropertyList(this.propertyList)
+            .setClassName(this.className));
 
-        propertyList.stream()
+        this.propertyList.stream()
             .filter(Property::getNewType)
             .forEach(property -> {
-                String propertyType = property.getPropertyType();
-                Pojo.of(pojoList, propertyType, (Map<String, Object>) property.getValue());
+                String propertyType = property.getType();
+                Pojo.of()
+                    .setPojoList(pojoList)
+                    .setClassName(propertyType)
+                    .setMap((Map<String, Object>) property.getValue())
+                    .build(pojoList);
             });
 
         return pojoList;
     }
 
-    private static List<Pojo> of(String className,
-                                 Map<String, Object> map) {
+    public List<Pojo> build() {
         List<Pojo> pojoList = new ArrayList<>();
-        return of(pojoList, className, map);
-    }
-
-    public static List<Pojo> of(String className, String json) {
-        return of(className, CoreUtil.fromJsonToMap(json));
+        build(pojoList);
+        return pojoList;
     }
 
     public static Pojo of() {
         return new Pojo();
-    }
-
-    public static Pojo of(List<Property> propertyList) {
-        return Pojo.of().setPropertyList(propertyList);
     }
 }
