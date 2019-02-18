@@ -10,10 +10,23 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.github.uuidcode.util.CoreUtil.AMPERSAND;
+import static com.github.uuidcode.util.CoreUtil.COMMA;
+import static com.github.uuidcode.util.CoreUtil.DOT;
+import static com.github.uuidcode.util.CoreUtil.EQUAL;
+import static com.github.uuidcode.util.CoreUtil.HYPHEN;
+import static com.github.uuidcode.util.CoreUtil.LINE_FEED;
+import static com.github.uuidcode.util.CoreUtil.QUESTION_MARK;
+import static com.github.uuidcode.util.CoreUtil.SEMICOLON;
+import static com.github.uuidcode.util.CoreUtil.SHARP;
+import static com.github.uuidcode.util.CoreUtil.SLASH;
+import static com.github.uuidcode.util.CoreUtil.SPACE;
+import static com.github.uuidcode.util.CoreUtil.UNDERSCORE;
+import static com.github.uuidcode.util.CoreUtil.VERTICAL_BAR;
+import static com.github.uuidcode.util.CoreUtil.lineSeparator;
+
 public class StringStream {
-    public static final String LINE_FEED = "\n";
     public static final String EMPTY = "";
-    public static final String COMMA = ",";
     private Stream.Builder<String> builder = Stream.builder();
     private List<IntermediateOperation> intermediateOperationList = new ArrayList<>();
     private Function<String, String> finisher;
@@ -91,7 +104,7 @@ public class StringStream {
     }
 
     public StringStream addSpace() {
-        return this.add(CoreUtil.space());
+        return this.add(SPACE);
     }
 
     public StringStream addEmpty() {
@@ -109,25 +122,25 @@ public class StringStream {
     }
 
     public StringStream addSpaceEqualSpace() {
-        return this.add(CoreUtil.space())
-            .add(CoreUtil.equal())
-            .add(CoreUtil.space());
+        return this.add(SPACE)
+            .add(EQUAL)
+            .add(SPACE);
     }
 
     public StringStream addSharp() {
-        return this.add(CoreUtil.sharp());
+        return this.add(SHARP);
     }
 
     public StringStream addSlash() {
-        return this.add(CoreUtil.slash());
+        return this.add(SLASH);
     }
 
     public StringStream addEqual() {
-        return this.add(CoreUtil.equal());
+        return this.add(EQUAL);
     }
 
     public StringStream addDot() {
-        return this.add(CoreUtil.dot());
+        return this.add(DOT);
     }
 
     public StringStream addLeftParenthesis() {
@@ -155,7 +168,7 @@ public class StringStream {
     }
 
     public StringStream addSemicolon() {
-        return this.add(CoreUtil.semicolon());
+        return this.add(SEMICOLON);
     }
 
     public StringStream add(Object object) {
@@ -232,7 +245,7 @@ public class StringStream {
     }
 
     public String joining() {
-        return this.joining(CoreUtil.empty());
+        return this.joining(EMPTY);
     }
 
     public String joining(CharSequence delimiter) {
@@ -273,47 +286,47 @@ public class StringStream {
     }
 
     public String joiningWithComma() {
-        return this.joining(CoreUtil.comma());
+        return this.joining(COMMA);
     }
 
     public String joiningWithCommaAndSpace() {
-        return this.joining(CoreUtil.comma() + CoreUtil.space());
+        return this.joining(COMMA + SPACE);
     }
 
-    public String joiningWithCommaAndNewLine() {
-        return this.joining(CoreUtil.comma() + CoreUtil.lineSeparator());
+    public String joiningWithCommaAndLineSeparator() {
+        return this.joining(COMMA + lineSeparator());
     }
 
     public String joiningWithSpace() {
-        return this.joining(CoreUtil.space());
+        return this.joining(SPACE);
     }
 
     public String joiningWithUnderscore() {
-        return this.joining(CoreUtil.underscore());
+        return this.joining(UNDERSCORE);
     }
 
     public String joiningWithHyphen() {
-        return this.joining("-");
+        return this.joining(HYPHEN);
     }
 
     public String joiningWithVerticalBar() {
-        return this.joining("|");
+        return this.joining(VERTICAL_BAR);
     }
 
     public String joiningWithSlash() {
-        return this.joining("/");
+        return this.joining(SLASH);
     }
 
     public String joiningWithQuestionMark() {
-        return this.joining("&");
+        return this.joining(QUESTION_MARK);
     }
 
     public String joiningWithDot() {
-        return this.joining(".");
+        return this.joining(DOT);
     }
 
     public String joiningWithAmpersand() {
-        return this.joining("&");
+        return this.joining(AMPERSAND);
     }
 
     public String joiningWithNewLine() {

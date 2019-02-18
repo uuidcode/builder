@@ -48,6 +48,22 @@ import com.google.gson.GsonBuilder;
 
 public class CoreUtil {
     public static final String SPACE4 = "    ";
+    public static final String SPACE = " ";
+    public static final String EMPTY = "";
+    public static final String LINE_FEED = "\n";
+    public static final String COMMA = ",";
+    public static final String HYPHEN = "_";
+    public static final String VERTICAL_BAR = "|";
+    public static final String SLASH = "/";
+    public static final String BACK_SLASH = "\\";
+    public static final String QUESTION_MARK = "?";
+    public static final String DOT = ".";
+    public static final String AMPERSAND = "&";
+    public static final String EQUAL = "=";
+    public static final String SHARP = "#";
+    public static final String UNDERSCORE = "_";
+    public static final String SEMICOLON = ";";
+
     protected static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 
     private static DateTimeParser[] dateTimeParsers = {
@@ -178,7 +194,7 @@ public class CoreUtil {
 
     public static String toFirstCharUpperCase(String name) {
         if (isEmpty(name)) {
-            return empty();
+            return EMPTY;
         }
 
         return name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -186,14 +202,14 @@ public class CoreUtil {
 
     public static String toFirstCharLowerCase(String name) {
         if (isEmpty(name)) {
-            return empty();
+            return EMPTY;
         }
 
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
     public static List<String> splitWithUnderscore(String text) {
-        return split(text, CoreUtil.underscore());
+        return split(text, UNDERSCORE);
     }
 
     public static List<String> split(String text, String delimiter) {
@@ -212,7 +228,7 @@ public class CoreUtil {
     }
 
     public static String joining(List<String> list) {
-        return CoreUtil.joining(list, CoreUtil.comma());
+        return CoreUtil.joining(list, COMMA);
     }
 
     public static String joiningWithCommaAndSpace(List<String> list) {
@@ -221,7 +237,7 @@ public class CoreUtil {
 
     public static String joining(List<String> list, String delimiter) {
         if (list == null) {
-            return CoreUtil.empty();
+            return EMPTY;
         }
 
         return list.stream().collect(Collectors.joining(delimiter));
@@ -248,7 +264,7 @@ public class CoreUtil {
             logger.error("error", e);
         }
 
-        return empty();
+        return EMPTY;
     }
 
     public static String getContentFromResource(String name) {
@@ -301,54 +317,14 @@ public class CoreUtil {
 
     public static String indent(String content) {
         if (CoreUtil.isEmpty(content)) {
-            return CoreUtil.empty();
+            return EMPTY;
         }
 
         return indent() + content;
     }
 
     public static String commaAndSpace() {
-        return CoreUtil.comma() + CoreUtil.space();
-    }
-
-    public static String comma() {
-        return ",";
-    }
-
-    public static String space() {
-        return " ";
-    }
-
-    public static String equal() {
-        return "=";
-    }
-
-    public static String sharp() {
-        return "#";
-    }
-
-    public static String underscore() {
-        return "_";
-    }
-
-    public static String empty() {
-        return "";
-    }
-
-    public static String semicolon() {
-        return ";";
-    }
-
-    public static String slash() {
-        return "/";
-    }
-
-    public static String backslash() {
-        return "\\";
-    }
-
-    public static String dot() {
-        return ".";
+        return COMMA + SPACE;
     }
 
     public static String leftBrace() {
@@ -376,7 +352,7 @@ public class CoreUtil {
     }
 
     public static String underscoreToLowerCamel(String value) {
-        if (value.contains(underscore())) {
+        if (value.contains(UNDERSCORE)) {
             return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, value);
         }
 
@@ -384,7 +360,7 @@ public class CoreUtil {
     }
 
     public static String underscoreToUpperCamel(String value) {
-        if (value.contains(underscore())) {
+        if (value.contains(UNDERSCORE)) {
             return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, value);
         }
 
@@ -392,7 +368,7 @@ public class CoreUtil {
     }
 
     public static String dotToSlash(String value) {
-        return value.replaceAll(backslash() + dot(), slash());
+        return value.replaceAll(BACK_SLASH + DOT, SLASH);
     }
 
     public static String getCanonicalPath(File file) {
@@ -600,5 +576,29 @@ public class CoreUtil {
         }
 
         return null;
+    }
+
+    public static String multipleEmptyLineToOneEmptyLine(String content) {
+        List<String> list = CoreUtil.splitListWithNewLine(content);
+
+        boolean previousEmpty = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            String line = list.get(i);
+
+            if (CoreUtil.isNotEmpty(line)) {
+                previousEmpty = false;
+            } else {
+                if (previousEmpty) {
+                    list.set(i, null);
+                }
+
+                previousEmpty = true;
+            }
+        }
+
+        return list.stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(LINE_FEED));
     }
 }

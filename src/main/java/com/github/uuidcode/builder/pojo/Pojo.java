@@ -19,7 +19,6 @@ public class Pojo {
 
     private String packageName;
     private String className;
-    private Map<String, Object> map;
     private List<Property> propertyList;
     private List<Pojo> pojoList;
 
@@ -32,7 +31,6 @@ public class Pojo {
         return this;
     }
 
-
     public List<Pojo> getPojoList() {
         return this.pojoList;
     }
@@ -40,19 +38,6 @@ public class Pojo {
     public Pojo setPojoList(List<Pojo> pojoList) {
         this.pojoList = pojoList;
         return this;
-    }
-
-    public Map<String, Object> getMap() {
-        return this.map;
-    }
-
-    public Pojo setMap(Map<String, Object> map) {
-        this.map = map;
-        return this;
-    }
-
-    public Pojo setJson(String json) {
-        return this.setMap(CoreUtil.fromJsonToMap(json));
     }
 
     public boolean getHasDateType() {
@@ -98,24 +83,18 @@ public class Pojo {
 
     public void generateAndSave(String targetDirectory) {
         String content = this.generateAndPrint();
+        this.save(targetDirectory, content);
+    }
+
+    private void save(String targetDirectory, String content) {
+        content = CoreUtil.multipleEmptyLineToOneEmptyLine(content);
         setContent(new File(targetDirectory, this.className + ".java"), content);
     }
 
     private List<Pojo> build(List<Pojo> pojoList) {
-        boolean propertyType = this.propertyList != null;
-
-        if (propertyType) {
-            this.processProperty();
-        } else {
-            this.processPropertyForMap();
-        }
-
-        pojoList.add(this.setPropertyList(this.propertyList));
-
-        if (propertyType) {
-            return pojoList;
-        }
-
+        this.processProperty();
+        this.setPropertyList(this.propertyList);
+        pojoList.add(this);
         this.processPropertyForNewType(pojoList);
 
         return pojoList;
@@ -133,25 +112,19 @@ public class Pojo {
             .collect(Collectors.toList());
     }
 
-    private void processPropertyForMap() {
-        this.propertyList = this.map.entrySet()
-            .stream()
-            .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
-            .map(Property::of)
-            .collect(Collectors.toList());
-    }
-
     private void processPropertyForNewType(List<Pojo> pojoList) {
         this.propertyList.stream()
             .filter(Property::getNewType)
             .forEach(property -> {
                 String type = property.getType();
 
+                Map<String, Object> map = (Map<String, Object>) property.getValue();
+
                 Pojo.of()
                     .setPackageName(this.packageName)
                     .setPojoList(pojoList)
                     .setClassName(type)
-                    .setMap((Map<String, Object>) property.getValue())
+                    .setPropertyList(PojoBuilder.getPropertyListFromMap(map))
                     .build(pojoList);
             });
     }

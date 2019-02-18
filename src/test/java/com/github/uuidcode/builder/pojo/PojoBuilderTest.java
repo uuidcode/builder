@@ -22,6 +22,7 @@ public class PojoBuilderTest {
     @Test
     public void schema() {
         PojoBuilder.of()
+            .setPackageName("com.test.java.domain")
             .setClassName("Payload")
             .setTargetDirectory(".test")
             .setSchema(getContentFromResource("pojo/schema.sql"))

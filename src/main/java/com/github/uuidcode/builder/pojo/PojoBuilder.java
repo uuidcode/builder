@@ -8,19 +8,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-
 import com.github.uuidcode.util.CoreUtil;
 
 import static com.github.uuidcode.builder.pojo.Property.TYPE_DATE;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
 import static com.github.uuidcode.util.CoreUtil.splitListWithSpace;
-import static org.slf4j.LoggerFactory.getLogger;
+import static com.github.uuidcode.util.CoreUtil.toFirstCharUpperCase;
 
 public class PojoBuilder {
-    protected static Logger logger = getLogger(PojoBuilder.class);
-
     public static Map<String, String> nameConverterMap = new HashMap<>();
     public static Set<String> includedFieldSet = new HashSet<>();
     public static Set<String> excludedFieldSet = new HashSet<>();
@@ -38,7 +34,6 @@ public class PojoBuilder {
     private String className;
     private String targetDirectory;
     private String packageName;
-    private Map<String, Object> map;
     private List<Property> propertyList;
 
     public String getPackageName() {
@@ -85,27 +80,18 @@ public class PojoBuilder {
         return this;
     }
 
-    public PojoBuilder setJson(String json) {
-        this.map = CoreUtil.fromJsonToMap(json);
-        return this;
-    }
-
     public PojoBuilder setSchema(String schema) {
         this.propertyList = CoreUtil.splitListWithNewLine(schema)
             .stream()
             .map(line -> {
                 line = line.trim();
                 List<String> itemList = splitListWithSpace(line);
-                final String type = itemList.get(1);
-                String convertedType = typeConvertMap.entrySet()
-                    .stream()
-                    .filter(entry -> entry.getKey().startsWith(type))
-                    .findFirst()
-                    .map(Entry::getValue)
-                    .orElse(TYPE_STRING);
+                String name = itemList.get(0).replaceAll("`", "");
+                String type = itemList.get(1);
+                String convertedType = this.getConvertedType(type);
 
                 return Property.of()
-                    .setName(itemList.get(0).replaceAll("`", ""))
+                    .setName(name)
                     .setType(convertedType)
                     .setIsList(false);
             })
@@ -114,13 +100,37 @@ public class PojoBuilder {
         return this;
     }
 
+    public PojoBuilder setJson(String json) {
+        Map<String, Object> map = CoreUtil.fromJsonToMap(json);
+        this.propertyList = getPropertyListFromMap(map);
+        return this;
+    }
+
+    public static List<Property> getPropertyListFromMap(Map<String, Object> map) {
+        return map.entrySet()
+            .stream()
+            .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
+            .map(Property::of)
+            .collect(Collectors.toList());
+    }
+
+    private String getConvertedType(String type) {
+        return typeConvertMap.entrySet()
+            .stream()
+            .filter(entry -> entry.getKey().startsWith(type))
+            .findFirst()
+            .map(Entry::getValue)
+            .orElse(TYPE_STRING);
+    }
+
     public static String getJavaType(String name) {
         if (name.endsWith("List")) {
-            name = CoreUtil.toFirstCharUpperCase(name.substring(0, name.length() - 4));
+            name = name.substring(0, name.length() - 4);
+            name = toFirstCharUpperCase(name);
         }
 
         String type = nameConverterMap.getOrDefault(name, name);
-        return CoreUtil.toFirstCharUpperCase(type);
+        return toFirstCharUpperCase(type);
     }
 
     public PojoBuilder addNameConvert(String oldName, String newName) {
@@ -146,7 +156,6 @@ public class PojoBuilder {
         Pojo.of()
             .setPackageName(this.packageName)
             .setClassName(this.className)
-            .setMap(this.map)
             .setPropertyList(this.propertyList)
             .build()
             .forEach(pojo -> pojo.generateAndSave(this.targetDirectory));
