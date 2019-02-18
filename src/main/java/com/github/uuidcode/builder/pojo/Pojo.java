@@ -49,6 +49,11 @@ public class Pojo {
             .anyMatch(Property::isDate);
     }
 
+    public boolean getHasListType() {
+        return this.propertyList.stream()
+            .anyMatch(Property::getIsList);
+    }
+
     public boolean getHasPackageName() {
         return this.packageName != null;
     }

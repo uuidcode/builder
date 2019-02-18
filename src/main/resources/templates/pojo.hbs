@@ -5,6 +5,9 @@ package {{{packageName}}};
 {{~#if hasDateType}}
 import java.util.Date;
 {{~/if}}
+{{~#if hasListType}}
+import java.util.List;
+{{~/if}}
 
 public class {{{className}}} {
     {{~#each propertyList}}
