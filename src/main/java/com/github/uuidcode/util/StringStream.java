@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import static com.github.uuidcode.util.CoreUtil.AMPERSAND;
 import static com.github.uuidcode.util.CoreUtil.COMMA;
 import static com.github.uuidcode.util.CoreUtil.DOT;
+import static com.github.uuidcode.util.CoreUtil.EMPTY;
 import static com.github.uuidcode.util.CoreUtil.EQUAL;
 import static com.github.uuidcode.util.CoreUtil.HYPHEN;
 import static com.github.uuidcode.util.CoreUtil.LEFT_ANGLE_BRACKET;
@@ -32,7 +33,6 @@ import static com.github.uuidcode.util.CoreUtil.VERTICAL_BAR;
 import static com.github.uuidcode.util.CoreUtil.lineSeparator;
 
 public class StringStream {
-    public static final String EMPTY = "";
     private Stream.Builder<String> builder = Stream.builder();
     private List<IntermediateOperation> intermediateOperationList = new ArrayList<>();
     private Function<String, String> finisher;
