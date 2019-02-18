@@ -8,32 +8,23 @@ import static com.github.uuidcode.util.CoreUtil.getContentFromResource;
 
 public class PojoBuilderTest {
     @Test
-    public void test() {
+    public void json() {
         PojoBuilder.of()
             .setPackageName("com.test.java.domain")
             .setClassName("Person")
-            .setJson(CoreUtil.getContentFromResource("pojo/payload.json"))
-            .setTargetDirectory("test")
+            .setTargetDirectory(".test")
             .addNameConvert("issues", "issue")
             .addExcludeField("itemList")
+            .setJson(CoreUtil.getContentFromResource("pojo/payload.json"))
             .build();
     }
 
     @Test
-    public void clipboard() {
+    public void schema() {
         PojoBuilder.of()
             .setClassName("Payload")
-            .setJson(CoreUtil.getClipboard())
-            .setTargetDirectory("test")
-            .build();
-    }
-
-    @Test
-    public void db() {
-        PojoBuilder.of()
-            .setClassName("Payload")
+            .setTargetDirectory(".test")
             .setSchema(getContentFromResource("pojo/schema.sql"))
-            .setTargetDirectory("test")
             .build();
     }
 }
