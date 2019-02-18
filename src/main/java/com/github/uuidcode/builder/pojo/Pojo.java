@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.util.CoreUtil.setContent;
 import static com.github.uuidcode.util.CoreUtil.underscoreToLowerCamel;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -85,14 +86,19 @@ public class Pojo {
         return CoreUtil.template("pojo", this);
     }
 
-    public void generateAndSave(String targetDirectory) {
+    public String generateAndPrint() {
         String content = this.generate();
 
         if (logger.isDebugEnabled()) {
             logger.debug(">>> generateAndSave content: \n{}", content);
         }
 
-        CoreUtil.setContent(new File(targetDirectory, this.className + ".java"), content);
+        return content;
+    }
+
+    public void generateAndSave(String targetDirectory) {
+        String content = this.generateAndPrint();
+        setContent(new File(targetDirectory, this.className + ".java"), content);
     }
 
     private List<Pojo> build(List<Pojo> pojoList) {
