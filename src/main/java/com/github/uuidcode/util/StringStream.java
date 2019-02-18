@@ -15,8 +15,14 @@ import static com.github.uuidcode.util.CoreUtil.COMMA;
 import static com.github.uuidcode.util.CoreUtil.DOT;
 import static com.github.uuidcode.util.CoreUtil.EQUAL;
 import static com.github.uuidcode.util.CoreUtil.HYPHEN;
+import static com.github.uuidcode.util.CoreUtil.LEFT_ANGLE_BRACKET;
+import static com.github.uuidcode.util.CoreUtil.LEFT_BRACE;
+import static com.github.uuidcode.util.CoreUtil.LEFT_PARENTHESIS;
 import static com.github.uuidcode.util.CoreUtil.LINE_FEED;
 import static com.github.uuidcode.util.CoreUtil.QUESTION_MARK;
+import static com.github.uuidcode.util.CoreUtil.RIGHT_ANGLE_BRACKET;
+import static com.github.uuidcode.util.CoreUtil.RIGHT_BRACE;
+import static com.github.uuidcode.util.CoreUtil.RIGHT_PARENTHESIS;
 import static com.github.uuidcode.util.CoreUtil.SEMICOLON;
 import static com.github.uuidcode.util.CoreUtil.SHARP;
 import static com.github.uuidcode.util.CoreUtil.SLASH;
@@ -144,27 +150,27 @@ public class StringStream {
     }
 
     public StringStream addLeftParenthesis() {
-        return this.add(CoreUtil.leftParenthesis());
+        return this.add(LEFT_PARENTHESIS);
     }
 
     public StringStream addRightParenthesis() {
-        return this.add(CoreUtil.rightParenthesis());
+        return this.add(RIGHT_PARENTHESIS);
     }
 
     public StringStream addLeftBrace() {
-        return this.add(CoreUtil.leftBrace());
-    }
-
-    public StringStream addRightAngleBracket() {
-        return this.add(CoreUtil.rightAngleBracket());
-    }
-
-    public StringStream addLeftAngleBracket() {
-        return this.add(CoreUtil.leftAngleBracket());
+        return this.add(LEFT_BRACE);
     }
 
     public StringStream addRightBrace() {
-        return this.add(CoreUtil.rightBrace());
+        return this.add(RIGHT_BRACE);
+    }
+
+    public StringStream addRightAngleBracket() {
+        return this.add(RIGHT_ANGLE_BRACKET);
+    }
+
+    public StringStream addLeftAngleBracket() {
+        return this.add(LEFT_ANGLE_BRACKET);
     }
 
     public StringStream addSemicolon() {

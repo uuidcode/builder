@@ -64,6 +64,12 @@ public class CoreUtil {
     public static final String SHARP = "#";
     public static final String UNDERSCORE = "_";
     public static final String SEMICOLON = ";";
+    public static final String LEFT_BRACE = "{";
+    public static final String RIGHT_BRACE = "}";
+    public static final String LEFT_PARENTHESIS = "(";
+    public static final String RIGHT_PARENTHESIS = ")";
+    public static final String LEFT_ANGLE_BRACKET = "<";
+    public static final String RIGHT_ANGLE_BRACKET = ">";
     public static final String UTF8 = "UTF-8";
 
     protected static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
@@ -179,11 +185,11 @@ public class CoreUtil {
     }
 
     public static String wrapWithBrace(String text) {
-        return wrap(text, leftBrace(), rightBrace());
+        return wrap(text, LEFT_BRACE, RIGHT_BRACE);
     }
 
     public static String wrapWithAngleBracket(String text) {
-        return wrap(text, leftAngleBracket(), rightAngleBracket());
+        return wrap(text, LEFT_ANGLE_BRACKET, RIGHT_ANGLE_BRACKET);
     }
 
     public static String wrap(String text, String left, String right) {
@@ -327,30 +333,6 @@ public class CoreUtil {
 
     public static String commaAndSpace() {
         return COMMA + SPACE;
-    }
-
-    public static String leftBrace() {
-        return "{";
-    }
-
-    public static String rightBrace() {
-        return "}";
-    }
-
-    public static String leftParenthesis() {
-        return "(";
-    }
-
-    public static String rightParenthesis() {
-        return ")";
-    }
-
-    public static String leftAngleBracket() {
-        return "<";
-    }
-
-    public static String rightAngleBracket() {
-        return ">";
     }
 
     public static String underscoreToLowerCamel(String value) {
