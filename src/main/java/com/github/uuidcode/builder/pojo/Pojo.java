@@ -10,8 +10,9 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.builder.pojo.PojoBuilder.getPropertyListFromMap;
+import static com.github.uuidcode.util.CoreUtil.multipleEmptyLineToOneEmptyLine;
 import static com.github.uuidcode.util.CoreUtil.setContent;
-import static com.github.uuidcode.util.CoreUtil.underscoreToLowerCamel;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Pojo {
@@ -96,8 +97,9 @@ public class Pojo {
     }
 
     private void save(String targetDirectory, String content) {
-        content = CoreUtil.multipleEmptyLineToOneEmptyLine(content);
-        setContent(new File(targetDirectory, this.className + ".java"), content);
+        content = multipleEmptyLineToOneEmptyLine(content);
+        File file = new File(targetDirectory, this.className + ".java");
+        setContent(file, content);
     }
 
     private List<Pojo> build(List<Pojo> pojoList) {
@@ -112,30 +114,27 @@ public class Pojo {
     private void processProperty() {
         this.propertyList = this.propertyList
             .stream()
-            .filter(property -> PojoBuilder.isAvailableField(property.getName()))
-            .map(property -> {
-                String name = property.getName();
-                name = name.toLowerCase();
-                return property.setName(underscoreToLowerCamel(name));
-            })
+            .filter(Property::isAvailable)
+            .map(Property::processName)
             .collect(Collectors.toList());
     }
 
     private void processPropertyForNewType(List<Pojo> pojoList) {
         this.propertyList.stream()
             .filter(Property::getNewType)
-            .forEach(property -> {
-                String type = property.getType();
+            .forEach(property -> build(pojoList, property));
+    }
 
-                Map<String, Object> map = (Map<String, Object>) property.getValue();
+    private void build(List<Pojo> pojoList, Property property) {
+        Map<String, Object> valueAsMap = property.getValueAsMap();
+        List<Property> propertyListFromMap = getPropertyListFromMap(valueAsMap);
 
-                Pojo.of()
-                    .setPackageName(this.packageName)
-                    .setPojoList(pojoList)
-                    .setClassName(type)
-                    .setPropertyList(PojoBuilder.getPropertyListFromMap(map))
-                    .build(pojoList);
-            });
+        Pojo.of()
+            .setPackageName(this.packageName)
+            .setPojoList(pojoList)
+            .setClassName(property.getType())
+            .setPropertyList(propertyListFromMap)
+            .build(pojoList);
     }
 
     public List<Pojo> build() {

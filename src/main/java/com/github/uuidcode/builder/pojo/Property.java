@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.util.CoreUtil.underscoreToLowerCamel;
+
 public class Property {
     public final static String TYPE_BOOLEAN = "Boolean";
     public final static String TYPE_STRING = "String";
@@ -116,6 +118,11 @@ public class Property {
         this.type = type;
         return this;
     }
+
+    public Map<String, Object> getValueAsMap() {
+        return (Map<String, Object>) this.value;
+    }
+
     public Object getValue() {
         return this.value;
     }
@@ -139,6 +146,16 @@ public class Property {
 
     public String getSetMethodName() {
         return "set" + CoreUtil.toFirstCharUpperCase(this.name);
+    }
+
+    public boolean isAvailable() {
+        return PojoBuilder.isAvailableField(this.name);
+    }
+
+    public Property processName() {
+        this.name = this.name.toLowerCase();
+        this.name = underscoreToLowerCamel(name);
+        return this;
     }
 }
 
