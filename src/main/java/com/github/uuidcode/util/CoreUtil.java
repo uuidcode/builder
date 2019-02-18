@@ -21,6 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -605,5 +606,17 @@ public class CoreUtil {
         return list.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.joining(LINE_FEED));
+    }
+
+    public static String base64Encode(String text) {
+        return new String(Base64.encodeBase64(text.getBytes()));
+    }
+
+    public static String base64Encode(byte[] data) {
+        return new String(Base64.encodeBase64(data));
+    }
+
+    public static String base64Decode(String text) {
+        return new String(Base64.decodeBase64(text.getBytes()));
     }
 }
