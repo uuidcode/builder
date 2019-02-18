@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,10 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.builder.pojo.Property.TYPE_DATE;
+import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
+import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
+import static com.github.uuidcode.util.CoreUtil.splitListWithSpace;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PojoBuilder {
@@ -19,6 +24,16 @@ public class PojoBuilder {
     public static Map<String, String> nameConverterMap = new HashMap<>();
     public static Set<String> includedFieldSet = new HashSet<>();
     public static Set<String> excludedFieldSet = new HashSet<>();
+    public static Map<String, String> typeConvertMap = new HashMap<String, String>() {{
+        this.put("int", TYPE_LONG);
+        this.put("bigint", TYPE_LONG);
+        this.put("varbinary", TYPE_STRING);
+        this.put("enum", TYPE_STRING);
+        this.put("varchar", TYPE_STRING);
+        this.put("char", TYPE_STRING);
+        this.put("timestamp", TYPE_DATE);
+        this.put("date", TYPE_DATE);
+    }};
 
     private String className;
     private String targetDirectory;
@@ -44,11 +59,6 @@ public class PojoBuilder {
             return true;
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> isAvailableField includedFieldSet: {}", CoreUtil.toJson(includedFieldSet));
-            logger.debug(">>> isAvailableField excludedFieldSet: {}", CoreUtil.toJson(excludedFieldSet));
-            logger.debug(">>> isAvailableField name: {}", CoreUtil.toJson(name));
-        }
 
         if (includedFieldSet.isEmpty()) {
             return !excludedFieldSet.contains(name);
@@ -84,35 +94,19 @@ public class PojoBuilder {
         this.propertyList = CoreUtil.splitListWithNewLine(schema)
             .stream()
             .map(line -> {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(">>> setSchema line: {}", CoreUtil.toJson(line));
-                }
-
                 line = line.trim();
-                List<String> itemList = CoreUtil.splitListWithSpace(line);
-                String type = itemList.get(1);
-
-                if (type.startsWith("int")) {
-                    type = Property.TYPE_LONG;
-                } else if (type.startsWith("bigint")) {
-                    type = Property.TYPE_LONG;
-                } else if (type.startsWith("varbinary")) {
-                    type = Property.TYPE_STRING;
-                } else if (type.startsWith("enum")) {
-                    type = Property.TYPE_STRING;
-                } else if (type.startsWith("varchar")) {
-                    type = Property.TYPE_STRING;
-                } else if (type.startsWith("char")) {
-                    type = Property.TYPE_STRING;
-                } else if (type.startsWith("timestamp")) {
-                    type = Property.TYPE_DATE;
-                } else {
-                    type = Property.TYPE_LONG;
-                }
+                List<String> itemList = splitListWithSpace(line);
+                final String type = itemList.get(1);
+                String convertedType = typeConvertMap.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().startsWith(type))
+                    .findFirst()
+                    .map(Entry::getValue)
+                    .orElse(TYPE_STRING);
 
                 return Property.of()
                     .setName(itemList.get(0).replaceAll("`", ""))
-                    .setType(type)
+                    .setType(convertedType)
                     .setIsList(false);
             })
             .collect(Collectors.toList());
@@ -149,11 +143,8 @@ public class PojoBuilder {
     }
 
     public void build() {
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> build propertyList: {}", CoreUtil.toJson(propertyList));
-        }
-
         Pojo.of()
+            .setPackageName(this.packageName)
             .setClassName(this.className)
             .setMap(this.map)
             .setPropertyList(this.propertyList)

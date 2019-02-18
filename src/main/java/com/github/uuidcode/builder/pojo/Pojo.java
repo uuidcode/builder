@@ -16,10 +16,21 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Pojo {
     protected static Logger logger = getLogger(Pojo.class);
 
+    private String packageName;
     private String className;
     private Map<String, Object> map;
     private List<Property> propertyList;
     private List<Pojo> pojoList;
+
+    public String getPackageName() {
+        return this.packageName;
+    }
+
+    public Pojo setPackageName(String packageName) {
+        this.packageName = packageName;
+        return this;
+    }
+
 
     public List<Pojo> getPojoList() {
         return this.pojoList;
@@ -46,6 +57,10 @@ public class Pojo {
     public boolean getHasDateType() {
         return this.propertyList.stream()
             .anyMatch(Property::isDate);
+    }
+
+    public boolean getHasPackageName() {
+        return this.packageName != null;
     }
 
     public String getClassName() {
@@ -84,44 +99,55 @@ public class Pojo {
         boolean propertyType = this.propertyList != null;
 
         if (propertyType) {
-            this.propertyList = this.propertyList
-                .stream()
-                .filter(property -> PojoBuilder.isAvailableField(property.getName()))
-                .map(property -> {
-                    String name = property.getName();
-                    name = name.toLowerCase();
-                    return property.setName(underscoreToLowerCamel(name));
-                })
-                .collect(Collectors.toList());
+            this.processProperty();
         } else {
-            this.propertyList = this.map.entrySet()
-                .stream()
-                .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
-                .map(Property::of)
-                .collect(Collectors.toList());
+            this.processPropertyForMap();
         }
 
-        pojoList.add(Pojo.of()
-            .setPropertyList(this.propertyList)
-            .setClassName(this.className));
+        pojoList.add(this.setPropertyList(this.propertyList));
 
         if (propertyType) {
             return pojoList;
         }
 
+        this.processPropertyForNewType(pojoList);
+
+        return pojoList;
+    }
+
+    private void processProperty() {
+        this.propertyList = this.propertyList
+            .stream()
+            .filter(property -> PojoBuilder.isAvailableField(property.getName()))
+            .map(property -> {
+                String name = property.getName();
+                name = name.toLowerCase();
+                return property.setName(underscoreToLowerCamel(name));
+            })
+            .collect(Collectors.toList());
+    }
+
+    private void processPropertyForMap() {
+        this.propertyList = this.map.entrySet()
+            .stream()
+            .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
+            .map(Property::of)
+            .collect(Collectors.toList());
+    }
+
+    private void processPropertyForNewType(List<Pojo> pojoList) {
         this.propertyList.stream()
             .filter(Property::getNewType)
             .forEach(property -> {
                 String type = property.getType();
 
                 Pojo.of()
+                    .setPackageName(this.packageName)
                     .setPojoList(pojoList)
                     .setClassName(type)
                     .setMap((Map<String, Object>) property.getValue())
                     .build(pojoList);
             });
-
-        return pojoList;
     }
 
     public List<Pojo> build() {

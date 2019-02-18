@@ -4,12 +4,15 @@ import org.junit.Test;
 
 import com.github.uuidcode.util.CoreUtil;
 
+import static com.github.uuidcode.util.CoreUtil.getContentFromResource;
+
 public class PojoBuilderTest {
     @Test
     public void test() {
         PojoBuilder.of()
+            .setPackageName("com.test.java.domain")
             .setClassName("Person")
-            .setJson(PojoTest.getJson())
+            .setJson(CoreUtil.getContentFromResource("pojo/payload.json"))
             .setTargetDirectory("test")
             .addNameConvert("issues", "issue")
             .addExcludeField("itemList")
@@ -29,7 +32,7 @@ public class PojoBuilderTest {
     public void db() {
         PojoBuilder.of()
             .setClassName("Payload")
-            .setSchema(CoreUtil.getClipboard())
+            .setSchema(getContentFromResource("pojo/schema.sql"))
             .setTargetDirectory("test")
             .build();
     }

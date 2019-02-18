@@ -1,0 +1,24 @@
+{
+    "name": "java",
+    "age": 35,
+    "birthDate": "2019-01-01",
+    "itemList": [1,2],
+    "issues": [
+        {
+            "id": 3,
+            "typeList": [
+                {
+                    "token": 333
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "typeList": [
+                {
+                  "token": 777
+                }
+            ]
+        }
+    ]
+}
