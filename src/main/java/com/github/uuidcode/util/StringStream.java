@@ -177,6 +177,10 @@ public class StringStream {
         return this.add(SEMICOLON);
     }
 
+    public StringStream addLineFeed() {
+        return this.add(LINE_FEED);
+    }
+
     public StringStream add(Object object) {
         if (object != null) {
             this.builder.add(object.toString());
@@ -240,6 +244,10 @@ public class StringStream {
 
     public StringStream add(boolean test, Object value) {
         return this.add(test ? value : null);
+    }
+
+    public StringStream add(Object value, boolean test) {
+        return this.add(test, value);
     }
 
     public StringStream add(boolean test, Object value1, Object value2) {

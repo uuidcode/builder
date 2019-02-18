@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
-import com.github.uuidcode.util.CoreUtil;
+import com.github.uuidcode.util.StringStream;
 
 import static com.github.uuidcode.builder.pojo.PojoBuilder.getPropertyListFromMap;
 import static com.github.uuidcode.util.CoreUtil.multipleEmptyLineToOneEmptyLine;
@@ -78,7 +78,83 @@ public class Pojo {
     }
 
     public String generate() {
-        return CoreUtil.template("pojo", this);
+        return StringStream.of()
+            .add("package " + this.packageName + ";", this.getHasPackageName())
+            .add("", this.getHasPackageName())
+            .add("import java.util.Date;", this.getHasDateType())
+            .add("import java.util.List;", this.getHasListType())
+            .add("")
+            .add("public class " + this.className + "{" )
+            .add(this.getFieldContent())
+            .add("")
+            .add(this.getOfMethod())
+            .add(this.getMethodContent())
+            .add("}")
+            .joiningWithLineFeed();
+    }
+
+    private String getFieldTemplate() {
+        return StringStream.of()
+            .add("    private type name;")
+            .joining();
+    }
+
+    private String getOfTemplate() {
+        return StringStream.of()
+            .add("    public static class of() {")
+            .add("        return new class()")
+            .add("    }")
+            .joiningWithLineFeed();
+    }
+
+    private String getOfMethod() {
+        return this.getOfTemplate()
+            .replaceAll("class", this.className);
+    }
+
+    public String getFieldContent() {
+        StringStream stringStream = StringStream.of();
+
+        for (Property property : propertyList) {
+            String fieldContent = this.getFieldTemplate()
+                .replaceAll("type", property.getJavaType())
+                .replaceAll("name", property.getName());
+
+            stringStream.add(fieldContent);
+        }
+
+        return stringStream.joiningWithLineFeed();
+    }
+
+    private String getMethodTemplate() {
+        return StringStream.of()
+            .addEmpty()
+            .add("    public class setMethod(type name) {")
+            .add("        this.name = name;")
+            .add("        return this;")
+            .add("    }")
+            .add("")
+            .add("    public type getMethod() {")
+            .add("        return this.name;")
+            .add("    }")
+            .joiningWithLineFeed();
+    }
+    public String getMethodContent() {
+        StringStream stringStream = StringStream.of();
+
+        for (Property property : propertyList) {
+            String methodContent = getMethodTemplate()
+                .replaceAll("type", property.getType())
+                .replaceAll("class", this.className)
+                .replaceAll("name", property.getName())
+                .replaceAll("setMethod", property.getSetMethodName())
+                .replaceAll("getMethod", property.getGetMethodName())
+                .replaceAll("type", property.getJavaType());
+
+            stringStream.add(methodContent);
+        }
+
+        return stringStream.joiningWithLineFeed();
     }
 
     public String generateAndPrint() {
