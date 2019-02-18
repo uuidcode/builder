@@ -45,7 +45,7 @@ public class Property {
     }
 
     public boolean isDate() {
-        return this.type.equals("Date");
+        return this.type.equals(TYPE_DATE);
     }
 
     public static Property of() {
@@ -81,7 +81,8 @@ public class Property {
         } else if (object instanceof Double) {
             return property.setType(TYPE_LONG);
         } else if (object instanceof Map) {
-            return property.setType(PojoBuilder.getJavaType(name))
+            String javaType = PojoBuilder.getJavaType(name);
+            return property.setType(javaType)
                 .setNewType(true);
         } else if (object instanceof List) {
             return processListType(property);
