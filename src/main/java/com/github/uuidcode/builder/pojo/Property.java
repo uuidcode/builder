@@ -22,7 +22,7 @@ public class Property {
 
     public String getJavaType() {
         if (this.isList) {
-            return CoreUtil.templateInline("List<{{{type}}}>", this);
+            return "List<type>".replaceAll("type", this.type);
         }
 
         return this.type;
