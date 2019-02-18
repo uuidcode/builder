@@ -63,6 +63,7 @@ public class CoreUtil {
     public static final String SHARP = "#";
     public static final String UNDERSCORE = "_";
     public static final String SEMICOLON = ";";
+    public static final String UTF8 = "UTF-8";
 
     protected static Logger logger = LoggerFactory.getLogger(CoreUtil.class);
 
@@ -384,7 +385,7 @@ public class CoreUtil {
     }
 
     public static String toQueryStringWithQuestionMark(FieldNamingPolicy fieldNamePolicy, Object object) {
-        return "?" + toQueryString(fieldNamePolicy, object);
+        return QUESTION_MARK + toQueryString(fieldNamePolicy, object);
     }
 
     public static String toQueryString(Object object) {
@@ -398,8 +399,8 @@ public class CoreUtil {
 
         return toNameValuePairList(fieldNamePolicy, object)
             .stream()
-            .map(p -> p.getName() + "=" + CoreUtil.urlEncode(p.getValue()))
-            .collect(Collectors.joining("&"));
+            .map(p -> p.getName() + EMPTY + CoreUtil.urlEncode(p.getValue()))
+            .collect(Collectors.joining(AMPERSAND));
     }
 
     public static List<NameValuePair> toNameValuePairList(Object object) {
@@ -486,7 +487,7 @@ public class CoreUtil {
 
     public static String urlEncode(String url) {
         try {
-            return URLEncoder.encode(url, "UTF-8");
+            return URLEncoder.encode(url, UTF8);
         } catch (Exception e) {
             logger.error("error", e);
         }
@@ -497,7 +498,7 @@ public class CoreUtil {
 
     public static String urlDecode(String url) {
         try {
-            return URLDecoder.decode(url, "UTF-8");
+            return URLDecoder.decode(url, UTF8);
         } catch (Exception e) {
             logger.error("error", e);
         }
@@ -585,6 +586,10 @@ public class CoreUtil {
 
         for (int i = 0; i < list.size(); i++) {
             String line = list.get(i);
+
+            if (i == 0 && isEmpty(line)) {
+                list.set(i, null);
+            }
 
             if (CoreUtil.isNotEmpty(line)) {
                 previousEmpty = false;
