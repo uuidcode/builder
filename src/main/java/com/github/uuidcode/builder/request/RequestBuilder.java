@@ -36,6 +36,9 @@ import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.GenericOf;
 import com.google.gson.FieldNamingPolicy;
 
+import static com.github.uuidcode.util.CoreUtil.QUESTION_MARK;
+import static com.github.uuidcode.util.CoreUtil.SEMICOLON;
+import static com.github.uuidcode.util.CoreUtil.toNameValuePairList;
 import static java.util.Optional.ofNullable;
 
 public class RequestBuilder {
@@ -116,7 +119,7 @@ public class RequestBuilder {
     }
 
     public RequestBuilder get(String url, String queryString) {
-        this.request = Request.Get(url + "?" + queryString);
+        this.request = Request.Get(url + QUESTION_MARK + queryString);
         return this;
     }
 
@@ -156,7 +159,7 @@ public class RequestBuilder {
     }
 
     public RequestBuilder body(Object object) {
-        List<NameValuePair> nameValuePairList = CoreUtil.toNameValuePairList(this.fieldNamePolicy, object);
+        List<NameValuePair> nameValuePairList = toNameValuePairList(this.fieldNamePolicy, object);
         this.request = this.request.bodyForm(nameValuePairList, Consts.UTF_8);
         return this;
     }
@@ -174,7 +177,8 @@ public class RequestBuilder {
                 this.logger.debug("urlEncodedFileName:" + fileName);
             }
 
-            ByteArrayBody fileBody = new ByteArrayBody(IOUtils.toByteArray(inputStream), urlEncodedFileName);
+            byte[] data = IOUtils.toByteArray(inputStream);
+            ByteArrayBody fileBody = new ByteArrayBody(data, urlEncodedFileName);
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -266,7 +270,7 @@ public class RequestBuilder {
 
             return Stream.of(response.getHeaders("Set-Cookie"))
                 .map(header -> header.getValue())
-                .map(value -> value.split(";")[0])
+                .map(value -> value.split(SEMICOLON)[0])
                 .collect(Collectors.joining("; "));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -283,7 +287,8 @@ public class RequestBuilder {
 
     public String executeAndGetContent() {
         try {
-            String content = EntityUtils.toString(this.execute().returnResponse().getEntity(), "UTF-8");
+            HttpEntity entity = this.execute().returnResponse().getEntity();
+            String content = EntityUtils.toString(entity, CoreUtil.UTF8);
 
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug(">>> content: " + content);
@@ -326,8 +331,11 @@ public class RequestBuilder {
 
     private <T> T executeAndGetObject(Class<T> tClass, Type typeofT) {
         try {
+            FieldNamingPolicy namingConvention = ofNullable(this.resultFieldNamePolicy)
+                .orElse(this.fieldNamePolicy);
+
             T object = CoreUtil.getGsonBuilder()
-                .setFieldNamingPolicy(ofNullable(this.resultFieldNamePolicy).orElse(this.fieldNamePolicy))
+                .setFieldNamingPolicy(namingConvention)
                 .create()
                 .fromJson(this.executeAndGetContent(), tClass != null ? tClass : typeofT );
 
