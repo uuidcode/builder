@@ -153,11 +153,15 @@ public class PojoBuilder {
     }
 
     public void build() {
-        Pojo.of()
+        List<Pojo> pojoList = Pojo.of()
             .setPackageName(this.packageName)
             .setClassName(this.className)
             .setPropertyList(this.propertyList)
-            .build()
+            .build();
+
+        pojoList
+            .stream()
+            .filter(Pojo::hasProperty)
             .forEach(pojo -> pojo.generateAndSave(this.targetDirectory));
     }
 }

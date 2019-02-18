@@ -22,6 +22,10 @@ public class Pojo {
     private List<Property> propertyList;
     private List<Pojo> pojoList;
 
+    public boolean hasProperty() {
+        return this.propertyList.size() > 0;
+    }
+
     public String getPackageName() {
         return this.packageName;
     }
