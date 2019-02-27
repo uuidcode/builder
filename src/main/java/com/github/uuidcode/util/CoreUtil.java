@@ -144,12 +144,21 @@ public class CoreUtil {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    public static String format(Date date) {
+    public static String formatDatetime(Date date) {
         if (date == null) {
             return null;
         }
 
         FastDateFormat format = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
+    }
+
+    public static String formatDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        FastDateFormat format = FastDateFormat.getInstance("yyyy-MM-dd");
         return format.format(date);
     }
 
@@ -455,7 +464,7 @@ public class CoreUtil {
 
         if (value instanceof Date) {
             Date date = (Date) value;
-            return CoreUtil.format(date);
+            return CoreUtil.formatDatetime(date);
         }
 
         return value.toString();
