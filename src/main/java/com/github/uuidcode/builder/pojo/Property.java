@@ -1,7 +1,5 @@
 package com.github.uuidcode.builder.pojo;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
@@ -63,51 +61,7 @@ public class Property {
     }
 
     public static Property processType(Property property) {
-        Object object = property.getValue();
-        String name = property.getName();
-
-        if (object == null) {
-            return property.setType(TYPE_STRING);
-        }
-
-        if (object instanceof String) {
-            Date date = CoreUtil.parseDateTime(object.toString());
-
-            if (date != null) {
-                return property.setType(TYPE_DATE);
-            }
-
-            return property.setType(TYPE_STRING);
-        } else if (object instanceof Boolean) {
-            return property.setType(TYPE_BOOLEAN);
-        } else if (object instanceof Double) {
-            return property.setType(TYPE_LONG);
-        } else if (object instanceof Map) {
-            String javaType = PojoBuilder.getJavaType(name);
-            return property.setType(javaType)
-                .setNewType(true);
-        } else if (object instanceof List) {
-            return processListType(property);
-        }
-
-        throw new RuntimeException("not support type: " + object.getClass().getName());
-    }
-
-    public static Property processListType(Property property) {
-        List object = (List) property.getValue();
-        String name = property.getName();
-
-        Object itemObject = null;
-
-        if (object.size() > 0) {
-            itemObject = object.get(0);
-        }
-
-        Property itemProperty = Property.of()
-            .setName(name)
-            .setValue(itemObject);
-
-        return processType(itemProperty).setIsList(true);
+        return TypeConverter.convert(property);
     }
 
     public String getType() {
