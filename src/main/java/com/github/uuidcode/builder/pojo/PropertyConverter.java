@@ -16,8 +16,8 @@ import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class TypeConverter {
-    protected static Logger logger = getLogger(TypeConverter.class);
+public class PropertyConverter {
+    protected static Logger logger = getLogger(PropertyConverter.class);
     private static Map<Class, Function<Property, Property>> map = new HashMap<>();
 
     static {
