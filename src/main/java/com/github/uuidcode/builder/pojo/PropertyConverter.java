@@ -16,19 +16,19 @@ import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class PropertyConverter {
-    protected static Logger logger = getLogger(PropertyConverter.class);
-    private static Map<Class, Function<Property, Property>> map = new HashMap<>();
+class PropertyConverter {
+    private static Logger logger = getLogger(PropertyConverter.class);
+    private static Map<Class, Function<Property, Property>> convertMap = new HashMap<>();
 
     static {
-        map.put(String.class, StringTypeConverter::convert);
-        map.put(Boolean.class, BooleanTypeConverter::convert);
-        map.put(Double.class, DoubleTypeConverter::convert);
-        map.put(Map.class, MapTypeConverter::convert);
-        map.put(List.class, ListTypeConverter::convert);
+        convertMap.put(String.class, StringTypeConverter::convert);
+        convertMap.put(Boolean.class, BooleanTypeConverter::convert);
+        convertMap.put(Double.class, DoubleTypeConverter::convert);
+        convertMap.put(Map.class, MapTypeConverter::convert);
+        convertMap.put(List.class, ListTypeConverter::convert);
     }
 
-    public static Property convert(Property property) {
+    static Property convert(Property property) {
         if (property == null) {
             return null;
         }
@@ -43,24 +43,16 @@ public class PropertyConverter {
     }
 
     private static Property convert(Property property, Object object) {
-        try {
-            Class<?> clazz = getClass(object);
+        Class<?> clazz = getClass(object);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug(">>> convert clazz: {}", clazz.getName());
-            }
-
-            return map.get(clazz).apply(property);
-        } catch (Throwable t) {
-            if (logger.isErrorEnabled()) {
-                logger.error(">>> error TypeConverter convert", t);
-            }
-
-            throw t;
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> convert clazz: {}", clazz.getName());
         }
+
+        return convertMap.get(clazz).apply(property);
     }
 
-    public static Class getClass(Object object) {
+    private static Class getClass(Object object) {
         Class<?> clazz = object.getClass();
 
         if (object instanceof List) {
@@ -75,7 +67,7 @@ public class PropertyConverter {
     }
 
     public static class StringTypeConverter {
-        public static Property convert(Property property) {
+        static Property convert(Property property) {
             Object object = property.getValue();
             Date date = CoreUtil.parseDateTime(object.toString());
 
@@ -88,19 +80,19 @@ public class PropertyConverter {
     }
 
     public static class BooleanTypeConverter {
-        public static Property convert(Property property) {
+        static Property convert(Property property) {
             return property.setType(TYPE_BOOLEAN);
         }
     }
 
     public static class DoubleTypeConverter {
-        public static Property convert(Property property) {
+        static Property convert(Property property) {
             return property.setType(TYPE_LONG);
         }
     }
 
     public static class MapTypeConverter {
-        public static Property convert(Property property) {
+        static Property convert(Property property) {
             String name = property.getName();
             String javaType = PojoBuilder.getJavaType(name);
 
@@ -110,12 +102,12 @@ public class PropertyConverter {
     }
 
     public static class ListTypeConverter {
-        public static Property convert(Property property) {
+        static Property convert(Property property) {
             return processListType(property);
         }
     }
 
-    public static Property processListType(Property property) {
+    private static Property processListType(Property property) {
         List object = (List) property.getValue();
         String name = property.getName();
 
