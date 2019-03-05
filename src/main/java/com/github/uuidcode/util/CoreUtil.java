@@ -414,24 +414,10 @@ public class CoreUtil {
             .stream(FieldUtils.getAllFields(object.getClass()))
             .filter(field -> !Modifier.isStatic(field.getModifiers()))
             .filter(field -> !Modifier.isFinal(field.getModifiers()))
-            .map(field -> {
-                field.setAccessible(true);
-
-                Object currentObject = null;
-
-                try {
-                    currentObject = field.get(object);
-                } catch (Exception e) {
-                }
-
-                if (currentObject != null) {
-                    String value = getValue(currentObject);
-                    String name = fieldNamePolicy.translateName(field);
-                    return new BasicNameValuePair(name, value);
-                }
-
-                return null;
-            })
+            .map(filed -> NameValuePairConverter.of()
+                .setField(filed)
+                .setFieldNamingPolicy(fieldNamePolicy)
+                .convert(object))
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
@@ -457,7 +443,7 @@ public class CoreUtil {
             .collect(Collectors.toList());
     }
 
-    private static String getValue(Object value) {
+    public static String getValue(Object value) {
         if (value == null) {
             return null;
         }
@@ -581,17 +567,19 @@ public class CoreUtil {
 
             if (i == 0 && isEmpty(line)) {
                 list.set(i, null);
+                continue;
             }
 
-            if (CoreUtil.isNotEmpty(line)) {
+            if (isNotEmpty(line)) {
                 previousEmpty = false;
-            } else {
-                if (previousEmpty) {
-                    list.set(i, null);
-                }
-
-                previousEmpty = true;
+                continue;
             }
+
+            if (previousEmpty) {
+                list.set(i, null);
+            }
+
+            previousEmpty = true;
         }
 
         return list.stream()
