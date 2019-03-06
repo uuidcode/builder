@@ -102,7 +102,7 @@ public class Pojo {
     private String getOfTemplate() {
         return StringStream.of()
             .add("    public static class of() {")
-            .add("        return new class()")
+            .add("        return new class();")
             .add("    }")
             .joiningWithLineFeed();
     }
