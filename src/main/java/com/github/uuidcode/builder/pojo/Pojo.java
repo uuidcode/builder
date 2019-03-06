@@ -84,7 +84,7 @@ public class Pojo {
             .add("import java.util.Date;", this.getHasDateType())
             .add("import java.util.List;", this.getHasListType())
             .add("")
-            .add("public class " + this.className + "{" )
+            .add("public class " + this.className + " {" )
             .add(this.getFieldContent())
             .add("")
             .add(this.getOfMethod())
