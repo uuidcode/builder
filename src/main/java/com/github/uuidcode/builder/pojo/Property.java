@@ -61,7 +61,7 @@ public class Property {
     }
 
     public static Property processType(Property property) {
-        return PropertyConverter.convert(property);
+        return PropertyTypeConverter.convert(property);
     }
 
     public String getType() {

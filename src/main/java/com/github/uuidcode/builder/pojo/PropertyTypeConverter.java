@@ -16,16 +16,16 @@ import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
 import static org.slf4j.LoggerFactory.getLogger;
 
-class PropertyConverter {
-    private static Logger logger = getLogger(PropertyConverter.class);
+class PropertyTypeConverter {
+    private static Logger logger = getLogger(PropertyTypeConverter.class);
     private static Map<Class, Function<Property, Property>> convertMap = new HashMap<>();
 
     static {
-        convertMap.put(String.class, StringTypeConverter::convert);
-        convertMap.put(Boolean.class, BooleanTypeConverter::convert);
-        convertMap.put(Double.class, DoubleTypeConverter::convert);
-        convertMap.put(Map.class, MapTypeConverter::convert);
-        convertMap.put(List.class, ListTypeConverter::convert);
+        convertMap.put(String.class, PropertyTypeConverter::stringType);
+        convertMap.put(Boolean.class, PropertyTypeConverter::booleanType);
+        convertMap.put(Double.class, PropertyTypeConverter::doubleType);
+        convertMap.put(Map.class, PropertyTypeConverter::mapType);
+        convertMap.put(List.class, PropertyTypeConverter::listType);
     }
 
     static Property convert(Property property) {
@@ -66,48 +66,34 @@ class PropertyConverter {
         return clazz;
     }
 
-    public static class StringTypeConverter {
-        static Property convert(Property property) {
-            Object object = property.getValue();
-            Date date = CoreUtil.parseDateTime(object.toString());
+    static Property stringType(Property property) {
+        Object object = property.getValue();
+        Date date = CoreUtil.parseDateTime(object.toString());
 
-            if (date != null) {
-                return property.setType(TYPE_DATE);
-            }
-
-            return property.setType(TYPE_STRING);
+        if (date != null) {
+            return property.setType(TYPE_DATE);
         }
+
+        return property.setType(TYPE_STRING);
     }
 
-    public static class BooleanTypeConverter {
-        static Property convert(Property property) {
-            return property.setType(TYPE_BOOLEAN);
-        }
+    static Property booleanType(Property property) {
+        return property.setType(TYPE_BOOLEAN);
     }
 
-    public static class DoubleTypeConverter {
-        static Property convert(Property property) {
-            return property.setType(TYPE_LONG);
-        }
+    static Property doubleType(Property property) {
+        return property.setType(TYPE_LONG);
     }
 
-    public static class MapTypeConverter {
-        static Property convert(Property property) {
-            String name = property.getName();
-            String javaType = PojoBuilder.getJavaType(name);
+    static Property mapType(Property property) {
+        String name = property.getName();
+        String javaType = PojoBuilder.getJavaType(name);
 
-            return property.setType(javaType)
-                .setNewType(true);
-        }
+        return property.setType(javaType)
+            .setNewType(true);
     }
 
-    public static class ListTypeConverter {
-        static Property convert(Property property) {
-            return processListType(property);
-        }
-    }
-
-    private static Property processListType(Property property) {
+    static Property listType(Property property) {
         List object = (List) property.getValue();
         String name = property.getName();
 
