@@ -139,22 +139,20 @@ public class Pojo {
             .add("    }")
             .joiningWithLineFeed();
     }
+
+    private String getMethodContent(Property property) {
+        return getMethodTemplate()
+            .replaceAll("type", property.getType())
+            .replaceAll("class", this.className)
+            .replaceAll("name", property.getName())
+            .replaceAll("setMethod", property.getSetMethodName())
+            .replaceAll("getMethod", property.getGetMethodName())
+            .replaceAll("type", property.getJavaType());
+    }
+
     public String getMethodContent() {
-        StringStream stringStream = StringStream.of();
-
-        for (Property property : propertyList) {
-            String methodContent = getMethodTemplate()
-                .replaceAll("type", property.getType())
-                .replaceAll("class", this.className)
-                .replaceAll("name", property.getName())
-                .replaceAll("setMethod", property.getSetMethodName())
-                .replaceAll("getMethod", property.getGetMethodName())
-                .replaceAll("type", property.getJavaType());
-
-            stringStream.add(methodContent);
-        }
-
-        return stringStream.joiningWithLineFeed();
+        return StringStream.of(propertyList, this::getMethodContent)
+            .joiningWithLineFeed();
     }
 
     public String generateAndPrint() {
