@@ -43,23 +43,6 @@ import static java.util.Optional.ofNullable;
 
 public class RequestBuilder {
     protected static Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
-
-    public enum LatencyType {
-        HIGH(1_000, 1_000),
-        MIDDLE(3_000, 3_000),
-        LOW(10_000, 10_000),
-        VERY_LOW(30_000, 30_000),
-        VERY_VERY_LOW(100_000, 100_000);;
-
-        private Integer connectionTimeout;
-        private Integer socketTimeout;
-
-        LatencyType(Integer connectionTimeout, Integer socketTimeout) {
-            this.connectionTimeout = connectionTimeout;
-            this.socketTimeout = socketTimeout;
-        }
-    }
-
     private Request request;
     private LatencyType latencyType = LatencyType.MIDDLE;
     private FieldNamingPolicy fieldNamePolicy = FieldNamingPolicy.IDENTITY;
@@ -246,13 +229,11 @@ public class RequestBuilder {
 
     public Response execute() {
         try {
-            this.request.connectTimeout(this.latencyType.connectionTimeout);
-            this.request.socketTimeout(this.latencyType.socketTimeout);
+            this.request.connectTimeout(this.latencyType.getConnectionTimeout());
+            this.request.socketTimeout(this.latencyType.getSocketTimeout());
             this.headerList.forEach(this.request::addHeader);
 
-            return
-                Executor
-                    .newInstance()
+            return Executor.newInstance()
                     .use(new BasicCookieStore())
                     .execute(this.request);
         } catch (Exception e) {
