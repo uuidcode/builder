@@ -80,21 +80,23 @@ public class PojoBuilder {
         return this;
     }
 
+    public Property toPropert(String line) {
+        line = line.trim();
+        List<String> itemList = splitListWithSpace(line);
+        String name = itemList.get(0).replaceAll("`", "");
+        String type = itemList.get(1);
+        String convertedType = this.getConvertedType(type);
+
+        return Property.of()
+            .setName(name)
+            .setType(convertedType)
+            .setIsList(false);
+    }
+    
     public PojoBuilder setSchema(String schema) {
         this.propertyList = CoreUtil.splitListWithNewLine(schema)
             .stream()
-            .map(line -> {
-                line = line.trim();
-                List<String> itemList = splitListWithSpace(line);
-                String name = itemList.get(0).replaceAll("`", "");
-                String type = itemList.get(1);
-                String convertedType = this.getConvertedType(type);
-
-                return Property.of()
-                    .setName(name)
-                    .setType(convertedType)
-                    .setIsList(false);
-            })
+            .map(this::toPropert)
             .collect(Collectors.toList());
 
         return this;
@@ -153,13 +155,11 @@ public class PojoBuilder {
     }
 
     public void build() {
-        List<Pojo> pojoList = Pojo.of()
+        Pojo.of()
             .setPackageName(this.packageName)
             .setClassName(this.className)
             .setPropertyList(this.propertyList)
-            .build();
-
-        pojoList
+            .build()
             .stream()
             .filter(Pojo::hasProperty)
             .forEach(pojo -> pojo.generateAndSave(this.targetDirectory));

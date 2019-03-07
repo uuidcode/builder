@@ -1,5 +1,6 @@
 package com.github.uuidcode.builder.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import static com.github.uuidcode.builder.pojo.Property.TYPE_BOOLEAN;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_DATE;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
+import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 class PropertyTypeConverter {
@@ -29,17 +31,10 @@ class PropertyTypeConverter {
     }
 
     static Property convert(Property property) {
-        if (property == null) {
-            return null;
-        }
-
-        Object object = property.getValue();
-
-        if (object == null) {
-            return property.setType(TYPE_STRING);
-        }
-
-        return convert(property, object);
+        return ofNullable(property)
+        .map(Property::getValue)
+        .map(object -> convert(property, object))
+        .orElseGet(() -> property.setType(TYPE_STRING));
     }
 
     private static Property convert(Property property, Object object) {
@@ -66,7 +61,7 @@ class PropertyTypeConverter {
         return clazz;
     }
 
-    static Property stringType(Property property) {
+    private static Property stringType(Property property) {
         Object object = property.getValue();
         Date date = CoreUtil.parseDateTime(object.toString());
 
@@ -77,15 +72,15 @@ class PropertyTypeConverter {
         return property.setType(TYPE_STRING);
     }
 
-    static Property booleanType(Property property) {
+    private static Property booleanType(Property property) {
         return property.setType(TYPE_BOOLEAN);
     }
 
-    static Property doubleType(Property property) {
+    private static Property doubleType(Property property) {
         return property.setType(TYPE_LONG);
     }
 
-    static Property mapType(Property property) {
+    private static Property mapType(Property property) {
         String name = property.getName();
         String javaType = PojoBuilder.getJavaType(name);
 
@@ -93,19 +88,19 @@ class PropertyTypeConverter {
             .setNewType(true);
     }
 
+    @SuppressWarnings("unchecked")
     static Property listType(Property property) {
-        List object = (List) property.getValue();
+        List list = (List) property.getValue();
         String name = property.getName();
-
-        Object itemObject = null;
-
-        if (object.size() > 0) {
-            itemObject = object.get(0);
-        }
+        Object value = ofNullable(list)
+            .orElse(new ArrayList())
+            .stream()
+            .findFirst()
+            .orElse(null);
 
         Property itemProperty = Property.of()
             .setName(name)
-            .setValue(itemObject);
+            .setValue(value);
 
         return convert(itemProperty).setIsList(true);
     }

@@ -178,10 +178,8 @@ public class Pojo {
 
     private List<Pojo> build(List<Pojo> pojoList) {
         this.processProperty();
-        this.setPropertyList(this.propertyList);
         pojoList.add(this);
         this.processPropertyForNewType(pojoList);
-
         return pojoList;
     }
 
