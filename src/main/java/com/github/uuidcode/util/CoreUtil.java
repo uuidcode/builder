@@ -411,7 +411,7 @@ public class CoreUtil {
         try {
             Field field = createField(entry.getKey().toString());
             String name = fieldNamingPolicy.translateName(field);
-            String value = getValue(i.getValue());
+            String value = getValue(entry.getValue());
             return new BasicNameValuePair(name, value);
         } catch (Exception e) {
             logger.error("error", e);
