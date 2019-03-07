@@ -41,8 +41,6 @@ import com.github.uuidcode.adapter.DateTypeAdapter;
 import com.github.uuidcode.adapter.LongTypeAdapter;
 import com.github.uuidcode.adapter.StringTypeAdapter;
 import com.google.common.base.CaseFormat;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -121,23 +119,9 @@ public class CoreUtil {
             .registerTypeAdapter(Long.class, new LongTypeAdapter())
             .registerTypeAdapter(String.class, new StringTypeAdapter())
             .registerTypeAdapter(Date.class, new DateTypeAdapter())
+            .addSerializationExclusionStrategy(new CoreExclusionStrategy())
             .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .addSerializationExclusionStrategy(new ExclusionStrategy() {
-                @Override
-                public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                    if (fieldAttributes.getDeclaredClass().equals(Class.class)) {
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                @Override
-                public boolean shouldSkipClass(Class<?> aClass) {
-                    return false;
-                }
-            });
+            .setPrettyPrinting();
     }
 
     public static String createUUID() {
@@ -422,23 +406,25 @@ public class CoreUtil {
             .collect(Collectors.toList());
     }
 
-    private static List<NameValuePair> toNameValuePairList(FieldNamingPolicy fieldNamePolicy,
-                                                           Map<?, ?> object) {
-        Map<?, ?> map = object;
+    private static NameValuePair toNameValuePair(FieldNamingPolicy fieldNamingPolicy,
+                                                 Map.Entry<?, ?> entry) {
+        try {
+            Field field = createField(entry.getKey().toString());
+            String name = fieldNamingPolicy.translateName(field);
+            String value = getValue(i.getValue());
+            return new BasicNameValuePair(name, value);
+        } catch (Exception e) {
+            logger.error("error", e);
+        }
 
+        return null;
+    }
+
+    private static List<NameValuePair> toNameValuePairList(FieldNamingPolicy fieldNamingPolicy,
+                                                           Map<?, ?> map) {
         return map.entrySet()
             .stream()
-            .map(i -> {
-                try {
-                    Field field = createField(i.getKey().toString());
-                    String name = fieldNamePolicy.translateName(field);
-                    String value = getValue(i.getValue());
-                    return new BasicNameValuePair(name, value);
-                } catch (Exception e) {
-                    logger.error("error", e);
-                }
-                return null;
-            })
+            .map(entry -> toNameValuePair(fieldNamingPolicy, entry))
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }

@@ -2,7 +2,6 @@ package com.github.uuidcode.adapter;
 
 import java.io.IOException;
 
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -21,16 +20,12 @@ public class StringTypeAdapter extends TypeAdapter<String> {
             return null;
         }
 
-        try {
-            String result = in.nextString();
+        String result = in.nextString();
 
-            if (result == null || result.trim().length() == 0) {
-                return null;
-            }
-
-            return result.trim();
-        } catch (NumberFormatException e) {
-            throw new JsonSyntaxException(e);
+        if (result == null || result.trim().length() == 0) {
+            return null;
         }
+
+        return result.trim();
     }
 }

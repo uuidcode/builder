@@ -3,7 +3,6 @@ package com.github.uuidcode.adapter;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -22,20 +21,16 @@ public class LongTypeAdapter extends TypeAdapter<Long> {
             return null;
         }
 
+        String result = in.nextString();
+
         try {
-            String result = in.nextString();
-
-            try {
-                if (result.contains("E")) {
-                    return new BigDecimal(result).longValue();
-                }
-
-                return Long.parseLong(result.replaceAll("\\,", "").trim(), 10);
-            } catch (Exception e) {
-                return null;
+            if (result.contains("E")) {
+                return new BigDecimal(result).longValue();
             }
-        } catch (NumberFormatException e) {
-            throw new JsonSyntaxException(e);
+
+            return Long.parseLong(result.replaceAll("\\,", "").trim(), 10);
+        } catch (Exception e) {
+            return null;
         }
     }
 }
