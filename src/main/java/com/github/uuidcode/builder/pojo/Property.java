@@ -107,7 +107,6 @@ public class Property {
     }
 
     public Property processName() {
-        this.name = this.name.toLowerCase();
         this.name = underscoreToLowerCamel(name);
         return this;
     }

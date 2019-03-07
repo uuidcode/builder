@@ -4,7 +4,7 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.38</version>
+    <version>0.0.40</version>
     <packaging>jar</packaging>
 
     <name>builder</name>
@@ -15,7 +15,7 @@
         <connection>scm:git:git://github.com/uuidcode/builder.git</connection>
         <developerConnection>scm:git:ssh://github.com:uuidcode/builder.git</developerConnection>
         <url>https://github.com/uuidcode/builder/tree/master</url>
-      <tag>builder-0.0.38</tag>
+      <tag>builder-0.0.40</tag>
   </scm>
 
     <licenses>

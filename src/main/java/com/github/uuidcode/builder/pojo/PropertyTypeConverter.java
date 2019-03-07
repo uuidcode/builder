@@ -46,7 +46,7 @@ class PropertyTypeConverter {
         Class<?> clazz = getClass(object);
 
         if (logger.isDebugEnabled()) {
-            logger.debug(">>> convert clazz: {}", clazz.getName());
+            logger.debug(">>> convert clazz: {} {}", property.getName(), clazz.getName());
         }
 
         return convertMap.get(clazz).apply(property);

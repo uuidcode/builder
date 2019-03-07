@@ -142,7 +142,7 @@ public class Pojo {
 
     private String getMethodContent(Property property) {
         return getMethodTemplate()
-            .replaceAll("type", property.getType())
+            .replaceAll("type", property.getJavaType())
             .replaceAll("class", this.className)
             .replaceAll("name", property.getName())
             .replaceAll("setMethod", property.getSetMethodName())
