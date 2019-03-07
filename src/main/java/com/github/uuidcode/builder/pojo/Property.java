@@ -3,6 +3,7 @@ package com.github.uuidcode.builder.pojo;
 import java.util.Map;
 
 import com.github.uuidcode.util.CoreUtil;
+import com.github.uuidcode.util.StringStream;
 
 import static com.github.uuidcode.util.CoreUtil.underscoreToLowerCamel;
 
@@ -17,6 +18,16 @@ public class Property {
     private String type;
     private boolean isList;
     private boolean newType;
+    private String className;
+
+    public String getClassName() {
+        return this.className;
+    }
+
+    public Property setClassName(String className) {
+        this.className = className;
+        return this;
+    }
 
     public String getJavaType() {
         if (this.isList) {
@@ -109,6 +120,42 @@ public class Property {
     public Property processName() {
         this.name = underscoreToLowerCamel(name);
         return this;
+    }
+
+    private String getFieldTemplate() {
+        return StringStream.of()
+            .add("    private type name;")
+            .joining();
+    }
+
+    public String getFieldContent() {
+        return this.getFieldTemplate()
+            .replaceAll("type", this.getJavaType())
+            .replaceAll("name", this.name);
+    }
+
+    private String getMethodTemplate() {
+        return StringStream.of()
+            .addEmpty()
+            .add("    public class setMethod(type name) {")
+            .add("        this.name = name;")
+            .add("        return this;")
+            .add("    }")
+            .add("")
+            .add("    public type getMethod() {")
+            .add("        return this.name;")
+            .add("    }")
+            .joiningWithLineFeed();
+    }
+
+    public String getMethodContent() {
+        return getMethodTemplate()
+            .replaceAll("type", this.getJavaType())
+            .replaceAll("class", this.className)
+            .replaceAll("name", this.name)
+            .replaceAll("setMethod", this.getSetMethodName())
+            .replaceAll("getMethod", this.getGetMethodName())
+            .replaceAll("type", this.getJavaType());
     }
 }
 

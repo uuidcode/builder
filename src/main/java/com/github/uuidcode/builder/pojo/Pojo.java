@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import com.github.uuidcode.util.StringStream;
 
 import static com.github.uuidcode.builder.pojo.PojoBuilder.getPropertyListFromMap;
+import static com.github.uuidcode.util.CoreUtil.LINE_FEED;
 import static com.github.uuidcode.util.CoreUtil.getCanonicalPath;
 import static com.github.uuidcode.util.CoreUtil.multipleEmptyLineToOneEmptyLine;
 import static com.github.uuidcode.util.CoreUtil.setContent;
@@ -85,12 +86,6 @@ public class Pojo {
             .joiningWithLineFeed();
     }
 
-    private String getFieldTemplate() {
-        return StringStream.of()
-            .add("    private type name;")
-            .joining();
-    }
-
     private String getOfTemplate() {
         return StringStream.of()
             .add("    public static class of() {")
@@ -105,46 +100,15 @@ public class Pojo {
     }
 
     public String getFieldContent() {
-        StringStream stringStream = StringStream.of();
-
-        for (Property property : propertyList) {
-            String fieldContent = this.getFieldTemplate()
-                .replaceAll("type", property.getJavaType())
-                .replaceAll("name", property.getName());
-
-            stringStream.add(fieldContent);
-        }
-
-        return stringStream.joiningWithLineFeed();
-    }
-
-    private String getMethodTemplate() {
-        return StringStream.of()
-            .addEmpty()
-            .add("    public class setMethod(type name) {")
-            .add("        this.name = name;")
-            .add("        return this;")
-            .add("    }")
-            .add("")
-            .add("    public type getMethod() {")
-            .add("        return this.name;")
-            .add("    }")
-            .joiningWithLineFeed();
-    }
-
-    private String getMethodContent(Property property) {
-        return getMethodTemplate()
-            .replaceAll("type", property.getJavaType())
-            .replaceAll("class", this.className)
-            .replaceAll("name", property.getName())
-            .replaceAll("setMethod", property.getSetMethodName())
-            .replaceAll("getMethod", property.getGetMethodName())
-            .replaceAll("type", property.getJavaType());
+        return this.propertyList.stream()
+            .map(Property::getFieldContent)
+            .collect(Collectors.joining(LINE_FEED));
     }
 
     public String getMethodContent() {
-        return StringStream.of(propertyList, this::getMethodContent)
-            .joiningWithLineFeed();
+        return this.propertyList.stream()
+            .map(Property::getMethodContent)
+            .collect(Collectors.joining(LINE_FEED));
     }
 
     public String generateAndPrint() {
@@ -179,9 +143,13 @@ public class Pojo {
     }
 
     private void processProperty() {
-        this.propertyList = this.propertyList
-            .stream()
+        if (this.propertyList == null) {
+            return;
+        }
+
+        this.propertyList = this.propertyList.stream()
             .filter(Property::isAvailable)
+            .map(property -> property.setClassName(this.className))
             .map(Property::processName)
             .collect(Collectors.toList());
     }
@@ -204,8 +172,8 @@ public class Pojo {
     }
 
     public List<Pojo> build() {
-        this.processProperty();
         pojoList.add(this);
+        this.processProperty();
         this.processPropertyForNewType();
         return pojoList;
     }
