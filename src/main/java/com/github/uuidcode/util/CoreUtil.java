@@ -248,6 +248,14 @@ public class CoreUtil {
         return new ArrayList(EnumSet.allOf(enumClass));
     }
 
+    public static String getCanonicalPath(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
     public static void setContent(File file, String data) {
         try {
             FileUtils.writeStringToFile(file, data, Charset.defaultCharset());
@@ -346,14 +354,6 @@ public class CoreUtil {
 
     public static String dotToSlash(String value) {
         return value.replaceAll(BACK_SLASH + DOT, SLASH);
-    }
-
-    public static String getCanonicalPath(File file) {
-        try {
-            return file.getCanonicalPath();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
     }
 
     public static String toQueryStringWithQuestionMark(Object object) {

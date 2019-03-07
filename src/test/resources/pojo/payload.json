@@ -3,6 +3,14 @@
     "age": 35,
     "birthDate": "2019-01-01",
     "itemList": [1,2],
+    "authorList": [
+        {
+            "name": "test"
+        },
+        {
+            "name": "test123"
+        }
+    ],
     "issues": [
         {
             "id": 3,

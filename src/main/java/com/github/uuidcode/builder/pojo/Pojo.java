@@ -11,17 +11,18 @@ import org.slf4j.Logger;
 import com.github.uuidcode.util.StringStream;
 
 import static com.github.uuidcode.builder.pojo.PojoBuilder.getPropertyListFromMap;
+import static com.github.uuidcode.util.CoreUtil.getCanonicalPath;
 import static com.github.uuidcode.util.CoreUtil.multipleEmptyLineToOneEmptyLine;
 import static com.github.uuidcode.util.CoreUtil.setContent;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Pojo {
-    protected static Logger logger = getLogger(Pojo.class);
+    private static Logger logger = getLogger(Pojo.class);
+    private static List<Pojo> pojoList = new ArrayList<>();
 
     private String packageName;
     private String className;
     private List<Property> propertyList;
-    private List<Pojo> pojoList;
 
     public boolean hasProperty() {
         return this.propertyList.size() > 0;
@@ -33,15 +34,6 @@ public class Pojo {
 
     public Pojo setPackageName(String packageName) {
         this.packageName = packageName;
-        return this;
-    }
-
-    public List<Pojo> getPojoList() {
-        return this.pojoList;
-    }
-
-    public Pojo setPojoList(List<Pojo> pojoList) {
-        this.pojoList = pojoList;
         return this;
     }
 
@@ -167,20 +159,23 @@ public class Pojo {
 
     public void generateAndSave(String targetDirectory) {
         String content = this.generateAndPrint();
+
+        if (targetDirectory == null) {
+            return;
+        }
+
         this.save(targetDirectory, content);
     }
 
     private void save(String targetDirectory, String content) {
         content = multipleEmptyLineToOneEmptyLine(content);
         File file = new File(targetDirectory, this.className + ".java");
-        setContent(file, content);
-    }
 
-    private List<Pojo> build(List<Pojo> pojoList) {
-        this.processProperty();
-        pojoList.add(this);
-        this.processPropertyForNewType(pojoList);
-        return pojoList;
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> save file: {}", getCanonicalPath(file));
+        }
+
+        setContent(file, content);
     }
 
     private void processProperty() {
@@ -191,27 +186,27 @@ public class Pojo {
             .collect(Collectors.toList());
     }
 
-    private void processPropertyForNewType(List<Pojo> pojoList) {
+    private void processPropertyForNewType() {
         this.propertyList.stream()
             .filter(Property::getNewType)
-            .forEach(property -> build(pojoList, property));
+            .forEach(this::build);
     }
 
-    private void build(List<Pojo> pojoList, Property property) {
+    private void build(Property property) {
         Map<String, Object> valueAsMap = property.getValueAsMap();
         List<Property> propertyListFromMap = getPropertyListFromMap(valueAsMap);
 
         Pojo.of()
             .setPackageName(this.packageName)
-            .setPojoList(pojoList)
             .setClassName(property.getType())
             .setPropertyList(propertyListFromMap)
-            .build(pojoList);
+            .build();
     }
 
     public List<Pojo> build() {
-        List<Pojo> pojoList = new ArrayList<>();
-        this.build(pojoList);
+        this.processProperty();
+        pojoList.add(this);
+        this.processPropertyForNewType();
         return pojoList;
     }
 
