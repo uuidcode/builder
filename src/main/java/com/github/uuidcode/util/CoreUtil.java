@@ -27,6 +27,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
@@ -44,6 +45,8 @@ import com.google.common.base.CaseFormat;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import static java.util.Optional.ofNullable;
 
 public class CoreUtil {
     public static final String SPACE4 = "    ";
@@ -209,8 +212,12 @@ public class CoreUtil {
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
-    public static List<String> splitWithUnderscore(String text) {
+    public static List<String> splitListWithUnderscore(String text) {
         return split(text, UNDERSCORE);
+    }
+
+    public static List<String> splitListWithDot(String text) {
+        return split(text, DOT);
     }
 
     public static List<String> split(String text, String delimiter) {
@@ -521,6 +528,9 @@ public class CoreUtil {
         return asList(text.split(delimiter));
     }
 
+    public static List<String> splitList(String text) {
+        return splitList(text, "");
+    }
 
     public static List<String> splitListWithNewLine(String text) {
         return splitList(text, "(\r\n|\r|\n|\n\r)");
@@ -583,5 +593,63 @@ public class CoreUtil {
 
     public static String base64Decode(String text) {
         return new String(Base64.decodeBase64(text.getBytes()));
+    }
+
+    public static Integer parseInt(String value) {
+        Long longValue = parseLong(value);
+        return ofNullable(longValue)
+            .map(Long::intValue)
+            .orElse(null);
+    }
+
+    public static Long parseLong(String value) {
+        try {
+            value = value.replaceAll("\\,", "");
+            return Long.parseLong(value, 10);
+        } catch (Throwable t) {
+            if (logger.isErrorEnabled()) {
+                logger.error(">>> error CoreUtil parseInt", t);
+            }
+        }
+
+        return null;
+    }
+
+    public static Date setMinTime(DateTime dateTime) {
+        return dateTime.withTime(0, 0, 0, 0).toDate();
+    }
+
+    public static Date setMinTime(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        return CoreUtil.setMinTime(new DateTime(date));
+    }
+
+    public static Date setMaxTime(DateTime dateTime) {
+        return dateTime.withTime(23, 59, 59, 999).toDate();
+    }
+
+    public static Date setMaxTime(Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        return CoreUtil.setMaxTime(new DateTime(date));
+    }
+
+    public static Date getNextWednesday(DateTime dateTime) {
+        int dayOfWeek = dateTime.getDayOfWeek();
+
+        if (dayOfWeek < 3) {
+            return dateTime.plusDays(3 - dayOfWeek).toDate();
+        }
+
+        return dateTime.plusDays(10 - dayOfWeek).toDate();
+    }
+
+    public static Date getNextWednesday(Date date) {
+        return getNextWednesday(new DateTime(date));
     }
 }

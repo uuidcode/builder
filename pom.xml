@@ -4,7 +4,7 @@
 
     <groupId>com.github.uuidcode</groupId>
     <artifactId>builder</artifactId>
-    <version>0.0.42</version>
+    <version>0.0.43</version>
     <packaging>jar</packaging>
 
     <name>builder</name>
@@ -15,7 +15,7 @@
         <connection>scm:git:git://github.com/uuidcode/builder.git</connection>
         <developerConnection>scm:git:ssh://github.com:uuidcode/builder.git</developerConnection>
         <url>https://github.com/uuidcode/builder/tree/master</url>
-      <tag>builder-0.0.42</tag>
+      <tag>builder-0.0.43</tag>
   </scm>
 
     <licenses>
@@ -45,7 +45,6 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.8.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
