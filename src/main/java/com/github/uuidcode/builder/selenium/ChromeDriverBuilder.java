@@ -1,11 +1,14 @@
 package com.github.uuidcode.builder.selenium;
 
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 
+import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
 
 import static java.util.Optional.ofNullable;
@@ -34,21 +37,21 @@ public class ChromeDriverBuilder {
         this(new ChromeOptions());
     }
 
-    public void click(WebElement webElement) {
+    public ChromeDriverBuilder click(WebElement webElement) {
         webElement.click();
-        this.sleep();
+        return this.sleep();
     }
 
-    public void loadUrl(String url) {
+    public ChromeDriverBuilder loadUrl(String url) {
         this.driver.get(url);
-        this.sleep();
+        return this.sleep();
     }
 
-    public void sleep() {
-        this.sleep(2);
+    public ChromeDriverBuilder sleep() {
+        return this.sleep(2);
     }
 
-    public void sleep(int second) {
+    public ChromeDriverBuilder sleep(int second) {
         try {
             Thread.sleep(second * 1000);
         } catch (Throwable t) {
@@ -56,9 +59,11 @@ public class ChromeDriverBuilder {
                 logger.error(">>> error sleep", t);
             }
         }
+
+        return this;
     }
 
-    public void clickByClassName(String className) {
+    public ChromeDriverBuilder clickByClassName(String className) {
         try {
             this.click(this.driver.findElementByClassName(className));
         } catch (Throwable t) {
@@ -66,9 +71,11 @@ public class ChromeDriverBuilder {
                 logger.error(">>> error clickByClassName", t);
             }
         }
+
+        return this;
     }
 
-    public void clickById(String id) {
+    public ChromeDriverBuilder clickById(String id) {
         try {
             WebElement element = this.driver.findElementById(id);
             this.click(element);
@@ -77,6 +84,8 @@ public class ChromeDriverBuilder {
                 logger.error(">>> error clickById", t);
             }
         }
+
+        return this;
     }
 
     public ChromeDriverBuilder sendKeyByClassName(String className, String value) {
@@ -110,39 +119,35 @@ public class ChromeDriverBuilder {
         return this;
     }
 
-    public void scrollDownByClassName(String className) {
-        String method = "getElementsByClassName('" + className + "')";
-        this.scroll(method);
+    public ChromeDriverBuilder scrollDownByClassName(String className) {
+        String method = "document.getElementsByClassName('selector').scrollTop"
+            .replaceAll("selector", className);
+        return this.scroll(method);
     }
 
-    public void scrollDownById(String id) {
-        String method = "getElementById('" + id + "')";
-        this.scroll(method);
+    public ChromeDriverBuilder scrollDownById(String id) {
+        String method = "document.getElementById('selector').scrollTop"
+            .replaceAll("selector", id);
+        return this.scroll(method);
     }
 
-    public void scroll(String method) {
+    public ChromeDriverBuilder scroll(String value) {
         String script = StringStream.of()
-            .add("var element = document." + method + ");")
-            .add("var scrollTop = element.scrollTop;")
+            .add("var scrollTop = expression;".replaceAll("expression", value))
             .add("window.scrollTo(0, scrollTop);")
             .joiningWithSpace();
 
         driver.executeScript(script);
-        this.sleep();
+        return this.sleep();
     }
 
-    public void scroll(int scrollTop) {
-        String script = StringStream.of()
-            .add("var scrollTop = " + scrollTop + ";")
-            .add("window.scrollTo(0, scrollTop);")
-            .joiningWithSpace();
-
-        driver.executeScript(script);
-        this.sleep();
+    public ChromeDriverBuilder scroll(int scrollTop) {
+        return this.scroll(String.valueOf(scrollTop));
     }
 
-    public void quit() {
+    public ChromeDriverBuilder quit() {
         ofNullable(this.driver).ifPresent(ChromeDriver::quit);
+        return this;
     }
 
     public boolean containsAtSource(String content) {
@@ -158,10 +163,16 @@ public class ChromeDriverBuilder {
         return this.driver;
     }
 
-    public void setInnerHTMLByClassName(String className, String content) {
+    public ChromeDriverBuilder setInnerHTMLByClassName(String className, String content) {
+        content = CoreUtil.splitListWithNewLine(content)
+            .stream()
+            .map(line -> line.replaceAll("'", "\'"))
+            .collect(Collectors.joining("\\n"));
+
         WebElement element = driver.findElementByClassName(className);
-        String script = "arguments[0].innerHTML='" + content + "'";
+        String script = "arguments[0].innerHTML= '" + content + "'";
         ((JavascriptExecutor) driver).executeScript(script, element);
-        this.sleep();
+
+        return this.sleep();
     }
 }
