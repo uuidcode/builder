@@ -639,17 +639,73 @@ public class CoreUtil {
         return CoreUtil.setMaxTime(new DateTime(date));
     }
 
-    public static Date getNextWednesday(DateTime dateTime) {
-        int dayOfWeek = dateTime.getDayOfWeek();
+    public static Date getNextDayOfWeek(DateTime dateTime, int dayOfWeek) {
+        int currentDayOfWeek = dateTime.getDayOfWeek();
 
-        if (dayOfWeek < 3) {
-            return dateTime.plusDays(3 - dayOfWeek).toDate();
+        if (currentDayOfWeek < dayOfWeek) {
+            return dateTime.plusDays(dayOfWeek - currentDayOfWeek).toDate();
         }
 
-        return dateTime.plusDays(10 - dayOfWeek).toDate();
+        return dateTime.plusDays(7 + dayOfWeek - currentDayOfWeek).toDate();
+    }
+
+    public static Date getNextDayOfWeek(Date date, int dayOfWeek) {
+        return getNextDayOfWeek(new DateTime(date), dayOfWeek);
+    }
+
+    public static Date getNextMonday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 1);
+    }
+
+    public static Date getNextMonday(Date date) {
+        return getNextMonday(new DateTime(date));
+    }
+
+    public static Date getNextTuesday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 2);
+    }
+
+    public static Date getNextTuesday(Date date) {
+        return getNextTuesday(new DateTime(date));
+    }
+
+    public static Date getNextWednesday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 3);
     }
 
     public static Date getNextWednesday(Date date) {
         return getNextWednesday(new DateTime(date));
+    }
+
+    public static Date getNextThursday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 4);
+    }
+
+    public static Date getNextThursday(Date date) {
+        return getNextThursday(new DateTime(date));
+    }
+
+    public static Date getNextFriday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 5);
+    }
+
+    public static Date getNextFriday(Date date) {
+        return getNextFriday(new DateTime(date));
+    }
+
+    public static Date getNextSaturday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 6);
+    }
+
+    public static Date getNextSaturday(Date date) {
+        return getNextThursday(new DateTime(date));
+    }
+
+    public static Date getNextSunday(DateTime dateTime) {
+        return getNextDayOfWeek(dateTime, 7);
+    }
+
+    public static Date getNextSunday(Date date) {
+        return getNextThursday(new DateTime(date));
     }
 }

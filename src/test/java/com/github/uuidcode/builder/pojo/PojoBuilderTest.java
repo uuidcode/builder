@@ -2,8 +2,6 @@ package com.github.uuidcode.builder.pojo;
 
 import org.junit.Test;
 
-import com.github.uuidcode.util.CoreUtil;
-
 import static com.github.uuidcode.util.CoreUtil.getContentFromResource;
 
 public class PojoBuilderTest {
@@ -15,7 +13,7 @@ public class PojoBuilderTest {
             .setTargetDirectory(".test")
             .addNameConvert("issues", "issue")
             .addExcludeField("itemList")
-            .setJson(CoreUtil.getContentFromResource("pojo/payload.json"))
+            .setJson(getContentFromResource("pojo/payload.json"))
             .build();
     }
 

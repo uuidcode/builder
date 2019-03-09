@@ -3,6 +3,7 @@ package com.github.uuidcode.util;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.DateTime;
@@ -71,16 +72,59 @@ public class CoreUtilTest {
         }
     }
 
-    @Test
-    public void getNextWednesday() {
+    public void getNextDayOfWeek(Function<DateTime, Date> mapper) {
         for (int i = 0; i < 10; i++) {
             DateTime dateTime = new DateTime().plusDays(i);
-            Date date = CoreUtil.getNextWednesday(dateTime);
+            Date date = mapper.apply(dateTime);
 
             if (logger.isDebugEnabled()) {
-                logger.debug(">>> getNextWednesday date: {} {}", toJson(dateTime.toDate()), toJson(date));
+                logger.debug(">>> getNextDayOfWeek date: {} {}", toJson(dateTime.toDate()), toJson(date));
             }
         }
+    }
+    @Test
+    public void getNextDayOfWeek() {
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextMonday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextMonday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextTuesday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextTuesday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextWednesday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextWednesday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextThursday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextThursday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextFriday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextFriday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextSaturday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextSaturday);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> getNextSunday");
+        }
+
+        this.getNextDayOfWeek(CoreUtil::getNextSunday);
     }
 
     public static <T> T clone(T t) {
