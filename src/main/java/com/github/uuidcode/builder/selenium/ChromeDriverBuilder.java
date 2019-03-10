@@ -18,6 +18,16 @@ public class ChromeDriverBuilder {
     protected static Logger logger = getLogger(ChromeDriverBuilder.class);
 
     private ChromeDriver driver;
+    private String host;
+
+    public String getHost() {
+        return this.host;
+    }
+
+    public ChromeDriverBuilder setHost(String host) {
+        this.host = host;
+        return this;
+    }
 
     public static ChromeDriverBuilder of() {
         return new ChromeDriverBuilder();
@@ -43,6 +53,10 @@ public class ChromeDriverBuilder {
     }
 
     public ChromeDriverBuilder loadUrl(String url) {
+        if (this.host != null) {
+            url = this.host + url;
+        }
+
         this.driver.get(url);
         return this.sleep();
     }
