@@ -192,6 +192,21 @@ public class ChromeDriverBuilder {
         return this.sleep();
     }
 
+    public ChromeDriverBuilder script(String script) {
+        ((JavascriptExecutor) driver).executeScript(script);
+        return this;
+    }
+
+    public ChromeDriverBuilder jQueryClick(String selector) {
+        String script = "$('" + selector + "').get(0).click();";
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> jQueryClick script: {}", CoreUtil.toJson(script));
+        }
+
+        return script(script);
+    }
+
     public ChromeDriverBuilder login(LoginForm loginForm) {
         List<String> valueList = splitListWithColon(base64Decode(loginForm.getToken()));
 
