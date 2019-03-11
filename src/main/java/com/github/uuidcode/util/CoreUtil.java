@@ -173,6 +173,12 @@ public class CoreUtil {
         return null;
     }
 
+    public static boolean isEmpty(List list) {
+        return ofNullable(list)
+            .map(List::isEmpty)
+            .orElse(true);
+    }
+
     public static boolean isEmpty(String value) {
         return value == null || value.trim().length() == 0;
     }
