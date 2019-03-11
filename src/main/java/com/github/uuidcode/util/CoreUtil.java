@@ -131,13 +131,18 @@ public class CoreUtil {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    public static String formatDatetime(Date date) {
+
+    public static String formatDatetime(Date date, String pattern) {
         if (date == null) {
             return null;
         }
 
-        FastDateFormat format = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+        FastDateFormat format = FastDateFormat.getInstance(pattern);
         return format.format(date);
+    }
+
+    public static String formatDatetime(Date date) {
+        return formatDatetime(date, "yyyy-MM-dd HH:mm:ss");
     }
 
     public static String formatDate(Date date) {
@@ -538,6 +543,10 @@ public class CoreUtil {
 
     public static List<String> splitListWithSpace(String text) {
         return splitList(text, "\\s");
+    }
+
+    public static List<String> splitListWithColon(String text) {
+        return splitList(text, "\\:");
     }
 
     public static String getClipboard() {

@@ -1,5 +1,7 @@
 package com.github.uuidcode.builder.selenium;
 
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -11,6 +13,9 @@ import org.slf4j.Logger;
 import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
 
+import static com.github.uuidcode.util.CoreUtil.base64Decode;
+import static com.github.uuidcode.util.CoreUtil.splitListWithColon;
+import static java.lang.Runtime.getRuntime;
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -19,6 +24,16 @@ public class ChromeDriverBuilder {
 
     private ChromeDriver driver;
     private String host;
+    private int sleepSecond = 2;
+
+    public int getSleepSecond() {
+        return this.sleepSecond;
+    }
+
+    public ChromeDriverBuilder setSleepSecond(int sleepSecond) {
+        this.sleepSecond = sleepSecond;
+        return this;
+    }
 
     public String getHost() {
         return this.host;
@@ -41,6 +56,11 @@ public class ChromeDriverBuilder {
 
     private ChromeDriverBuilder(ChromeOptions options) {
         this.driver = new ChromeDriver(options);
+        getRuntime().addShutdownHook(createShutdownHook());
+    }
+
+    private Thread createShutdownHook() {
+        return new Thread(() -> this.driver.quit());
     }
 
     private ChromeDriverBuilder() {
@@ -62,7 +82,7 @@ public class ChromeDriverBuilder {
     }
 
     public ChromeDriverBuilder sleep() {
-        return this.sleep(2);
+        return this.sleep(this.sleepSecond);
     }
 
     public ChromeDriverBuilder sleep(int second) {
@@ -77,9 +97,9 @@ public class ChromeDriverBuilder {
         return this;
     }
 
-    public ChromeDriverBuilder clickByClassName(String className) {
+    public ChromeDriverBuilder click(Function<String, WebElement> function, String selector) {
         try {
-            this.click(this.driver.findElementByClassName(className));
+            this.click(function.apply(selector));
         } catch (Throwable t) {
             if (logger.isErrorEnabled()) {
                 logger.error(">>> error clickByClassName", t);
@@ -89,43 +109,25 @@ public class ChromeDriverBuilder {
         return this;
     }
 
-    public ChromeDriverBuilder clickById(String id) {
+    public ChromeDriverBuilder click(String selector) {
+        return click(this.driver::findElementByCssSelector, selector);
+    }
+
+    public ChromeDriverBuilder sendKey(Function<String, WebElement> function,
+                                       String selector, String value) {
         try {
-            WebElement element = this.driver.findElementById(id);
-            this.click(element);
+            this.sendKey(function.apply(selector), value);
         } catch (Throwable t) {
             if (logger.isErrorEnabled()) {
-                logger.error(">>> error clickById", t);
+                logger.error(">>> error clickByClassName", t);
             }
         }
 
         return this;
     }
 
-    public ChromeDriverBuilder sendKeyByClassName(String className, String value) {
-        try {
-            WebElement element = this.driver.findElementByClassName(className);
-            this.sendKey(element, value);
-        } catch (Throwable t) {
-            if (logger.isErrorEnabled()) {
-                logger.error(">>> error sendKeyByClassName", t);
-            }
-        }
-
-        return this;
-    }
-
-    public ChromeDriverBuilder sendKeyById(String id, String value) {
-        try {
-            WebElement element = this.driver.findElementById(id);
-            this.sendKey(element, value);
-        } catch (Throwable t) {
-            if (logger.isErrorEnabled()) {
-                logger.error(">>> error sendKeyById", t);
-            }
-        }
-
-        return this;
+    public ChromeDriverBuilder sendKey(String selector, String value) {
+        return this.sendKey(this.driver::findElementByCssSelector, selector, value);
     }
 
     public ChromeDriverBuilder sendKey(WebElement webElement, String value) {
@@ -186,6 +188,27 @@ public class ChromeDriverBuilder {
         WebElement element = driver.findElementByClassName(className);
         String script = "arguments[0].innerHTML= '" + content + "'";
         ((JavascriptExecutor) driver).executeScript(script, element);
+
+        return this.sleep();
+    }
+
+    public ChromeDriverBuilder login(LoginForm loginForm) {
+        List<String> valueList = splitListWithColon(base64Decode(loginForm.getToken()));
+
+        this.loadUrl(loginForm.getUri());
+        this.sendKey(loginForm.getFirst(), valueList.get(0));
+        this.sendKey(loginForm.getSecond(), valueList.get(1));
+
+        return this.click(loginForm.getThird());
+    }
+
+    public ChromeDriverBuilder click(String selector, String innerText) {
+        this.driver
+            .findElementsByCssSelector(selector)
+            .stream()
+            .filter(element -> element.getAttribute("innerText").equals(innerText))
+            .findFirst()
+            .ifPresent(WebElement::click);
 
         return this.sleep();
     }
