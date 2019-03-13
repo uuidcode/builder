@@ -175,7 +175,7 @@ public class ChromeDriverBuilder {
         return driver.getPageSource().contains(content);
     }
 
-    public ChromeDriver getDriver() {
+    public ChromeDriver getChromeDriver() {
         return this.driver;
     }
 
