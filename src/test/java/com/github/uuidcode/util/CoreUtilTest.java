@@ -1,11 +1,9 @@
 package com.github.uuidcode.util;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -125,23 +123,5 @@ public class CoreUtilTest {
         }
 
         this.getNextDayOfWeek(CoreUtil::getNextSunday);
-    }
-
-    public static <T> T clone(T t) {
-        if (t == null) {
-            return null;
-        }
-
-        try {
-            if (t instanceof Serializable) {
-                return (T) SerializationUtils.clone((Serializable) t);
-            } else {
-                throw new RuntimeException(t + " is not Serializable.");
-            }
-        } catch (Exception e) {
-            logger.error("error", e);
-        }
-
-        return null;
     }
 }
