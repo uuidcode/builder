@@ -83,7 +83,7 @@ public class ChromeDriverBuilder {
     }
 
     private Wait getWait() {
-        return new FluentWait(driver)
+        return new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(5))
                 .pollingEvery(Duration.ofSeconds(1));
     }
