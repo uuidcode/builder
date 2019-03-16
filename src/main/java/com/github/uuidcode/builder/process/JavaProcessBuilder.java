@@ -3,11 +3,16 @@ package com.github.uuidcode.builder.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import com.github.uuidcode.util.CoreUtil;
 
 import static java.util.stream.Collectors.joining;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class JavaProcessBuilder {
+    protected static Logger logger = getLogger(JavaProcessBuilder.class);
+
     private List<String> optionList = new ArrayList<>();
     private List<String> argumentList = new ArrayList<>();
     private List<String> classpathList = new ArrayList<>();
@@ -70,7 +75,13 @@ public class JavaProcessBuilder {
 
     public Process build() {
         try {
-            return Runtime.getRuntime().exec(this.getCommand());
+            String command = this.getCommand();
+
+            if (logger.isDebugEnabled()) {
+                logger.debug(">>> build command: {}", command);
+            }
+
+            return Runtime.getRuntime().exec(command);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
