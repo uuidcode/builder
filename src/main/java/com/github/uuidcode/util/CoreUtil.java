@@ -179,6 +179,10 @@ public class CoreUtil {
             .orElse(true);
     }
 
+    public static boolean isNotEmpty(List list) {
+        return !isEmpty(list);
+    }
+
     public static boolean isEmpty(String value) {
         return value == null || value.trim().length() == 0;
     }
@@ -328,6 +332,14 @@ public class CoreUtil {
 
     public static String lineSeparator() {
         return System.getProperty("line.separator");
+    }
+
+    public static String fileSeparator() {
+        return File.separator;
+    }
+
+    public static String pathSeparator() {
+        return File.pathSeparator;
     }
 
     public static String lineSeparator(int size) {
