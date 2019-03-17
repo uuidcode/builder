@@ -27,6 +27,18 @@ public class JavaProcessBuilder {
         return new JavaProcessBuilder();
     }
 
+    private JavaProcessBuilder printGCDetails() {
+        return this.addOption("-XX:+PrintGCDetails");
+    }
+
+    private JavaProcessBuilder printGCDateStamps() {
+        return this.addOption("-XX:+PrintGCDateStamps");
+    }
+
+    private JavaProcessBuilder loggc(String file) {
+        return this.addOption("-Xloggc:" + file);
+    }
+
     private JavaProcessBuilder Xmn(String value) {
         return this.addOption("-Xmn" + value);
     }
