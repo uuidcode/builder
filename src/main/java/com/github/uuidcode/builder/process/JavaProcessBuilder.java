@@ -1,8 +1,11 @@
 package com.github.uuidcode.builder.process;
 
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
@@ -11,6 +14,8 @@ import static java.util.stream.Collectors.joining;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class JavaProcessBuilder {
+    public static final String MEGA = "M";
+    public static final String GIGA = "G";
     protected static Logger logger = getLogger(JavaProcessBuilder.class);
 
     private List<String> optionList = new ArrayList<>();
@@ -20,6 +25,42 @@ public class JavaProcessBuilder {
 
     public static JavaProcessBuilder of() {
         return new JavaProcessBuilder();
+    }
+
+    private JavaProcessBuilder Xmn(String value) {
+        return this.addOption("-Xmn" + value);
+    }
+
+    public JavaProcessBuilder XmnMega(int value) {
+        return this.Xmn(value + MEGA);
+    }
+
+    public JavaProcessBuilder XmnGiga(int value) {
+        return this.Xmn(value + GIGA);
+    }
+
+    private JavaProcessBuilder Xms(String value) {
+        return this.addOption("-Xms" + value);
+    }
+
+    public JavaProcessBuilder XmsMega(int value) {
+        return this.Xms(value + MEGA);
+    }
+
+    public JavaProcessBuilder XmsGiga(int value) {
+        return this.Xms(value + GIGA);
+    }
+
+    private JavaProcessBuilder Xmx(String value) {
+        return this.addOption("-Xmx" + value);
+    }
+
+    public JavaProcessBuilder XmxMega(int value) {
+        return this.Xms(value + MEGA);
+    }
+
+    public JavaProcessBuilder XmxGiga(int value) {
+        return this.Xms(value + GIGA);
     }
 
     public JavaProcessBuilder addOption(String option) {
@@ -40,6 +81,10 @@ public class JavaProcessBuilder {
     public JavaProcessBuilder addClasspath(String classpath) {
         this.classpathList.add(classpath);
         return this;
+    }
+
+    public JavaProcessBuilder addDefaultClasspath() {
+        return this.addClasspath("target/classes");
     }
 
     public JavaProcessBuilder setClassName(String className) {
@@ -73,7 +118,7 @@ public class JavaProcessBuilder {
             .collect(joining(CoreUtil.pathSeparator()));
     }
 
-    public Process build() {
+    public Process run() {
         try {
             String command = this.getCommand();
 
@@ -82,6 +127,16 @@ public class JavaProcessBuilder {
             }
 
             return Runtime.getRuntime().exec(command);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
+    public String runAndGetResult() {
+        try {
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(this.run().getInputStream(), writer, StandardCharsets.UTF_8);
+            return writer.toString();
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

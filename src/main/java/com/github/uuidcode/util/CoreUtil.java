@@ -6,6 +6,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -734,5 +735,22 @@ public class CoreUtil {
 
     public static Date getNextSunday(Date date) {
         return getNextThursday(new DateTime(date));
+    }
+
+    public static String getJarPath(Class clazz) {
+        try {
+            URI uri = clazz.getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI();
+
+            return new File(uri).getPath();
+        } catch (Throwable t) {
+            if (logger.isErrorEnabled()) {
+                logger.error("error CoreUtil getJarPath", t);
+            }
+        }
+
+        return null;
     }
 }
