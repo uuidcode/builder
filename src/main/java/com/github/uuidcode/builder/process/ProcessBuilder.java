@@ -1,11 +1,13 @@
 package com.github.uuidcode.builder.process;
 
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
+import static com.github.uuidcode.util.CoreUtil.splitListWithNewLine;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public interface ProcessBuilder {
@@ -27,13 +29,17 @@ public interface ProcessBuilder {
         }
     }
 
-    default  String runAndGetResult() {
+    default String runAndGetResult() {
         try {
             StringWriter writer = new StringWriter();
-            IOUtils.copy(this.run().getInputStream(), writer, StandardCharsets.UTF_8);
+            IOUtils.copy(this.run().getInputStream(), writer, UTF_8);
             return writer.toString();
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
+    }
+
+    default List<String> runAndGetResultList() {
+        return splitListWithNewLine(this.runAndGetResult());
     }
 }
