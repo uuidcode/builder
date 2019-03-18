@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -799,5 +800,15 @@ public class CoreUtil {
         return ofNullable(line)
             .map(l -> l.replaceAll("'", "\'"))
             .orElse(null);
+    }
+
+    public static <T, R> Function<T, R> unchecked(CheckedFunction<T, R> mapper) {
+        return t -> {
+            try {
+                return mapper.apply(t);
+            } catch (Throwable throwable) {
+                throw new RuntimeException(throwable);
+            }
+        };
     }
 }
