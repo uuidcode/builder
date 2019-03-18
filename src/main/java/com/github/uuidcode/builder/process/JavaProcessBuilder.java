@@ -1,11 +1,8 @@
 package com.github.uuidcode.builder.process;
 
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
@@ -13,7 +10,7 @@ import com.github.uuidcode.util.CoreUtil;
 import static java.util.stream.Collectors.joining;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class JavaProcessBuilder {
+public class JavaProcessBuilder implements ProcessBuilder {
     public static final String MEGA = "M";
     public static final String GIGA = "G";
     protected static Logger logger = getLogger(JavaProcessBuilder.class);
@@ -27,15 +24,15 @@ public class JavaProcessBuilder {
         return new JavaProcessBuilder();
     }
 
-    private JavaProcessBuilder printGCDetails() {
+    public JavaProcessBuilder printGCDetails() {
         return this.addOption("-XX:+PrintGCDetails");
     }
 
-    private JavaProcessBuilder printGCDateStamps() {
+    public JavaProcessBuilder printGCDateStamps() {
         return this.addOption("-XX:+PrintGCDateStamps");
     }
 
-    private JavaProcessBuilder loggc(String file) {
+    public JavaProcessBuilder loggc(String file) {
         return this.addOption("-Xloggc:" + file);
     }
 
@@ -95,6 +92,11 @@ public class JavaProcessBuilder {
         return this;
     }
 
+    public JavaProcessBuilder addClasspath(List<String> classpathList) {
+        this.classpathList.addAll(classpathList);
+        return this;
+    }
+
     public JavaProcessBuilder addDefaultClasspath() {
         return this.addClasspath("target/classes");
     }
@@ -108,6 +110,7 @@ public class JavaProcessBuilder {
         return this.setClassName(clazz.getName());
     }
 
+    @Override
     public String getCommand() {
         List<String> commandList = new ArrayList<>();
 
@@ -128,29 +131,5 @@ public class JavaProcessBuilder {
     public String createClassPath() {
         return this.classpathList.stream()
             .collect(joining(CoreUtil.pathSeparator()));
-    }
-
-    public Process run() {
-        try {
-            String command = this.getCommand();
-
-            if (logger.isDebugEnabled()) {
-                logger.debug(">>> build command: {}", command);
-            }
-
-            return Runtime.getRuntime().exec(command);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    public String runAndGetResult() {
-        try {
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(this.run().getInputStream(), writer, StandardCharsets.UTF_8);
-            return writer.toString();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
     }
 }

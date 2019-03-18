@@ -55,7 +55,7 @@ public class CoreUtil {
     public static final String EMPTY = "";
     public static final String LINE_FEED = "\n";
     public static final String COMMA = ",";
-    public static final String HYPHEN = "_";
+    public static final String HYPHEN = "-";
     public static final String VERTICAL_BAR = "|";
     public static final String SLASH = "/";
     public static final String BACK_SLASH = "\\";

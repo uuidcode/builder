@@ -145,6 +145,7 @@ public class ChromeDriverBuilder {
     public ChromeDriverBuilder click(By by) {
         try {
             this.wait(by).click();
+            this.sleep();
         } catch (Throwable t) {
             if (logger.isErrorEnabled()) {
                 logger.error(">>> error ChromeDriverBuilder click", t);
@@ -186,13 +187,13 @@ public class ChromeDriverBuilder {
         return this.driver;
     }
 
-    public ChromeDriverBuilder setInnerHTMLByClassName(String className, String content) {
+    public ChromeDriverBuilder setInnerHTML(By by, String content) {
         content = CoreUtil.splitListWithNewLine(content)
             .stream()
             .map(line -> line.replaceAll("'", "\'"))
             .collect(Collectors.joining("\\n"));
 
-        WebElement element = driver.findElementByClassName(className);
+        WebElement element = driver.findElement(by);
         String script = "arguments[0].innerHTML= '" + content + "'";
         ((JavascriptExecutor) driver).executeScript(script, element);
 
