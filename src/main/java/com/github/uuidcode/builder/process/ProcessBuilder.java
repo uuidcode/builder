@@ -1,13 +1,14 @@
 package com.github.uuidcode.builder.process;
 
-import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import org.jooq.lambda.Unchecked;
 import org.slf4j.Logger;
 
-import static com.github.uuidcode.util.CoreUtil.splitListWithNewLine;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.github.uuidcode.util.CoreUtil;
+
+import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public interface ProcessBuilder {
@@ -18,6 +19,7 @@ public interface ProcessBuilder {
     default Process run() {
         try {
             String command = this.getCommand();
+
 
             if (logger.isDebugEnabled()) {
                 logger.debug(">>> build command: {}", command);
@@ -30,16 +32,15 @@ public interface ProcessBuilder {
     }
 
     default String runAndGetResult() {
-        try {
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(this.run().getInputStream(), writer, UTF_8);
-            return writer.toString();
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
+        return ofNullable(this.run())
+            .map(Process::getInputStream)
+            .map(Unchecked.function(CoreUtil::toString))
+            .orElse(null);
     }
 
     default List<String> runAndGetResultList() {
-        return splitListWithNewLine(this.runAndGetResult());
+        return ofNullable(this.runAndGetResult())
+            .map(CoreUtil::splitListWithNewLine)
+            .orElse(new ArrayList<>());
     }
 }

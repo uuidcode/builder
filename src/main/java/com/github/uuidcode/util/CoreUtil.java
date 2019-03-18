@@ -3,6 +3,8 @@ package com.github.uuidcode.util;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,6 +12,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -25,6 +28,7 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.http.NameValuePair;
@@ -785,5 +789,9 @@ public class CoreUtil {
         }
 
         return null;
+    }
+
+    public static String toString(InputStream in) throws IOException {
+        return IOUtils.toString(in, StandardCharsets.UTF_8);
     }
 }
