@@ -59,7 +59,7 @@ public class CoreUtil {
     public static final String HYPHEN = "-";
     public static final String VERTICAL_BAR = "|";
     public static final String SLASH = "/";
-    public static final String BACK_SLASH = "\\";
+    public static final String BACK_SLASH = "\\\\";
     public static final String QUESTION_MARK = "?";
     public static final String DOT = ".";
     public static final String AMPERSAND = "&";
