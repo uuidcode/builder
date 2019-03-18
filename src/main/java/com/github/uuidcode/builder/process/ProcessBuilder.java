@@ -1,6 +1,5 @@
 package com.github.uuidcode.builder.process;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,20 +18,20 @@ public interface ProcessBuilder {
         return ofNullable(this.getCommand())
             .map(this::logCommand)
             .uncheckedMap(Runtime.getRuntime()::exec)
-            .orElse(null);
+            .orElseNull();
     }
 
     default String runAndGetResult() {
         return ofNullable(this.run())
             .map(Process::getInputStream)
             .uncheckedMap(CoreUtil::toString)
-            .orElse(null);
+            .orElseNull();
     }
 
     default List<String> runAndGetResultList() {
         return ofNullable(this.runAndGetResult())
             .map(CoreUtil::splitListWithNewLine)
-            .orElse(new ArrayList<>());
+            .orElseList();
     }
 
     default String logCommand(String command) {

@@ -1,5 +1,6 @@
 package com.github.uuidcode.util;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -228,6 +229,14 @@ public class OptionalEx<T> {
      */
     public T orElse(T other) {
         return value != null ? value : other;
+    }
+
+    public T orElseList() {
+        return value != null ? value : (T) new ArrayList<>();
+    }
+
+    public T orElseNull() {
+        return value != null ? value : null;
     }
 
     /**
