@@ -17,18 +17,15 @@ public interface ProcessBuilder {
     String getCommand();
 
     default Process run() {
-        try {
-            String command = this.getCommand();
+        String command = this.getCommand();
 
-
-            if (logger.isDebugEnabled()) {
-                logger.debug(">>> build command: {}", command);
-            }
-
-            return Runtime.getRuntime().exec(command);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> run command: {}", command);
         }
+
+        return ofNullable(Runtime.getRuntime())
+            .map(Unchecked.function(runtime -> runtime.exec(command)))
+            .orElse(null);
     }
 
     default String runAndGetResult() {
