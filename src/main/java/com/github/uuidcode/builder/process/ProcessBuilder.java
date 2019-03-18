@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
-import static com.github.uuidcode.util.CoreUtil.unchecked;
-import static java.util.Optional.ofNullable;
+import static com.github.uuidcode.util.OptionalEx.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public interface ProcessBuilder {
@@ -19,14 +18,14 @@ public interface ProcessBuilder {
     default Process run() {
         return ofNullable(this.getCommand())
             .map(this::logCommand)
-            .map(unchecked(Runtime.getRuntime()::exec))
+            .uncheckedMap(Runtime.getRuntime()::exec)
             .orElse(null);
     }
 
     default String runAndGetResult() {
         return ofNullable(this.run())
             .map(Process::getInputStream)
-            .map(unchecked(CoreUtil::toString))
+            .uncheckedMap(CoreUtil::toString)
             .orElse(null);
     }
 
