@@ -566,7 +566,7 @@ public class CoreUtil {
             return null;
         }
 
-        return list.get(list.size());
+        return list.get(list.size() - 1);
     }
 
     public static <T> Optional<T> firstAsOptional(List<T> list) {
@@ -793,5 +793,11 @@ public class CoreUtil {
 
     public static String toString(InputStream in) throws IOException {
         return IOUtils.toString(in, StandardCharsets.UTF_8);
+    }
+
+    public static String escapeSingleQuotation(String line) {
+        return ofNullable(line)
+            .map(l -> l.replaceAll("'", "\'"))
+            .orElse(null);
     }
 }

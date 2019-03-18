@@ -39,7 +39,6 @@ public class MavenProcessBuilder implements ProcessBuilder {
             .collect(toList());
     }
 
-
     public List<String> getLibraryPathList() {
         String result = this.dependencyBuildClasspath().runAndGetResult();
         List<String> list = CoreUtil.splitListWithNewLine(result);

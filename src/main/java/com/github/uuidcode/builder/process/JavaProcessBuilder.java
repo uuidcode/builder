@@ -65,11 +65,11 @@ public class JavaProcessBuilder implements ProcessBuilder {
     }
 
     public JavaProcessBuilder XmxMega(int value) {
-        return this.Xms(value + MEGA);
+        return this.Xmx(value + MEGA);
     }
 
     public JavaProcessBuilder XmxGiga(int value) {
-        return this.Xms(value + GIGA);
+        return this.Xmx(value + GIGA);
     }
 
     public JavaProcessBuilder addOption(String option) {

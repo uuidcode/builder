@@ -2,7 +2,6 @@ package com.github.uuidcode.builder.selenium;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -17,10 +16,12 @@ import org.slf4j.Logger;
 import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
 
+import static com.github.uuidcode.util.CoreUtil.LINE_FEED;
 import static com.github.uuidcode.util.CoreUtil.base64Decode;
 import static com.github.uuidcode.util.CoreUtil.splitListWithColon;
 import static java.lang.Runtime.getRuntime;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.joining;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ChromeDriverBuilder {
@@ -190,8 +191,8 @@ public class ChromeDriverBuilder {
     public ChromeDriverBuilder setInnerHTML(By by, String content) {
         content = CoreUtil.splitListWithNewLine(content)
             .stream()
-            .map(line -> line.replaceAll("'", "\'"))
-            .collect(Collectors.joining("\\n"));
+            .map(CoreUtil::escapeSingleQuotation)
+            .collect(joining(LINE_FEED));
 
         WebElement element = driver.findElement(by);
         String script = "arguments[0].innerHTML= '" + content + "'";
