@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -550,6 +551,38 @@ public class CoreUtil {
         }
 
         return asList(text.split(delimiter));
+    }
+
+    public static List<String> splitListWithFilePathSeparator(String path) {
+        return CoreUtil.splitList(path, File.pathSeparator);
+    }
+
+    public static <T> T last(List<T> list) {
+        if (CoreUtil.isEmpty(list)) {
+            return null;
+        }
+
+        return list.get(list.size());
+    }
+
+    public static <T> Optional<T> firstAsOptional(List<T> list) {
+        return ofNullable(first(list));
+    }
+
+    public static <T> T first(List<T> list) {
+        if (CoreUtil.isEmpty(list)) {
+            return null;
+        }
+
+        return list.get(0);
+    }
+
+    public static <T> Optional<T> lastAsOptional(List<T> list) {
+        return ofNullable(last(list));
+    }
+
+    public static List<String> splitListWithFileSeparator(String path) {
+        return CoreUtil.splitList(path, File.separator);
     }
 
     public static List<String> splitList(String text) {
