@@ -33,6 +33,12 @@ public class OptionalEx<T> {
         return optionalEx;
     }
 
+    public static <T> OptionalEx<T> ofNullable(Optional<T> optional) {
+        OptionalEx optionalEx = new OptionalEx();
+        optionalEx.optional = optional;
+        return optionalEx;
+    }
+
     public T get() {
         return this.optional.get();
     }
