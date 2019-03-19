@@ -261,6 +261,10 @@ public class CoreUtil {
         return CoreUtil.joining(list, COMMA);
     }
 
+    public static String joiningWithPathSeparator(List<String> list) {
+        return CoreUtil.joining(list, File.pathSeparator);
+    }
+
     public static String joiningWithCommaAndSpace(List<String> list) {
         return CoreUtil.joining(list, CoreUtil.commaAndSpace());
     }

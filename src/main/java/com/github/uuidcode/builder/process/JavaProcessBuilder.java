@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 
 import com.github.uuidcode.util.CoreUtil;
 
-import static java.util.stream.Collectors.joining;
+import static com.github.uuidcode.util.CoreUtil.SPACE;
+import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class JavaProcessBuilder implements ProcessBuilder {
@@ -116,20 +117,18 @@ public class JavaProcessBuilder implements ProcessBuilder {
 
         commandList.add("java");
         commandList.addAll(this.optionList);
-
-        if (CoreUtil.isNotEmpty(this.classpathList)) {
-            commandList.add("-cp");
-            commandList.add(this.createClassPath());
-        }
-
+        commandList.addAll(this.createClassPath());
         commandList.add(this.className);
         commandList.addAll(this.argumentList);
 
-        return commandList.stream().collect(joining(CoreUtil.SPACE));
+        return String.join(SPACE, commandList);
     }
 
-    public String createClassPath() {
-        return this.classpathList.stream()
-            .collect(joining(CoreUtil.pathSeparator()));
+    public List<String> createClassPath() {
+        return ofNullable(this.classpathList)
+            .map(CoreUtil::joiningWithPathSeparator)
+            .filter(CoreUtil::isNotEmpty)
+            .map(path -> CoreUtil.asList("-cp", path))
+            .orElse(new ArrayList<>());
     }
 }

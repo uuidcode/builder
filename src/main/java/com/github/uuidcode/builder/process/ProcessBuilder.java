@@ -17,14 +17,9 @@ public interface ProcessBuilder {
     String getCommand();
 
     default Process run() {
-        String command = this.getCommand();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug(">>> run command: {}", command);
-        }
-
-        return ofNullable(Runtime.getRuntime())
-            .map(unchecked(runtime -> runtime.exec(command)))
+        return ofNullable(this.getCommand())
+            .map(this::logCommand)
+            .map(unchecked(Runtime.getRuntime()::exec))
             .orElse(null);
     }
 
@@ -39,5 +34,13 @@ public interface ProcessBuilder {
         return ofNullable(this.runAndGetResult())
             .map(CoreUtil::splitListWithNewLine)
             .orElse(new ArrayList<>());
+    }
+
+    default String logCommand(String command) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> run command: {}", command);
+        }
+
+        return command;
     }
 }
