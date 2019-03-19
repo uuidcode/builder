@@ -19,11 +19,11 @@ public class OptionalExTest {
         Optional<File> firstFileOptional = Arrays.stream(file.listFiles()).findFirst();
 
         OptionalEx.ofNullable(firstFileOptional)
-            .map(f -> log(f, logger, ">>> getCanonicalPath {}", f.getName()))
+            .map(f -> log(f, logger, ">>> getCanonicalPath {} {}", f.getName(), f.length()))
             .mapUnchecked(File::getCanonicalPath)
-            .map(name -> log(name, logger, ">>> getCanonicalPath {}", name))
+            .map(name -> log(name, logger, ">>> getCanonicalPath {}"))
             .map(String::toUpperCase)
-            .map(name -> log(name, logger, ">>> toUpperCase {}", name))
+            .map(name -> log(name, logger, ">>> toUpperCase {}"))
             .orElse(null);
     }
 }
