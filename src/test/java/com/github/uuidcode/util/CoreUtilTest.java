@@ -1,12 +1,16 @@
 package com.github.uuidcode.util;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
+
+import com.github.uuidcode.builder.domain.Person;
 
 import static com.github.uuidcode.util.CoreUtil.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -123,5 +127,24 @@ public class CoreUtilTest {
         }
 
         this.getNextDayOfWeek(CoreUtil::getNextSunday);
+    }
+
+    @Test
+    public void toPredicateTest() {
+        List<Person> list = new ArrayList<>();
+        list.add(Person.of().setName("1"));
+        list.add(Person.of().setName("2"));
+
+        list.stream()
+            .filter(person -> Objects.equals(person.getName(), "1"))
+            .forEach(System.out::println);
+
+        list.stream()
+            .filter(person -> person.isSameName("1"))
+            .forEach(System.out::println);
+
+        list.stream()
+            .filter(Person.sameName("1"))
+            .forEach(System.out::println);
     }
 }
