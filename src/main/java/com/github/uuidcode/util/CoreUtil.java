@@ -833,4 +833,11 @@ public class CoreUtil {
     public static Predicate<Map.Entry<String, String>> keyStartsWith(String type) {
         return entry -> entry.getKey().startsWith(type);
     }
+
+    public static <T> Predicate<T> equals(Function<T, String> mapper, String value) {
+        return t -> ofNullable(t)
+            .map(mapper)
+            .filter(text -> Objects.equals(text, value))
+            .isPresent();
+    }
 }

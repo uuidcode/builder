@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import com.github.uuidcode.builder.domain.Person;
 
 import static com.github.uuidcode.util.CoreUtil.toJson;
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -146,5 +147,30 @@ public class CoreUtilTest {
         list.stream()
             .filter(Person.sameName("1"))
             .forEach(System.out::println);
+    }
+
+    @Test
+    public void equals() {
+        assertThat(Objects.equals(null, null)).isTrue();
+    }
+
+    @Test
+    public void predicateEqualsTest() {
+        {
+            Person p = null;
+            Person person = ofNullable(p)
+                .filter(CoreUtil.equals(Person::getName, "hello"))
+                .orElse(Person.of())
+                .assertName(null);
+        }
+
+        {
+            Person p = Person.of().setName("hello");
+            Person person = ofNullable(p)
+                .filter(CoreUtil.equals(Person::getName, "hello"))
+                .orElse(Person.of())
+                .assertName("hello");
+        }
+
     }
 }
