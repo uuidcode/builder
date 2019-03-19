@@ -796,8 +796,12 @@ public class CoreUtil {
         return null;
     }
 
-    public static String toString(InputStream in) throws IOException {
+    private static String internalInputStreamToString(InputStream in) throws IOException {
         return IOUtils.toString(in, StandardCharsets.UTF_8);
+    }
+
+    public static String inputStreamToString(InputStream in) {
+        return unchecked(CoreUtil::internalInputStreamToString).apply(in);
     }
 
     public static String escapeSingleQuotation(String line) {
@@ -814,5 +818,14 @@ public class CoreUtil {
                 throw new RuntimeException(throwable);
             }
         };
+    }
+
+    public static Process exec(String command) {
+        return CoreUtil.unchecked(CoreUtil::internalExec)
+            .apply(command);
+    }
+
+    private static Process internalExec(String line) throws IOException {
+        return Runtime.getRuntime().exec(line);
     }
 }
