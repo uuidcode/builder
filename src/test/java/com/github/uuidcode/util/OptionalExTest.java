@@ -24,12 +24,16 @@ public class OptionalExTest {
             .stream()
             .findFirst();
 
-        ofNullable(firstFileOptional)
+        String firstFileName = ofNullable(firstFileOptional)
             .map(f -> log(f, logger, ">>> getCanonicalPath {} {}", f.getName(), f.length()))
             .mapUnchecked(File::getCanonicalPath)
             .map(name -> log(name, logger, ">>> getCanonicalPath {}"))
             .map(String::toUpperCase)
             .map(name -> log(name, logger, ">>> toUpperCase {}"))
-            .orElse(null);
+            .orElseNull();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> unchecked firstFileName: {}", CoreUtil.toJson(firstFileName));
+        }
     }
 }
