@@ -17,14 +17,14 @@ public interface ProcessBuilder {
     default Process run() {
         return ofNullable(this.getCommand())
             .map(this::logCommand)
-            .uncheckedMap(Runtime.getRuntime()::exec)
+            .mapUnchecked(Runtime.getRuntime()::exec)
             .orElseNull();
     }
 
     default String runAndGetResult() {
         return ofNullable(this.run())
             .map(Process::getInputStream)
-            .uncheckedMap(CoreUtil::toString)
+            .mapUnchecked(CoreUtil::toString)
             .orElseNull();
     }
 

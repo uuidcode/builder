@@ -806,7 +806,7 @@ public class CoreUtil {
             .orElse(null);
     }
 
-    public static <T, R> Function<T, R> unchecked(CheckedFunction<T, R> mapper) {
+    public static <T, R> Function<? super T, ? extends R> unchecked(CheckedFunction<? super T, ? extends R> mapper) {
         return t -> {
             try {
                 return mapper.apply(t);
