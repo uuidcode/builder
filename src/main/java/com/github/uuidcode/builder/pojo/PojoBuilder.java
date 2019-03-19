@@ -13,6 +13,7 @@ import com.github.uuidcode.util.CoreUtil;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_DATE;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
+import static com.github.uuidcode.util.CoreUtil.keyStartsWith;
 import static com.github.uuidcode.util.CoreUtil.splitListWithSpace;
 import static com.github.uuidcode.util.CoreUtil.toFirstCharUpperCase;
 
@@ -49,11 +50,14 @@ public class PojoBuilder {
         return this.targetDirectory;
     }
 
+    public static boolean isAvailableField(Entry<String, Object> entry) {
+        return isAvailableField(entry.getKey());
+    }
+
     public static boolean isAvailableField(String name) {
         if (includedFieldSet.isEmpty() && excludedFieldSet.isEmpty()) {
             return true;
         }
-
 
         if (includedFieldSet.isEmpty()) {
             return !excludedFieldSet.contains(name);
@@ -111,7 +115,7 @@ public class PojoBuilder {
     public static List<Property> getPropertyListFromMap(Map<String, Object> map) {
         return map.entrySet()
             .stream()
-            .filter(entry -> PojoBuilder.isAvailableField(entry.getKey()))
+            .filter(PojoBuilder::isAvailableField)
             .map(Property::of)
             .collect(Collectors.toList());
     }
@@ -119,7 +123,7 @@ public class PojoBuilder {
     private String getConvertedType(String type) {
         return typeConvertMap.entrySet()
             .stream()
-            .filter(entry -> entry.getKey().startsWith(type))
+            .filter(keyStartsWith(type))
             .findFirst()
             .map(Entry::getValue)
             .orElse(TYPE_STRING);

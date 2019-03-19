@@ -1,6 +1,5 @@
 package com.github.uuidcode.builder.pojo;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ import static com.github.uuidcode.builder.pojo.Property.TYPE_BOOLEAN;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_DATE;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_LONG;
 import static com.github.uuidcode.builder.pojo.Property.TYPE_STRING;
+import static com.github.uuidcode.util.CoreUtil.first;
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -92,16 +92,14 @@ class PropertyTypeConverter {
     static Property listType(Property property) {
         List list = (List) property.getValue();
         String name = property.getName();
-        Object value = ofNullable(list)
-            .orElse(new ArrayList())
-            .stream()
-            .findFirst()
-            .orElse(null);
+        Object value = first(list);
 
-        Property itemProperty = Property.of()
+        return Property.of()
             .setName(name)
-            .setValue(value);
-
-        return convert(itemProperty).setIsList(true);
+            .setValue(value)
+            .optional()
+            .map(PropertyTypeConverter::convert)
+            .map(Property::setIsList)
+            .get();
     }
 }

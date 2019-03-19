@@ -1,6 +1,7 @@
 package com.github.uuidcode.builder.pojo;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
@@ -55,6 +56,10 @@ public class Property {
         return this;
     }
 
+    public Property setIsList() {
+        return this.setIsList(true);
+    }
+
     public boolean isDate() {
         return this.type.equals(TYPE_DATE);
     }
@@ -90,6 +95,10 @@ public class Property {
 
     public Object getValue() {
         return this.value;
+    }
+
+    public Optional<Property> optional() {
+        return Optional.of(this);
     }
 
     public Property setValue(Object value) {

@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -827,5 +828,9 @@ public class CoreUtil {
 
     private static Process internalExec(String line) throws IOException {
         return Runtime.getRuntime().exec(line);
+    }
+
+    public static Predicate<Map.Entry<String, String>> keyStartsWith(String type) {
+        return entry -> entry.getKey().startsWith(type);
     }
 }
