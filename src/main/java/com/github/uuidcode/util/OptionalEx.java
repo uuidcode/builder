@@ -69,7 +69,7 @@ public class OptionalEx<T> {
     }
 
     public <U> OptionalEx<U> map(Function<? super T, ? extends U> mapper) {
-        U u = this.optional.map(mapper).get();
+        U u = this.optional.map(mapper).orElse(null);
         return OptionalEx.ofNullable(u);
     }
 
@@ -91,7 +91,7 @@ public class OptionalEx<T> {
 
     public <U> OptionalEx<U> mapUnchecked(CheckedFunction<? super T, ? extends U> mapper) {
         Function<? super T, ? extends U> unchecked = CoreUtil.unchecked(mapper);
-        U u = this.optional.map(unchecked).get();
+        U u = this.optional.map(unchecked).orElse(null);
         return OptionalEx.ofNullable(u);
     }
 

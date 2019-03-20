@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import static com.github.uuidcode.util.OptionalEx.log;
 import static com.github.uuidcode.util.OptionalEx.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,11 +24,8 @@ public class OptionalExTest {
             .findFirst();
 
         String firstFileName = ofNullable(firstFileOptional)
-            .map(f -> log(f, logger, ">>> getCanonicalPath {} {}", f.getName(), f.length()))
             .mapUnchecked(File::getCanonicalPath)
-            .map(name -> log(name, logger, ">>> getCanonicalPath {}"))
             .map(String::toUpperCase)
-            .map(name -> log(name, logger, ">>> toUpperCase {}"))
             .orElseNull();
 
         if (logger.isDebugEnabled()) {
