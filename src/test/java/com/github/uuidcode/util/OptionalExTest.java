@@ -24,6 +24,7 @@ public class OptionalExTest {
             .findFirst();
 
         String firstFileName = ofNullable(firstFileOptional)
+            .map(f -> OptionalEx.log(f, logger, "path: {}", f.getName()))
             .mapUnchecked(File::getCanonicalPath)
             .map(String::toUpperCase)
             .orElseNull();
