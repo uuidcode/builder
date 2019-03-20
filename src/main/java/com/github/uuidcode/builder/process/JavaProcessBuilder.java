@@ -25,6 +25,22 @@ public class JavaProcessBuilder implements ProcessBuilder {
         return new JavaProcessBuilder();
     }
 
+    public JavaProcessBuilder useG1GC() {
+        return this.addOption("-XX:+UseG1GC");
+    }
+
+    public JavaProcessBuilder useConcMarkSweepGC() {
+        return this.addOption("-XX:+UseConcMarkSweepGC");
+    }
+
+    public JavaProcessBuilder useParallelOldGC() {
+        return this.addOption("-XX:+UseParallelOldGC");
+    }
+
+    public JavaProcessBuilder useSerialGC() {
+        return this.addOption("-XX:+UseSerialGC");
+    }
+
     public JavaProcessBuilder printGCDetails() {
         return this.addOption("-XX:+PrintGCDetails");
     }
@@ -35,6 +51,10 @@ public class JavaProcessBuilder implements ProcessBuilder {
 
     public JavaProcessBuilder loggc(String file) {
         return this.addOption("-Xloggc:" + file);
+    }
+
+    public JavaProcessBuilder javaagent(String javaagent) {
+        return this.addOption("-javaagent:" + javaagent);
     }
 
     private JavaProcessBuilder Xmn(String value) {
