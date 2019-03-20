@@ -41,6 +41,16 @@ public class CoreUtilTest {
             assertThat(actual).isEqualTo("1\n\n2");
         }
 
+        {
+            String actual = CoreUtil.multipleEmptyLineToOneEmptyLine("\n1\n\n2\n\n");
+            assertThat(actual).isEqualTo("1\n\n2");
+        }
+
+        {
+            String actual = CoreUtil.multipleEmptyLineToOneEmptyLine("\n\n1\n\n2");
+            assertThat(actual).isEqualTo("1\n\n2");
+        }
+
     }
     
     @Test

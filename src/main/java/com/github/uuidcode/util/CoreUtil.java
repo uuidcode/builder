@@ -626,31 +626,43 @@ public class CoreUtil {
     public static String multipleEmptyLineToOneEmptyLine(String content) {
         List<String> list = CoreUtil.splitListWithNewLine(content);
 
-        boolean previousEmpty = false;
+        setNullUntilNotEmpty(list);
 
-        for (int i = 0; i < list.size(); i++) {
-            String line = list.get(i);
+        for (int i = 0; i < list.size() - 1; i++) {
+            String currentLine = list.get(i);
+            String nextLine = list.get(i + 1);
 
-            if (i == 0 && isEmpty(line)) {
-                list.set(i, null);
-                continue;
-            }
-
-            if (isNotEmpty(line)) {
-                previousEmpty = false;
-                continue;
-            }
-
-            if (previousEmpty) {
+            if (CoreUtil.isEmpty(currentLine) && CoreUtil.isEmpty(nextLine)) {
                 list.set(i, null);
             }
-
-            previousEmpty = true;
         }
 
         return list.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.joining(LINE_FEED));
+    }
+
+    private static void setNullUntilNotEmpty(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            if (setNullUntilNotEmpty(list, i)) {
+                break;
+            }
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            if (setNullUntilNotEmpty(list, list.size() - 1 - i)) {
+                break;
+            }
+        }
+    }
+
+    private static boolean setNullUntilNotEmpty(List<String> list, int i) {
+        if (CoreUtil.isNotEmpty(list.get(i))) {
+            return true;
+        }
+
+        list.set(i, null);
+        return false;
     }
 
     public static String base64Encode(String text) {
