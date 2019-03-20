@@ -16,25 +16,19 @@ public class OptionalEx<T> {
     }
 
     public static <T> OptionalEx<T> empty() {
-        OptionalEx optionalEx = new OptionalEx();
-        optionalEx.optional = Optional.empty();
-        return optionalEx;
+        return ofNullable(Optional.empty());
     }
 
     public static <T> OptionalEx<T> of(T value) {
-        OptionalEx optionalEx = new OptionalEx();
-        optionalEx.optional = Optional.of(value);
-        return optionalEx;
+        return ofNullable(Optional.of(value));
     }
 
     public static <T> OptionalEx<T> ofNullable(T value) {
-        OptionalEx optionalEx = new OptionalEx();
-        optionalEx.optional = Optional.ofNullable(value);
-        return optionalEx;
+        return ofNullable(Optional.ofNullable(value));
     }
 
     public static <T> OptionalEx<T> ofNullable(Optional<T> optional) {
-        OptionalEx optionalEx = new OptionalEx();
+        OptionalEx<T> optionalEx = new OptionalEx<>();
         optionalEx.optional = optional;
         return optionalEx;
     }
@@ -71,22 +65,6 @@ public class OptionalEx<T> {
     public <U> OptionalEx<U> map(Function<? super T, ? extends U> mapper) {
         U u = this.optional.map(mapper).orElse(null);
         return OptionalEx.ofNullable(u);
-    }
-
-    public OptionalEx<T> mapJsonDebug(Logger logger, String message, Object value) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(message, CoreUtil.toJson(value));
-        }
-
-        return this;
-    }
-
-    public OptionalEx<T> mapDebug(Logger logger, String message, Object... value) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(message, value);
-        }
-
-        return this;
     }
 
     public <U> OptionalEx<U> mapUnchecked(CheckedFunction<? super T, ? extends U> mapper) {
