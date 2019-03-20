@@ -45,12 +45,12 @@ public class OptionalEx<T> {
         this.optional.ifPresent(consumer);
     }
 
-    public OptionalEx<T> filter(Predicate predicate) {
+    public OptionalEx<T> filter(Predicate<T> predicate) {
         this.optional = this.optional.filter(predicate);
         return this;
     }
 
-    public static <T> T log(T self, Logger logger, String format, Object... value) {
+    public static <T> T debug(T self, Logger logger, String format, Object... value) {
         if (logger.isDebugEnabled()) {
             if (value.length > 0) {
                 logger.debug(format, value);
@@ -109,6 +109,7 @@ public class OptionalEx<T> {
         return this.optional.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public T orElseList() {
         return this.optional.orElse((T) new ArrayList<>());
     }
