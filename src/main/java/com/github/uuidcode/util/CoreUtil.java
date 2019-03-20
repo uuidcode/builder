@@ -629,10 +629,7 @@ public class CoreUtil {
         setNullUntilNotEmpty(list);
 
         for (int i = 0; i < list.size() - 1; i++) {
-            String currentLine = list.get(i);
-            String nextLine = list.get(i + 1);
-
-            if (CoreUtil.isEmpty(currentLine) && CoreUtil.isEmpty(nextLine)) {
+            if (isMultipleEmptyLine(list, i)) {
                 list.set(i, null);
             }
         }
@@ -640,6 +637,13 @@ public class CoreUtil {
         return list.stream()
             .filter(Objects::nonNull)
             .collect(Collectors.joining(LINE_FEED));
+    }
+
+    private static boolean isMultipleEmptyLine(List<String> list, int i) {
+        String currentLine = list.get(i);
+        String nextLine = list.get(i + 1);
+
+        return CoreUtil.isEmpty(currentLine) && CoreUtil.isEmpty(nextLine);
     }
 
     private static void setNullUntilNotEmpty(List<String> list) {
