@@ -822,8 +822,7 @@ public class CoreUtil {
     }
 
     public static Process exec(String command) {
-        return CoreUtil.unchecked(CoreUtil::internalExec)
-            .apply(command);
+        return CoreUtil.unchecked(CoreUtil::internalExec).apply(command);
     }
 
     private static Process internalExec(String line) throws IOException {

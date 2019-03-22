@@ -7,6 +7,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Person {
     private String name;
+    private Integer personId;
+
+    public Integer getPersonId() {
+        return this.personId;
+    }
+
+    public Person setPersonId(Integer personId) {
+        this.personId = personId;
+        return this;
+    }
 
     public static Person of() {
         return new Person();
