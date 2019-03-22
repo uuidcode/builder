@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import com.github.uuidcode.util.CoreUtil;
 import com.github.uuidcode.util.StringStream;
 
-import static com.github.uuidcode.util.CoreUtil.LINE_FEED;
 import static com.github.uuidcode.util.CoreUtil.base64Decode;
 import static com.github.uuidcode.util.CoreUtil.splitListWithColon;
 import static java.lang.Runtime.getRuntime;
@@ -192,7 +191,7 @@ public class ChromeDriverBuilder {
         content = CoreUtil.splitListWithNewLine(content)
             .stream()
             .map(CoreUtil::escapeSingleQuotation)
-            .collect(joining(LINE_FEED));
+            .collect(joining("\\n"));
 
         WebElement element = driver.findElement(by);
         String script = "arguments[0].innerHTML= '" + content + "'";
