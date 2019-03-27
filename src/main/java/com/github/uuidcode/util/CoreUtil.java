@@ -53,6 +53,8 @@ import com.google.common.base.CaseFormat;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import static java.util.Optional.ofNullable;
 
@@ -840,5 +842,12 @@ public class CoreUtil {
             .map(mapper)
             .filter(text -> Objects.equals(text, value))
             .isPresent();
+    }
+
+    public static String prettifyJson(String json) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonElement = jsonParser.parse(json);
+        return gson.toJson(jsonElement);
     }
 }
