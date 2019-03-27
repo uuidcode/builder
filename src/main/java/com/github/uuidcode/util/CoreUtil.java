@@ -106,6 +106,8 @@ public class CoreUtil {
 
         DateTimeFormat.forPattern("dd/MMM/yyyy:HH:mm:ss").withLocale(Locale.US).getParser(),
 
+        DateTimeFormat.forPattern("yy/MM/dd").getParser(),
+
         DateTimeFormat.forPattern("yyyy.MM.dd").getParser(),
         DateTimeFormat.forPattern("yyyy.MM.dd HH").getParser(),
         DateTimeFormat.forPattern("yyyy.MM.dd HH:mm").getParser(),
