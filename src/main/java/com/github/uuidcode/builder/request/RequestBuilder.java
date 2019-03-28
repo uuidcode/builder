@@ -38,6 +38,7 @@ import com.google.gson.FieldNamingPolicy;
 
 import static com.github.uuidcode.util.CoreUtil.QUESTION_MARK;
 import static com.github.uuidcode.util.CoreUtil.SEMICOLON;
+import static com.github.uuidcode.util.CoreUtil.prettifyJson;
 import static com.github.uuidcode.util.CoreUtil.toNameValuePairList;
 import static java.util.Optional.ofNullable;
 
@@ -163,15 +164,11 @@ public class RequestBuilder {
             byte[] data = IOUtils.toByteArray(inputStream);
             ByteArrayBody fileBody = new ByteArrayBody(data, urlEncodedFileName);
 
-            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addPart("file", fileBody);
+            MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+            multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            multipartEntityBuilder.addPart("file", fileBody);
 
-            return this.body(MultipartEntityBuilder
-                .create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .addPart("file", fileBody)
-                .build());
+            return this.body(multipartEntityBuilder.build());
         } catch (Exception e) {
             logger.error("body error", e);
             throw new IllegalArgumentException(e.getMessage());
@@ -268,17 +265,35 @@ public class RequestBuilder {
 
     public String executeAndGetContent() {
         try {
-            HttpEntity entity = this.execute().returnResponse().getEntity();
+            HttpResponse httpResponse = this.execute().returnResponse();
+            HttpEntity entity = httpResponse.getEntity();
             String content = EntityUtils.toString(entity, CoreUtil.UTF8);
 
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug(">>> content: " + content);
             }
 
+            this.debug(httpResponse, content);
+
             return content;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void debug(HttpResponse httpResponse, String content) {
+        Header header = httpResponse.getFirstHeader("Content-Type");
+
+        ofNullable(header)
+            .map(Header::getValue)
+            .filter(value -> value.contains("json"))
+            .map(value -> CoreUtil.splitListWithNewLine(content))
+            .filter(list -> list.size() == 1)
+            .ifPresent(value -> {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(">>> executeAndGetContent json: {}", prettifyJson(content));
+                }
+            });
     }
 
     public void executeAndDownload(File file) {
