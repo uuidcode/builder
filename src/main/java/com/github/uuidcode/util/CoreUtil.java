@@ -811,7 +811,7 @@ public class CoreUtil {
 
     public static String escapeSingleQuotation(String line) {
         return ofNullable(line)
-            .map(l -> l.replaceAll("'", "\'"))
+            .map(l -> l.replaceAll("'", "&apos;"))
             .orElse(null);
     }
 
@@ -849,5 +849,10 @@ public class CoreUtil {
         JsonParser jsonParser = new JsonParser();
         JsonElement jsonElement = jsonParser.parse(json);
         return gson.toJson(jsonElement);
+    }
+
+    public static List<String> readLines(String fileName) {
+        String content = getContent(new File(fileName));
+        return splitListWithNewLine(content);
     }
 }

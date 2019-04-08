@@ -171,6 +171,11 @@ public class CoreUtilTest {
                 .orElse(Person.of())
                 .assertName("hello");
         }
+    }
 
+    @Test
+    public void escapeSingleQuotation() {
+        String result = CoreUtil.escapeSingleQuotation("<pre><code>BRUNCH-8889 [운영툴] 운영 권한 그룹 중 'dks_call' 일 때 메뉴 노출 예외 처리");
+        assertThat(result).isEqualTo("<pre><code>BRUNCH-8889 [운영툴] 운영 권한 그룹 중 &apos;dks_call&apos; 일 때 메뉴 노출 예외 처리");
     }
 }

@@ -193,6 +193,10 @@ public class ChromeDriverBuilder {
             .map(CoreUtil::escapeSingleQuotation)
             .collect(joining("\\n"));
 
+        if (logger.isDebugEnabled()) {
+            logger.debug(">>> setInnerHTML content: {}", content);
+        }
+
         WebElement element = driver.findElement(by);
         String script = "arguments[0].innerHTML= '" + content + "'";
         ((JavascriptExecutor) driver).executeScript(script, element);
