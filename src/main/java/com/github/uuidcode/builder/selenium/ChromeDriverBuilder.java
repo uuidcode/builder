@@ -55,11 +55,17 @@ public class ChromeDriverBuilder {
     }
 
     public static ChromeDriverBuilder of() {
-        return new ChromeDriverBuilder();
+        ChromeOptions options = getDefaultOptions();
+        return new ChromeDriverBuilder(options);
+    }
+
+    private static ChromeOptions getDefaultOptions() {
+        ChromeOptions options = new ChromeOptions();
+        return options;
     }
 
     public static ChromeDriverBuilder headless() {
-        ChromeOptions options = new ChromeOptions();
+        ChromeOptions options = getDefaultOptions();
         options.addArguments("headless");
         return new ChromeDriverBuilder(options);
     }
@@ -71,10 +77,6 @@ public class ChromeDriverBuilder {
 
     private Thread createShutdownHook() {
         return new Thread(() -> this.driver.quit());
-    }
-
-    private ChromeDriverBuilder() {
-        this(new ChromeOptions());
     }
 
     private Wait getWait() {
@@ -220,11 +222,22 @@ public class ChromeDriverBuilder {
     }
 
     public ChromeDriverBuilder login(LoginForm loginForm) {
-        List<String> valueList = splitListWithColon(base64Decode(loginForm.getToken()));
+        String decodedToken = base64Decode(loginForm.getToken());
+        List<String> valueList = splitListWithColon(decodedToken);
 
         this.loadUrl(loginForm.getUri());
-        this.sendKey(By.cssSelector(loginForm.getFirst()), valueList.get(0));
-        this.sendKey(By.cssSelector(loginForm.getSecond()), valueList.get(1));
+
+        String first = valueList.get(0);
+        String second = valueList.get(1);
+
+        String firstSuffix = loginForm.getFirstSuffix();
+
+        if (CoreUtil.isNotEmpty(firstSuffix)) {
+            first += firstSuffix;
+        }
+
+        this.sendKey(By.cssSelector(loginForm.getFirst()), first);
+        this.sendKey(By.cssSelector(loginForm.getSecond()), second);
 
         return this.click(By.cssSelector(loginForm.getThird()));
     }

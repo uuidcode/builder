@@ -6,6 +6,16 @@ public class LoginForm {
     private String second;
     private String third;
     private String uri;
+    private String firstSuffix;
+
+    public String getFirstSuffix() {
+        return this.firstSuffix;
+    }
+
+    public LoginForm setFirstSuffix(String firstSuffix) {
+        this.firstSuffix = firstSuffix;
+        return this;
+    }
 
     public static LoginForm of() {
         return new LoginForm();
@@ -28,6 +38,7 @@ public class LoginForm {
         this.third = third;
         return this;
     }
+
     public String getSecond() {
         return this.second;
     }
@@ -36,6 +47,7 @@ public class LoginForm {
         this.second = second;
         return this;
     }
+
     public String getFirst() {
         return this.first;
     }
@@ -44,6 +56,7 @@ public class LoginForm {
         this.first = first;
         return this;
     }
+
     public String getToken() {
         return this.token;
     }
