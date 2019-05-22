@@ -70,6 +70,9 @@ public class ChromeDriverBuilder {
         return new ChromeDriverBuilder(options);
     }
 
+    /**
+     * https://groups.google.com/forum/#!topic/chromedriver-users/yHuW_Z7tdy0
+     */
     private ChromeDriverBuilder(ChromeOptions options) {
         options.addArguments("enable-features=NetworkServiceInProcess");
         this.driver = new ChromeDriver(options);
