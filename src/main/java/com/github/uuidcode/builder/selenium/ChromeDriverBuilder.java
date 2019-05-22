@@ -71,6 +71,7 @@ public class ChromeDriverBuilder {
     }
 
     private ChromeDriverBuilder(ChromeOptions options) {
+        options.addArguments("enable-features=NetworkServiceInProcess");
         this.driver = new ChromeDriver(options);
         getRuntime().addShutdownHook(createShutdownHook());
     }
